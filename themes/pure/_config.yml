@@ -196,6 +196,7 @@ profile:
   social:
     links:
       github: https://github.com/wangmingco
+      gitee: https://gitee.com/wangmingco
       weibo: https://www.douban.com/people/xxxyy/
       zhihu: https://www.zhihu.com/people/wangmingco
       # facebook: /
@@ -213,6 +214,7 @@ profile:
   # My Personal Links
   links:
     Github: https://github.com/wangmingco
+    Gitee: https://gitee.com/wangmingco
     Blog: https://wangmingco.github.io/
     微博: https://www.zhihu.com/people/wangmingco
     知乎: https://www.zhihu.com/people/wangmingco

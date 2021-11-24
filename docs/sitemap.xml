@@ -2,6 +2,27 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://wangmingco.github.io/books/index.html</loc>
+    
+    <lastmod>2021-11-24</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/tags/index.html</loc>
+    
+    <lastmod>2021-11-24</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/about/index.html</loc>
+    
+    <lastmod>2021-11-24</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://wangmingco.github.io/2020/04/14/zhihu/springboot_vue_admin/</loc>
     
     <lastmod>2021-11-24</lastmod>
@@ -103,6 +124,34 @@
     <loc>https://wangmingco.github.io/2019/04/28/zhihu/CGLib/</loc>
     
     <lastmod>2021-11-24</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/repository/index.html</loc>
+    
+    <lastmod>2021-11-18</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/links/index.html</loc>
+    
+    <lastmod>2021-11-18</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/categories/index.html</loc>
+    
+    <lastmod>2021-11-18</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/404.html</loc>
+    
+    <lastmod>2021-11-18</lastmod>
     
   </url>
   
