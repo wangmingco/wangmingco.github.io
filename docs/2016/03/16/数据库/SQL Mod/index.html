@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>Data too long for column 引起的设置 sql_mod | 向南</title>
+  <meta name="description" content="今天游戏上线, 在角色登陆日志里突然发生了 1Data too long for column &amp;#x27;name&amp;#x27; at row 1 当时在我们测试环境测试了,没问题, 这是为啥嘞? 当时没有纠结这个问题, 现在出现问题的这个varchar长度调大, 问题解决. 但是为啥生产环境出现问题, 而测试环境就没问题了, 于是开启了我的探索之旅… 我在自己的机器上创建了一张这样的表 123C">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Data too long for column 引起的设置 sql_mod">
+<meta property="og:url" content="https://wangmingco.github.io/2016/03/16/%E6%95%B0%E6%8D%AE%E5%BA%93/SQL%20Mod/index.html">
+<meta property="og:site_name" content="向南">
+<meta property="og:description" content="今天游戏上线, 在角色登陆日志里突然发生了 1Data too long for column &amp;#x27;name&amp;#x27; at row 1 当时在我们测试环境测试了,没问题, 这是为啥嘞? 当时没有纠结这个问题, 现在出现问题的这个varchar长度调大, 问题解决. 但是为啥生产环境出现问题, 而测试环境就没问题了, 于是开启了我的探索之旅… 我在自己的机器上创建了一张这样的表 123C">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2016-03-15T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-11-18T02:53:01.348Z">
+<meta property="article:author" content="向南">
+<meta name="twitter:card" content="summary">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://wangmingco.github.io/2016/03/16/%E6%95%B0%E6%8D%AE%E5%BA%93/SQL%20Mod/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="向南" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/wangmingco" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">向南</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Coder</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Beijing, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">项目</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books">
+            
+            <i class="icon icon-book-fill"></i>
+            
+            <span class="menu-title">书单</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">友链</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/wangmingco" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="https://www.douban.com/people/xxxyy/" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://www.zhihu.com/people/wangmingco" target="_blank" title="Zhihu" data-toggle=tooltip data-placement=top><i class="icon icon-zhihu"></i></a></li>
+        
+        <li><a href="https://www.douban.com/people/xxxyy/" target="_blank" title="Douban" data-toggle=tooltip data-placement=top><i class="icon icon-douban"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/ASM/">ASM</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Groovy/">Groovy</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/JVM/">JVM</a><span class="category-list-count">12</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">21</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java-%E7%B1%BB%E5%BA%93/">Java 类库</a><span class="category-list-count">12</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java-%E7%BD%91%E7%BB%9C%E5%BA%93/">Java 网络库</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Javasist/">Javasist</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Jedis/">Jedis</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Mybatis/">Mybatis</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Netty/">Netty</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Nginx/">Nginx</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/NoSql/">NoSql</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/PHP/">PHP</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/PYTHON2/">PYTHON2</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Shell/">Shell</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ZooKeeper/">ZooKeeper</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/awk/">awk</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/haskell/">haskell</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/vertx/">vertx</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%80%A7%E8%83%BD%E7%9B%91%E6%8E%A7/">性能监控</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%9F%A5%E4%B9%8E/">知乎</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><span class="category-list-count">11</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Archiva/" rel="tag">Archiva</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CRaSH/" rel="tag">CRaSH</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dropwizard/" rel="tag">Dropwizard</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Guava/" rel="tag">Guava</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Guice/" rel="tag">Guice</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JMeter/" rel="tag">JMeter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jackson/" rel="tag">Jackson</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/" rel="tag">JavaScript</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jetty/" rel="tag">Jetty</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Log4J2/" rel="tag">Log4J2</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Lombok/" rel="tag">Lombok</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Memcached/" rel="tag">Memcached</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MessagePack/" rel="tag">MessagePack</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MongoDB/" rel="tag">MongoDB</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Netty/" rel="tag">Netty</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OWNER/" rel="tag">OWNER</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PEG-js/" rel="tag">PEG.js</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Redis/" rel="tag">Redis</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ReflectASM/" rel="tag">ReflectASM</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Retrofit/" rel="tag">Retrofit</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Typesafe-Config/" rel="tag">Typesafe Config</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/asm/" rel="tag">asm</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vertx2/" rel="tag">vertx2</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vertx3/" rel="tag">vertx3</a><span class="tag-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/Archiva/" style="font-size: 13px;">Archiva</a> <a href="/tags/CRaSH/" style="font-size: 13px;">CRaSH</a> <a href="/tags/Dropwizard/" style="font-size: 13px;">Dropwizard</a> <a href="/tags/Guava/" style="font-size: 13px;">Guava</a> <a href="/tags/Guice/" style="font-size: 13px;">Guice</a> <a href="/tags/JMeter/" style="font-size: 13px;">JMeter</a> <a href="/tags/Jackson/" style="font-size: 13px;">Jackson</a> <a href="/tags/JavaScript/" style="font-size: 13.5px;">JavaScript</a> <a href="/tags/Jetty/" style="font-size: 13px;">Jetty</a> <a href="/tags/Log4J2/" style="font-size: 13px;">Log4J2</a> <a href="/tags/Lombok/" style="font-size: 13px;">Lombok</a> <a href="/tags/Memcached/" style="font-size: 13px;">Memcached</a> <a href="/tags/MessagePack/" style="font-size: 13px;">MessagePack</a> <a href="/tags/MongoDB/" style="font-size: 13.5px;">MongoDB</a> <a href="/tags/Netty/" style="font-size: 14px;">Netty</a> <a href="/tags/OWNER/" style="font-size: 13px;">OWNER</a> <a href="/tags/PEG-js/" style="font-size: 13px;">PEG.js</a> <a href="/tags/Redis/" style="font-size: 13.5px;">Redis</a> <a href="/tags/ReflectASM/" style="font-size: 13px;">ReflectASM</a> <a href="/tags/Retrofit/" style="font-size: 13px;">Retrofit</a> <a href="/tags/Typesafe-Config/" style="font-size: 13px;">Typesafe Config</a> <a href="/tags/asm/" style="font-size: 13.75px;">asm</a> <a href="/tags/mysql/" style="font-size: 13.75px;">mysql</a> <a href="/tags/vertx2/" style="font-size: 13.25px;">vertx2</a> <a href="/tags/vertx3/" style="font-size: 13.75px;">vertx3</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">二月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">十一月 2018</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">八月 2015</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">七月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">九月 2014</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">四月 2014</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/09/">九月 2013</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E7%9F%A5%E4%B9%8E/">知乎</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/05/13/zhihu/java_thread_state/" class="title">Java 线程状态</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-05-13T08:36:00.000Z" itemprop="datePublished">2020-05-13</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E7%9F%A5%E4%B9%8E/">知乎</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/04/14/zhihu/java_script_runner/" class="title">写一个在线Java脚本执行器</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-04-14T11:14:00.000Z" itemprop="datePublished">2020-04-14</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E7%9F%A5%E4%B9%8E/">知乎</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/04/14/zhihu/springboot_vue_admin/" class="title">基于SpringBoot/Vue/ElementUI 构建权限系统</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-04-14T10:42:00.000Z" itemprop="datePublished">2020-04-14</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E7%9F%A5%E4%B9%8E/">知乎</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/04/13/zhihu/SpringBoot_Loader/" class="title">SpringBoot Loader 浅析</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-04-13T10:22:00.000Z" itemprop="datePublished">2020-04-13</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E7%9F%A5%E4%B9%8E/">知乎</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/04/02/zhihu/PEG_js/" class="title">PEG.js 文档 [译]</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-04-02T10:45:00.000Z" itemprop="datePublished">2020-04-02</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-数据库/SQL Mod" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Data too long for column 引起的设置 sql_mod
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2016/03/16/%E6%95%B0%E6%8D%AE%E5%BA%93/SQL%20Mod/" class="article-date">
+	  <time datetime="2016-03-15T16:00:00.000Z" itemprop="datePublished">2016-03-16</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+  </span>
+
+        
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2016/03/16/%E6%95%B0%E6%8D%AE%E5%BA%93/SQL%20Mod/#comments" class="article-comment-link">评论</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <p>今天游戏上线, 在角色登陆日志里突然发生了</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Data too long <span class="keyword">for</span> column <span class="string">&#x27;name&#x27;</span> at row 1</span><br></pre></td></tr></table></figure>
+<p>当时在我们测试环境测试了,没问题, 这是为啥嘞? 当时没有纠结这个问题, 现在出现问题的这个varchar长度调大, 问题解决.</p>
+<p>但是为啥生产环境出现问题, 而测试环境就没问题了, 于是开启了我的探索之旅…</p>
+<p>我在自己的机器上创建了一张这样的表</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> `testvarchar` (</span><br><span class="line">  `name` <span class="type">varchar</span>(<span class="number">10</span>) <span class="keyword">DEFAULT</span> <span class="keyword">NULL</span></span><br><span class="line">) ENGINE<span class="operator">=</span>InnoDB <span class="keyword">DEFAULT</span> CHARSET<span class="operator">=</span>utf8</span><br></pre></td></tr></table></figure>
+<p>执行以下语句</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> testvarchar(NAME) <span class="keyword">VALUES</span>(&quot;0123456789&quot;);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> testvarchar(NAME) <span class="keyword">VALUES</span>(&quot;0123456789123&quot;);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> testvarchar(NAME) <span class="keyword">VALUES</span>(&quot;中文测试中文测试中文测试&quot;);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> testvarchar(NAME) <span class="keyword">VALUES</span>(&quot;abcdeabcdeabcde&quot;);</span><br><span class="line"><span class="keyword">INSERT</span> <span class="keyword">INTO</span> testvarchar(NAME) <span class="keyword">VALUES</span>(&quot;a        ee  ee&quot;);</span><br></pre></td></tr></table></figure>
+<p>查询结果为</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">0123456789</span><br><span class="line">0123456789</span><br><span class="line">中文测试中文测试中文</span><br><span class="line">abcdeabcde</span><br><span class="line">a        e</span><br></pre></td></tr></table></figure>
+<p>很奇怪数据都存进去了,但是却把我的数据给截取到指定的长度10个字符. 而且不管是中文还是数字都是10字符长度. 这会不会和刚才那个问题有关系呢? 鉴于刚才那个问题没有头绪, 于是我看下这个截取的是为啥？<br>于是我找到了这篇文章<a target="_blank" rel="noopener" href="http://www.th7.cn/db/mysql/201512/146503.shtml">mysql中varchar字段长度超过限制长度自动截取的问题</a></p>
+<p>我在本地种使用</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SET</span> SESSION sql_mode<span class="operator">=</span><span class="string">&#x27;STRICT_TRANS_TABLES&#x27;</span>;</span><br><span class="line"><span class="keyword">SELECT</span> @<span class="variable">@sql</span>_mode;</span><br></pre></td></tr></table></figure>
+<p>再次执行上面的插入,果真产生了<code>Data too long for column</code>, 看来就是生产环境里设置了这个值引起的.</p>
+<p>在本地环境里也要设置成和生产环境一样的, 肯定不能用<code>SESSION</code>，用<code>GLOBLE</code>也不靠谱,我再Windows上对my.ini进行修改</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Set the SQL mode to strict</span></span><br><span class="line">sql-mode=<span class="string">&quot;STRICT_TRANS_TABLES,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION&quot;</span></span><br></pre></td></tr></table></figure>
+<p>这样一来,哪怕MySQL重启了,我们的设置仍然有效.</p>
+<p>最后贴一下其他的sql_mode的值</p>
+<ul>
+<li><code>ONLY_FULL_GROUP_BY</code>：对于GROUP BY聚合操作，如果在SELECT中的列，没有在GROUP BY中出现，那么这个SQL是不合法的，因为列不在GROUP BY从句中</li>
+<li><code>NO_AUTO_VALUE_ON_ZERO</code>：该值影响自增长列的插入。默认设置下，插入0或NULL代表生成下一个自增长值。如果用户 希望插入的值为0，而该列又是自增长的，那么这个选项就有用了。</li>
+<li><code>STRICT_TRANS_TABLES</code>：在该模式下，如果一个值不能插入到一个事务表中，则中断当前的操作，对非事务表不做限制</li>
+<li><code>NO_ZERO_IN_DATE</code>：在严格模式下，不允许日期和月份为零</li>
+<li><code>NO_ZERO_DATE</code>：设置该值，mysql数据库不允许插入零日期，插入零日期会抛出错误而不是警告。</li>
+<li><code>ERROR_FOR_DIVISION_BY_ZERO</code>：在INSERT或UPDATE过程中，如果数据被零除，则产生错误而非警告。如 果未给出该模式，那么数据被零除时MySQL返回NULL</li>
+<li><code>NO_AUTO_CREATE_USER</code>：禁止GRANT创建密码为空的用户</li>
+<li><code>NO_ENGINE_SUBSTITUTION</code>：如果需要的存储引擎被禁用或未编译，那么抛出错误。不设置此值时，用默认的存储引擎替代，并抛出一个异常</li>
+<li><code>PIPES_AS_CONCAT</code>：将”||”视为字符串的连接操作符而非或运算符，这和Oracle数据库是一样的，也和字符串的拼接函数Concat相类似</li>
+<li><code>ANSI_QUOTES</code>：启用ANSI_QUOTES后，不能用双引号来引用字符串，因为它被解释为识别符</li>
+</ul>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://wangmingco.github.io/2016/03/16/%E6%95%B0%E6%8D%AE%E5%BA%93/SQL%20Mod/" title="Data too long for column 引起的设置 sql_mod" target="_blank" rel="external">https://wangmingco.github.io/2016/03/16/数据库/SQL Mod/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/wangmingco" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/wangmingco" target="_blank"><span class="text-dark">向南</span><small class="ml-1x">Coder</small></a></h3>
+        <div>个人简介。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2016/03/17/JavaLibrary/Netty%20%E5%8E%8B%E6%B5%8B/" title="Netty 压测"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2016/03/16/%E6%95%B0%E6%8D%AE%E5%BA%93/%E6%95%B0%E6%8D%AE%E5%8E%8B%E7%BC%A9/" title="Mysql 数据压缩"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>感谢您的支持，我会继续努力的!</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/images/donate/alipayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开支付宝扫一扫，即可进行扫码打赏哦</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/images/donate/wechatpayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开微信扫一扫，即可进行扫码打赏哦</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> 支付宝</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> 微信支付</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/wangmingco" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="https://www.douban.com/people/xxxyy/" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://www.zhihu.com/people/wangmingco" target="_blank" title="Zhihu" data-toggle=tooltip data-placement=top><i class="icon icon-zhihu"></i></a></li>
+        
+        <li><a href="https://www.douban.com/people/xxxyy/" target="_blank" title="Douban" data-toggle=tooltip data-placement=top><i class="icon icon-douban"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>

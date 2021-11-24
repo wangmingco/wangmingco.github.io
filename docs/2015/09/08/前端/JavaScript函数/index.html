@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>JavaScript函数 | 向南</title>
+  <meta name="description" content="JavaScript是一门基于原型继承的函数式的面向对象的编程语言,对象可以直接从其他对象继承属性,且JavaScript是无类型的. JavaScript中函数就是对象。函数对象连接到Function.prototype(该原型连接到Object.prototype).  每个函数对象在创建时也随配一个prototype属性,它的值是一个拥有constructor属性且值为该函数的对象（这和连接">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript函数">
+<meta property="og:url" content="https://wangmingco.github.io/2015/09/08/%E5%89%8D%E7%AB%AF/JavaScript%E5%87%BD%E6%95%B0/index.html">
+<meta property="og:site_name" content="向南">
+<meta property="og:description" content="JavaScript是一门基于原型继承的函数式的面向对象的编程语言,对象可以直接从其他对象继承属性,且JavaScript是无类型的. JavaScript中函数就是对象。函数对象连接到Function.prototype(该原型连接到Object.prototype).  每个函数对象在创建时也随配一个prototype属性,它的值是一个拥有constructor属性且值为该函数的对象（这和连接">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2015-09-07T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-11-18T02:53:57.917Z">
+<meta property="article:author" content="向南">
+<meta property="article:tag" content="JavaScript">
+<meta name="twitter:card" content="summary">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://wangmingco.github.io/2015/09/08/%E5%89%8D%E7%AB%AF/JavaScript%E5%87%BD%E6%95%B0/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="向南" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/wangmingco" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">向南</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Coder</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Beijing, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">项目</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books">
+            
+            <i class="icon icon-book-fill"></i>
+            
+            <span class="menu-title">书单</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">友链</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/wangmingco" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="https://www.douban.com/people/xxxyy/" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://www.zhihu.com/people/wangmingco" target="_blank" title="Zhihu" data-toggle=tooltip data-placement=top><i class="icon icon-zhihu"></i></a></li>
+        
+        <li><a href="https://www.douban.com/people/xxxyy/" target="_blank" title="Douban" data-toggle=tooltip data-placement=top><i class="icon icon-douban"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/ASM/">ASM</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Groovy/">Groovy</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/JVM/">JVM</a><span class="category-list-count">12</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">21</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java-%E7%B1%BB%E5%BA%93/">Java 类库</a><span class="category-list-count">12</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java-%E7%BD%91%E7%BB%9C%E5%BA%93/">Java 网络库</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Javasist/">Javasist</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Jedis/">Jedis</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Mybatis/">Mybatis</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Netty/">Netty</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Nginx/">Nginx</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/NoSql/">NoSql</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/PHP/">PHP</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/PYTHON2/">PYTHON2</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Shell/">Shell</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ZooKeeper/">ZooKeeper</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/awk/">awk</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/haskell/">haskell</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/vertx/">vertx</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%80%A7%E8%83%BD%E7%9B%91%E6%8E%A7/">性能监控</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%9F%A5%E4%B9%8E/">知乎</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><span class="category-list-count">11</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Archiva/" rel="tag">Archiva</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CRaSH/" rel="tag">CRaSH</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dropwizard/" rel="tag">Dropwizard</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Guava/" rel="tag">Guava</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Guice/" rel="tag">Guice</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JMeter/" rel="tag">JMeter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jackson/" rel="tag">Jackson</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/" rel="tag">JavaScript</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jetty/" rel="tag">Jetty</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Log4J2/" rel="tag">Log4J2</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Lombok/" rel="tag">Lombok</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Memcached/" rel="tag">Memcached</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MessagePack/" rel="tag">MessagePack</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MongoDB/" rel="tag">MongoDB</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Netty/" rel="tag">Netty</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OWNER/" rel="tag">OWNER</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PEG-js/" rel="tag">PEG.js</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Redis/" rel="tag">Redis</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ReflectASM/" rel="tag">ReflectASM</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Retrofit/" rel="tag">Retrofit</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Typesafe-Config/" rel="tag">Typesafe Config</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/asm/" rel="tag">asm</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vertx2/" rel="tag">vertx2</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vertx3/" rel="tag">vertx3</a><span class="tag-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/Archiva/" style="font-size: 13px;">Archiva</a> <a href="/tags/CRaSH/" style="font-size: 13px;">CRaSH</a> <a href="/tags/Dropwizard/" style="font-size: 13px;">Dropwizard</a> <a href="/tags/Guava/" style="font-size: 13px;">Guava</a> <a href="/tags/Guice/" style="font-size: 13px;">Guice</a> <a href="/tags/JMeter/" style="font-size: 13px;">JMeter</a> <a href="/tags/Jackson/" style="font-size: 13px;">Jackson</a> <a href="/tags/JavaScript/" style="font-size: 13.5px;">JavaScript</a> <a href="/tags/Jetty/" style="font-size: 13px;">Jetty</a> <a href="/tags/Log4J2/" style="font-size: 13px;">Log4J2</a> <a href="/tags/Lombok/" style="font-size: 13px;">Lombok</a> <a href="/tags/Memcached/" style="font-size: 13px;">Memcached</a> <a href="/tags/MessagePack/" style="font-size: 13px;">MessagePack</a> <a href="/tags/MongoDB/" style="font-size: 13.5px;">MongoDB</a> <a href="/tags/Netty/" style="font-size: 14px;">Netty</a> <a href="/tags/OWNER/" style="font-size: 13px;">OWNER</a> <a href="/tags/PEG-js/" style="font-size: 13px;">PEG.js</a> <a href="/tags/Redis/" style="font-size: 13.5px;">Redis</a> <a href="/tags/ReflectASM/" style="font-size: 13px;">ReflectASM</a> <a href="/tags/Retrofit/" style="font-size: 13px;">Retrofit</a> <a href="/tags/Typesafe-Config/" style="font-size: 13px;">Typesafe Config</a> <a href="/tags/asm/" style="font-size: 13.75px;">asm</a> <a href="/tags/mysql/" style="font-size: 13.75px;">mysql</a> <a href="/tags/vertx2/" style="font-size: 13.25px;">vertx2</a> <a href="/tags/vertx3/" style="font-size: 13.75px;">vertx3</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">二月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">十一月 2018</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">八月 2015</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">七月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">九月 2014</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">四月 2014</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/09/">九月 2013</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E7%9F%A5%E4%B9%8E/">知乎</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/05/13/zhihu/java_thread_state/" class="title">Java 线程状态</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-05-13T08:36:00.000Z" itemprop="datePublished">2020-05-13</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E7%9F%A5%E4%B9%8E/">知乎</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/04/14/zhihu/java_script_runner/" class="title">写一个在线Java脚本执行器</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-04-14T11:14:00.000Z" itemprop="datePublished">2020-04-14</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E7%9F%A5%E4%B9%8E/">知乎</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/04/14/zhihu/springboot_vue_admin/" class="title">基于SpringBoot/Vue/ElementUI 构建权限系统</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-04-14T10:42:00.000Z" itemprop="datePublished">2020-04-14</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E7%9F%A5%E4%B9%8E/">知乎</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/04/13/zhihu/SpringBoot_Loader/" class="title">SpringBoot Loader 浅析</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-04-13T10:22:00.000Z" itemprop="datePublished">2020-04-13</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E7%9F%A5%E4%B9%8E/">知乎</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/04/02/zhihu/PEG_js/" class="title">PEG.js 文档 [译]</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-04-02T10:45:00.000Z" itemprop="datePublished">2020-04-02</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-前端/JavaScript函数" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      JavaScript函数
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2015/09/08/%E5%89%8D%E7%AB%AF/JavaScript%E5%87%BD%E6%95%B0/" class="article-date">
+	  <time datetime="2015-09-07T16:00:00.000Z" itemprop="datePublished">2015-09-08</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/JavaScript/" rel="tag">JavaScript</a>
+  </span>
+
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2015/09/08/%E5%89%8D%E7%AB%AF/JavaScript%E5%87%BD%E6%95%B0/#comments" class="article-comment-link">评论</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <p>JavaScript是一门基于原型继承的函数式的面向对象的编程语言,对象可以直接从其他对象继承属性,且JavaScript是无类型的.</p>
+<p>JavaScript中函数就是对象。函数对象连接到Function.prototype(该原型连接到Object.prototype).</p>
+<ul>
+<li>每个函数对象在创建时也随配一个prototype属性,它的值是一个拥有constructor属性且值为该函数的对象（这和连接到Function.prototype全完不同）.</li>
+<li>因为函数是对象,所以函数可以保存在变量,对象和数组中. 函数可以当做参数传递给其他函数,函数也可以再返回给函数.而且因为函数是对象,函数还可以拥有方法</li>
+<li>一个函数总会有一个返回值,如果没有指定返回值则返回undefined(如果函数调用前加上了new前缀,且返回的不是一个对象,则返回this)</li>
+</ul>
+<h3 id="函数字面量"><a href="#函数字面量" class="headerlink" title="函数字面量"></a>函数字面量</h3><p>我们定义一个函数字面量</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> add = <span class="function"><span class="keyword">function</span>(<span class="params">a, b</span>) </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> a + b;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>上面这个函数字面量是通过将一个匿名函数赋值给一个变量.</p>
+<p>函数字面量可以出现在任何允许表达式出现的地方. 函数可以被定义在其他函数中. 可以作为函数参数或者函数返回值出现。函数甚至拥有自己的作用域(就像变量有自己的作用域一样)</p>
+<p>每声明一个函数实际是创建了一个Function 实例,上面的函数等价于</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> Add = <span class="keyword">new</span> <span class="built_in">Function</span>(<span class="string">&quot;a&quot;</span>,<span class="string">&quot;b&quot;</span>,<span class="string">&quot;a + b;&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> add = <span class="keyword">new</span> Add(<span class="number">1</span>, <span class="number">2</span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="闭包"><a href="#闭包" class="headerlink" title="闭包"></a>闭包</h3><p>内部函数可以访问自己内部的参数和变量还可以访问嵌套在父函数的参数和变量。通过函数字面量创建的函数对象包含了一个连接到外部上下文的连接，这杯称为闭包(每个函数在创建时会附加俩个隐藏属性：函数的上下文和实现函数行为的代码).</p>
+<h3 id="函数调用"><a href="#函数调用" class="headerlink" title="函数调用"></a>函数调用</h3><p>当调用函数时除了显示地向其传递的参数,每个函数还会接受俩个附加参数<code>this</code>, <code>arguments</code>. 当实际参数大于形式参数时,多余的参数会被忽略,而当实际参数小于形式,参数时缺少的参数会被赋值为undefined.</p>
+<p>下面会介绍四种调用模式,每种调用模式对<code>this</code>参数的初始化是不一样的.</p>
+<h4 id="方法调用模式"><a href="#方法调用模式" class="headerlink" title="方法调用模式"></a>方法调用模式</h4><p>当一个函数作为一个对象的属性时,我们称其为方法.方法里的this参数被被绑定到该对象上.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> obj = &#123;</span><br><span class="line">	<span class="attr">value</span> : <span class="number">1</span>;</span><br><span class="line">	addOne : <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">		<span class="built_in">this</span>.value += <span class="number">1</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">obj.addOne();</span><br></pre></td></tr></table></figure>
+
+<h4 id="函数调用模式"><a href="#函数调用模式" class="headerlink" title="函数调用模式"></a>函数调用模式</h4><p>当一个函数并非一个对象属性时,那么它就被当做是一个函数来调用</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">add</span>(<span class="params">a, b</span>) </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> a + b;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">c = add(<span class="number">1</span>, <span class="number">2</span>);</span><br></pre></td></tr></table></figure>
+<p>这种模式下this被绑定到全局对象上</p>
+<h4 id="构造器调用模式"><a href="#构造器调用模式" class="headerlink" title="构造器调用模式"></a>构造器调用模式</h4><p>一个函数如果创建的目的就是希望集合new关键字来使用,那么它就是构造器函数</p>
+<p>如果在一个函数前面带上一个new来调用,实际上会创建一个连接到该函数prototype成员的新对象,同时this也会绑定到那个新对象上.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> Quo = <span class="function"><span class="keyword">function</span>(<span class="params">string</span>) </span>&#123;</span><br><span class="line">	<span class="built_in">this</span>.status = string;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Quo.prototype.get_status = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="built_in">this</span>.status;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> myQuo = <span class="keyword">new</span> Quo(<span class="string">&quot;hello&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<h4 id="Apply调用模式"><a href="#Apply调用模式" class="headerlink" title="Apply调用模式"></a>Apply调用模式</h4><p>JavaScript的函数可以拥有方法,apply方法可以让我们构建一个参数数组传递给调用函数. apply方法接受俩个参数<code>this</code>和参数数组.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> add = <span class="function"><span class="keyword">function</span>(<span class="params">a, b</span>) </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> a + b;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> argus = [<span class="number">3</span>, <span class="number">4</span>];</span><br><span class="line"><span class="keyword">var</span> sum = add.apply(<span class="literal">null</span>, argus);</span><br></pre></td></tr></table></figure>
+
+<h3 id="arguments数组"><a href="#arguments数组" class="headerlink" title="arguments数组"></a>arguments数组</h3><p>在函数内部我们可以通过arguments数组变量访问所有的实际参数</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> add = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="keyword">var</span> sum = <span class="number">0</span>;</span><br><span class="line">	<span class="keyword">for</span>(i = <span class="number">0</span>; i &lt; <span class="built_in">arguments</span>.length; i += <span class="number">1</span>) &#123;</span><br><span class="line">		sum += argements[i];</span><br><span class="line">	&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> sum = add(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="异常"><a href="#异常" class="headerlink" title="异常"></a>异常</h3><p>throw语句中断函数的执行,它应该抛出一个exception对象,这个对象包含一个<code>name</code>和<code>message</code>属性(你也可以添加额外的属性).</p>
+<p>我们使用try catch来捕获异常 </p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> add = <span class="function"><span class="keyword">function</span>(<span class="params">a, b</span>) </span>&#123;</span><br><span class="line">	<span class="keyword">if</span>(<span class="built_in">arguments</span>.length &lt; <span class="number">2</span>) &#123;</span><br><span class="line">		<span class="keyword">throw</span> &#123;</span><br><span class="line">				<span class="attr">name</span>: <span class="string">&quot;arguments error&quot;</span>,</span><br><span class="line">				<span class="attr">message</span>: <span class="string">&quot;need more arguments&quot;</span></span><br><span class="line">			&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> tryAdd = <span class="function"><span class="keyword">function</span>(<span class="params">a, b</span>) </span>&#123;</span><br><span class="line">	<span class="keyword">try</span> &#123;</span><br><span class="line">		<span class="keyword">return</span> add(a, b);</span><br><span class="line">	&#125; <span class="keyword">catch</span>(e) &#123;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">tryAdd(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>);</span><br></pre></td></tr></table></figure>
+
+<h3 id="作用域"><a href="#作用域" class="headerlink" title="作用域"></a>作用域</h3><p>代码块是包在一对花括号中的一组语句，JavaScript中的代码块不会创建新的作用域.但是函数确实是有其自己的作用域的,但是在函数内部定义的变量在整个函数体的任意位置都是可见的,因此变量应该被定义在函数的头部。</p>
+<p>作用域的好处是内部函数可以访问定义在他们的外部函数的参数和变量(除了this和arguments)</p>
+<h3 id="闭包-1"><a href="#闭包-1" class="headerlink" title="闭包"></a>闭包</h3><p>当我们在函数A中定义了函数B,函数B引用了函数A中的变量I,当函数A执行完毕,函数B作为返回值继续被执行时,函数A的变量I是仍然可以被访问的,这就是闭包.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> f1 = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="keyword">var</span> id = <span class="number">1132</span>;</span><br><span class="line">	<span class="keyword">return</span> &#123;</span><br><span class="line">		<span class="attr">add</span>: <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">			<span class="keyword">return</span> id += <span class="number">1</span>;</span><br><span class="line">		&#125;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> if1 = fi();</span><br><span class="line"><span class="keyword">var</span> id = if1.add(); <span class="comment">// 结果是1133</span></span><br></pre></td></tr></table></figure>
+<p>简而言之呢,闭包的特性是保存了创建它时的上下文信息.</p>
+<h3 id="模块"><a href="#模块" class="headerlink" title="模块"></a>模块</h3><p>我们可以使用函数和闭包来构造模块. 模块是一个提供接口却隐藏状态与实现的函数或者对象.</p>
+<p>模块的一般形式是：一个定义了私有变量和函数的函数,利用闭包创建可以访问私有变量和函数的特权函数,最后返回这个特权函数,或者将他们保存到一个可访问到的地方.</p>
+<h3 id="柯里化"><a href="#柯里化" class="headerlink" title="柯里化"></a>柯里化</h3><p>函数也是值,我们可以像往常操作值那样去操作函数, 将函数作为一个变量.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> f = <span class="function"><span class="keyword">function</span>(<span class="params">a, b, c</span>) </span>&#123;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> f1 = <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> p(<span class="number">1</span>);</span><br><span class="line">&#125; </span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> c = f1();</span><br></pre></td></tr></table></figure>
+<p>上面就实现了函数的柯里化</p>
+<h3 id="普通函数"><a href="#普通函数" class="headerlink" title="普通函数"></a>普通函数</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">add</span>(<span class="params">a, b</span>) </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> a + b;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://wangmingco.github.io/2015/09/08/%E5%89%8D%E7%AB%AF/JavaScript%E5%87%BD%E6%95%B0/" title="JavaScript函数" target="_blank" rel="external">https://wangmingco.github.io/2015/09/08/前端/JavaScript函数/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/wangmingco" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/wangmingco" target="_blank"><span class="text-dark">向南</span><small class="ml-1x">Coder</small></a></h3>
+        <div>个人简介。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2015/09/08/%E5%89%8D%E7%AB%AF/JavaScript/" title="JavaScript 变量和流程控制"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2015/09/08/%E5%89%8D%E7%AB%AF/JavaScript%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/" title="JavaScript面向对象和原型链"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>感谢您的支持，我会继续努力的!</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/images/donate/alipayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开支付宝扫一扫，即可进行扫码打赏哦</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/images/donate/wechatpayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开微信扫一扫，即可进行扫码打赏哦</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> 支付宝</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> 微信支付</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/wangmingco" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="https://www.douban.com/people/xxxyy/" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://www.zhihu.com/people/wangmingco" target="_blank" title="Zhihu" data-toggle=tooltip data-placement=top><i class="icon icon-zhihu"></i></a></li>
+        
+        <li><a href="https://www.douban.com/people/xxxyy/" target="_blank" title="Douban" data-toggle=tooltip data-placement=top><i class="icon icon-douban"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>

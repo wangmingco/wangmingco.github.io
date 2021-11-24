@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>Javasist Class Loader | 向南</title>
+  <meta name="description" content="If what classes must be modified is known in advance, the easiest way for modifying the classes is as follows:  Get a CtClass object by calling ClassPool.get(), Modify it, and Call writeFile() or toBy">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Javasist Class Loader">
+<meta property="og:url" content="https://wangmingco.github.io/2019/05/03/JavaLibrary/Javasist%203%20Class%20loader/index.html">
+<meta property="og:site_name" content="向南">
+<meta property="og:description" content="If what classes must be modified is known in advance, the easiest way for modifying the classes is as follows:  Get a CtClass object by calling ClassPool.get(), Modify it, and Call writeFile() or toBy">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2019-05-03T12:15:00.000Z">
+<meta property="article:modified_time" content="2021-11-18T02:32:48.065Z">
+<meta property="article:author" content="向南">
+<meta name="twitter:card" content="summary">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://wangmingco.github.io/2019/05/03/JavaLibrary/Javasist%203%20Class%20loader/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="向南" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/wangmingco" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">向南</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Coder</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Beijing, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">项目</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books">
+            
+            <i class="icon icon-book-fill"></i>
+            
+            <span class="menu-title">书单</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">友链</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/wangmingco" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="https://www.douban.com/people/xxxyy/" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://www.zhihu.com/people/wangmingco" target="_blank" title="Zhihu" data-toggle=tooltip data-placement=top><i class="icon icon-zhihu"></i></a></li>
+        
+        <li><a href="https://www.douban.com/people/xxxyy/" target="_blank" title="Douban" data-toggle=tooltip data-placement=top><i class="icon icon-douban"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/ASM/">ASM</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Groovy/">Groovy</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/JVM/">JVM</a><span class="category-list-count">12</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">21</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java-%E7%B1%BB%E5%BA%93/">Java 类库</a><span class="category-list-count">12</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java-%E7%BD%91%E7%BB%9C%E5%BA%93/">Java 网络库</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Javasist/">Javasist</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Jedis/">Jedis</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Mybatis/">Mybatis</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Netty/">Netty</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Nginx/">Nginx</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/NoSql/">NoSql</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/PHP/">PHP</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/PYTHON2/">PYTHON2</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Shell/">Shell</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ZooKeeper/">ZooKeeper</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/awk/">awk</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/haskell/">haskell</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/vertx/">vertx</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%80%A7%E8%83%BD%E7%9B%91%E6%8E%A7/">性能监控</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%9F%A5%E4%B9%8E/">知乎</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><span class="category-list-count">11</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Archiva/" rel="tag">Archiva</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CRaSH/" rel="tag">CRaSH</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dropwizard/" rel="tag">Dropwizard</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Guava/" rel="tag">Guava</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Guice/" rel="tag">Guice</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JMeter/" rel="tag">JMeter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jackson/" rel="tag">Jackson</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/" rel="tag">JavaScript</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jetty/" rel="tag">Jetty</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Log4J2/" rel="tag">Log4J2</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Lombok/" rel="tag">Lombok</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Memcached/" rel="tag">Memcached</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MessagePack/" rel="tag">MessagePack</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MongoDB/" rel="tag">MongoDB</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Netty/" rel="tag">Netty</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OWNER/" rel="tag">OWNER</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PEG-js/" rel="tag">PEG.js</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Redis/" rel="tag">Redis</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ReflectASM/" rel="tag">ReflectASM</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Retrofit/" rel="tag">Retrofit</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Typesafe-Config/" rel="tag">Typesafe Config</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/asm/" rel="tag">asm</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vertx2/" rel="tag">vertx2</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vertx3/" rel="tag">vertx3</a><span class="tag-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/Archiva/" style="font-size: 13px;">Archiva</a> <a href="/tags/CRaSH/" style="font-size: 13px;">CRaSH</a> <a href="/tags/Dropwizard/" style="font-size: 13px;">Dropwizard</a> <a href="/tags/Guava/" style="font-size: 13px;">Guava</a> <a href="/tags/Guice/" style="font-size: 13px;">Guice</a> <a href="/tags/JMeter/" style="font-size: 13px;">JMeter</a> <a href="/tags/Jackson/" style="font-size: 13px;">Jackson</a> <a href="/tags/JavaScript/" style="font-size: 13.5px;">JavaScript</a> <a href="/tags/Jetty/" style="font-size: 13px;">Jetty</a> <a href="/tags/Log4J2/" style="font-size: 13px;">Log4J2</a> <a href="/tags/Lombok/" style="font-size: 13px;">Lombok</a> <a href="/tags/Memcached/" style="font-size: 13px;">Memcached</a> <a href="/tags/MessagePack/" style="font-size: 13px;">MessagePack</a> <a href="/tags/MongoDB/" style="font-size: 13.5px;">MongoDB</a> <a href="/tags/Netty/" style="font-size: 14px;">Netty</a> <a href="/tags/OWNER/" style="font-size: 13px;">OWNER</a> <a href="/tags/PEG-js/" style="font-size: 13px;">PEG.js</a> <a href="/tags/Redis/" style="font-size: 13.5px;">Redis</a> <a href="/tags/ReflectASM/" style="font-size: 13px;">ReflectASM</a> <a href="/tags/Retrofit/" style="font-size: 13px;">Retrofit</a> <a href="/tags/Typesafe-Config/" style="font-size: 13px;">Typesafe Config</a> <a href="/tags/asm/" style="font-size: 13.75px;">asm</a> <a href="/tags/mysql/" style="font-size: 13.75px;">mysql</a> <a href="/tags/vertx2/" style="font-size: 13.25px;">vertx2</a> <a href="/tags/vertx3/" style="font-size: 13.75px;">vertx3</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">二月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">十一月 2018</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">八月 2015</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">七月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">九月 2014</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">四月 2014</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/09/">九月 2013</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E7%9F%A5%E4%B9%8E/">知乎</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/05/13/zhihu/java_thread_state/" class="title">Java 线程状态</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-05-13T08:36:00.000Z" itemprop="datePublished">2020-05-13</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E7%9F%A5%E4%B9%8E/">知乎</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/04/14/zhihu/java_script_runner/" class="title">写一个在线Java脚本执行器</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-04-14T11:14:00.000Z" itemprop="datePublished">2020-04-14</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E7%9F%A5%E4%B9%8E/">知乎</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/04/14/zhihu/springboot_vue_admin/" class="title">基于SpringBoot/Vue/ElementUI 构建权限系统</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-04-14T10:42:00.000Z" itemprop="datePublished">2020-04-14</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E7%9F%A5%E4%B9%8E/">知乎</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/04/13/zhihu/SpringBoot_Loader/" class="title">SpringBoot Loader 浅析</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-04-13T10:22:00.000Z" itemprop="datePublished">2020-04-13</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E7%9F%A5%E4%B9%8E/">知乎</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/04/02/zhihu/PEG_js/" class="title">PEG.js 文档 [译]</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-04-02T10:45:00.000Z" itemprop="datePublished">2020-04-02</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-JavaLibrary/Javasist 3 Class loader" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Javasist Class Loader
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2019/05/03/JavaLibrary/Javasist%203%20Class%20loader/" class="article-date">
+	  <time datetime="2019-05-03T12:15:00.000Z" itemprop="datePublished">2019-05-03</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/Javasist/">Javasist</a>
+  </span>
+
+        
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2019/05/03/JavaLibrary/Javasist%203%20Class%20loader/#comments" class="article-comment-link">评论</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <p>If what classes must be modified is known in advance, the easiest way for modifying the classes is as follows:</p>
+<ol>
+<li>Get a CtClass object by calling ClassPool.get(),</li>
+<li>Modify it, and</li>
+<li>Call writeFile() or toBytecode() on that CtClass object to obtain a modified class file.<br>If whether a class is modified or not is determined at load time, the users must make Javassist collaborate with a class loader. Javassist can be used with a class loader so that bytecode can be modified at load time. The users of Javassist can define their own version of class loader but they can also use a class loader provided by Javassist.</li>
+</ol>
+<h2 id="3-1-The-toClass-method-in-CtClass"><a href="#3-1-The-toClass-method-in-CtClass" class="headerlink" title="3.1 The toClass method in CtClass"></a>3.1 The toClass method in CtClass</h2><p>CtClass 提供了一个便捷方法 toClass(), 该方法会将CtClass对象所代表的class通过当前线程的context 类加载器加载进虚拟机里. 在调用该方法之前, 调用者必须拥有权限, 否则会抛出 SecurityException 异常.</p>
+<p>The CtClass provides a convenience method toClass(), which requests the context class loader for the current thread to load the class represented by the CtClass object. To call this method, the caller must have appropriate permission; otherwise, a SecurityException may be thrown.</p>
+<p>The following program shows how to use toClass():</p>
+<p>下面的程序展示了如何使用toClass().</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Hello</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">say</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        System.out.println(<span class="string">&quot;Hello&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        ClassPool cp = ClassPool.getDefault();</span><br><span class="line">        CtClass cc = cp.get(<span class="string">&quot;Hello&quot;</span>);</span><br><span class="line">        CtMethod m = cc.getDeclaredMethod(<span class="string">&quot;say&quot;</span>);</span><br><span class="line">        m.insertBefore(<span class="string">&quot;&#123; System.out.println(\&quot;Hello.say():\&quot;); &#125;&quot;</span>);</span><br><span class="line">        Class c = cc.toClass();</span><br><span class="line">        Hello h = (Hello)c.newInstance();</span><br><span class="line">        h.say();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Test.main() 在Hello类的say()方法中插入了一个对 println() 的方法调用. 然后将修改过的Hello class构建一个实例出来, 接着调用该实例的say()方法.</p>
+<p>Test.main() inserts a call to println() in the method body of say() in Hello. Then it constructs an instance of the modified Hello class and calls say() on that instance.</p>
+<blockquote>
+<p>注意, 上面的程序能运行成功取决于在toClass()执行之前, Hello class从来没有被加载过. 如果Hello已经被加载过的话, 在toClass() 加载修改过的Hello class之前,  JVM会先将原生的Hello class加载进来. 因此加载修改过的Hello class就会失败(抛出LinkageError 错误). 例如:</p>
+</blockquote>
+<p>Note that the program above depends on the fact that the Hello class is never loaded before toClass() is invoked. If not, the JVM would load the original Hello class before toClass() requests to load the modified Hello class. Hence loading the modified Hello class would be failed (LinkageError is thrown). For example, if main() in Test is something like this:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">    Hello orig = <span class="keyword">new</span> Hello();</span><br><span class="line">    ClassPool cp = ClassPool.getDefault();</span><br><span class="line">    CtClass cc = cp.get(<span class="string">&quot;Hello&quot;</span>);</span><br><span class="line">        :</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>main 方法的第一行首先将原生的Hello class加载了进来, 后续再调用 toClass() 就会抛出异常, 这是因为同一个类加载器不能同时加载俩个相同版本的Hello class.</p>
+<p>then the original Hello class is loaded at the first line of main and the call to toClass() throws an exception since the class loader cannot load two different versions of the Hello class at the same time.</p>
+<p>如果这个应用程序运行在一些如JBoss或者Tomcat的应用服务器桑, toClass() 直接使用context 类加载器 可能就不太正确了. 在上面的例子中, 你会看到一个未检查异常 ClassCastException 被抛出. 要避免这种异常, 你必须给 toClass() 一个合适的类加载器. 例如, 如果变量 bean 是你的session bean对象的话, 你可以采用下面的代码:</p>
+<p>If the program is running on some application server such as JBoss and Tomcat, the context class loader used by toClass() might be inappropriate. In this case, you would see an unexpected ClassCastException. To avoid this exception, you must explicitly give an appropriate class loader to toClass(). For example, if bean is your session bean object, then the following code:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">CtClass cc = ...;</span><br><span class="line">Class c = cc.toClass(bean.getClass().getClassLoader());</span><br></pre></td></tr></table></figure>
+<p>上面的代码可以正确运行. 你应该将加载你程序的类加载器传递给toClass() (在上面的例子中, 是bean对象的class)</p>
+<p>would work. You should give toClass() the class loader that has loaded your program (in the above example, the class of the bean object).</p>
+<p><code>toClass()</code> 只是一个便捷方法. 如果你需要更复杂的功能, 你应该实现自己的类加载器.</p>
+<p>toClass() is provided for convenience. If you need more complex functionality, you should write your own class loader.</p>
+<h2 id="3-2-Class-loading-in-Java"><a href="#3-2-Class-loading-in-Java" class="headerlink" title="3.2 Class loading in Java"></a>3.2 Class loading in Java</h2><p>在Java中, 多个class loader是可以共存的, 每个ClassLoader都有它自己的命名空间. 不同的类加载器可以加载相同名称的不同的class. 加载进来的class被视为不一样的. 这个特性允许我们在同一个JVM运行包含相同名称的class的多个应用程序.</p>
+<p>In Java, multiple class loaders can coexist and each class loader creates its own name space. Different class loaders can load different class files with the same class name. The loaded two classes are regarded as different ones. This feature enables us to run multiple application programs on a single JVM even if these programs include different classes with the same name.</p>
+<blockquote>
+<p>注意, JVM不允许动态重新加载class. 一旦一个类加载器已经加载了一个class, 那么在运行期, 就不允许该类加载器再去加载一个已经修改过的class. 因此当JVM已经加载了一个class之后, 就不允许再去修改该class的定义了. 但是, JDPA(Java Platform Debugger Architecture) 提供了一些工具可以帮助重新加载一个类. See Section 3.6.</p>
+</blockquote>
+<p>Note: The JVM does not allow dynamically reloading a class. Once a class loader loads a class, it cannot reload a modified version of that class during runtime. Thus, you cannot alter the definition of a class after the JVM loads it. However, the JPDA (Java Platform Debugger Architecture) provides limited ability for reloading a class. See Section 3.6.</p>
+<p>如果相同的class 文件被不同的类加载器加载了, JVM就会创建俩个名称和定义相同的class. 但是这俩个class是被视为是不同的. 因为这俩个class是不同的, 一个class的实例是不允许赋值到另一个class的变量的. 在这俩个class之间的转换操作会失败, 同时抛出一个 ClassCastException.</p>
+<p>If the same class file is loaded by two distinct class loaders, the JVM makes two distinct classes with the same name and definition. The two classes are regarded as different ones. Since the two classes are not identical, an instance of one class is not assignable to a variable of the other class. The cast operation between the two classes fails and throws a ClassCastException.</p>
+<p>例如, 下面的代码片段抛出的异常.</p>
+<p>For example, the following code snippet throws an exception:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">MyClassLoader myLoader = <span class="keyword">new</span> MyClassLoader();</span><br><span class="line">Class clazz = myLoader.loadClass(<span class="string">&quot;Box&quot;</span>);</span><br><span class="line">Object obj = clazz.newInstance();</span><br><span class="line">Box b = (Box)obj;    <span class="comment">// this always throws ClassCastException.</span></span><br></pre></td></tr></table></figure>
+
+<p>Box class 被俩个类加载器加载. 假设一个类加载器 CL将上面的代码片段的一个类. CL会将上述代码片段的MyClassLoader, Class, Object, and Box进行加载(除非CL被代理给了其他类加载器). 因此变量b的类型是Box 是被CL加载的. 然而,  myLoader 也加载了Box class. 变量obj指向的对象就是被myLoader加载的Box的实例. 因此最后语句就会抛出异常ClassCastException, 因为obj的class和变量b所引用的class不是同一个.</p>
+<p>The Box class is loaded by two class loaders. Suppose that a class loader CL loads a class including this code snippet. Since this code snippet refers to MyClassLoader, Class, Object, and Box, CL also loads these classes (unless it delegates to another class loader). Hence the type of the variable b is the Box class loaded by CL. On the other hand, myLoader also loads the Box class. The object obj is an instance of the Box class loaded by myLoader. Therefore, the last statement always throws a ClassCastException since the class of obj is a different verison of the Box class from one used as the type of the variable b.</p>
+<p>不同的类加载器构成了一个树结构. 除了bootstrap类加载器, 每个类加载器都有一个父加载器, which has normally loaded the class of that child class loader. 因为被请求加载的类可以被代理给这个层级中的其他类加载器, 因此一个class也许可以被不是你想使用的其他类加载器加载. 因此, 你希望加载类C的类加载器也许和实际加载类C的加载器不是同一个. 因此为了区分这俩个类加载器, 我们把前一个类加载器称为<code>the initiator of C</code>, 后一个类加载器称为<code>the real loader of C</code>.</p>
+<p>Multiple class loaders form a tree structure. Each class loader except the bootstrap loader has a parent class loader, which has normally loaded the class of that child class loader. Since the request to load a class can be delegated along this hierarchy of class loaders, a class may be loaded by a class loader that you do not request the class loading. Therefore, the class loader that has been requested to load a class C may be different from the loader that actually loads the class C. For distinction, we call the former loader the initiator of C and we call the latter loader the real loader of C.</p>
+<p>此外, 如果被请求加载类C的类加载器(<code>the initiator of C</code>)被代理给了父加载器PL, 那么类加载器CL也不会再起加载类C中依赖的任何其他的类. 类加载CL就不再是哪些类的initiator, 它的父加载器PL就成为了initiator, 然后PL负责去加载哪些类. 类C定义中指向的那些类将会被类C的真实加载器进行加载.</p>
+<p>Furthermore, if a class loader CL requested to load a class C (the initiator of C) delegates to the parent class loader PL, then the class loader CL is never requested to load any classes referred to in the definition of the class C. CL is not the initiator of those classes. Instead, the parent class loader PL becomes their initiators and it is requested to load them. The classes that the definition of a class C referes to are loaded by the real loader of C.</p>
+<p>下面看一个例子, 深入理解一下:</p>
+<p>To understand this behavior, let’s consider the following example.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Point</span> </span>&#123;    <span class="comment">// loaded by PL</span></span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> x, y;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getX</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> x; &#125;</span><br><span class="line">        :</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Box</span> </span>&#123;      <span class="comment">// the initiator is L but the real loader is PL</span></span><br><span class="line">    <span class="keyword">private</span> Point upperLeft, size;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getBaseX</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> upperLeft.x; &#125;</span><br><span class="line">        :</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Window</span> </span>&#123;    <span class="comment">// loaded by a class loader L</span></span><br><span class="line">    <span class="keyword">private</span> Box box;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getBaseX</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> box.getBaseX(); &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>假设类<code>Window</code>是被类加载器<code>L</code>加载的. 那么类<code>Window</code>的initiator和真实加载器都是<code>L</code>. 因为<code>Window</code>定义里面指向了类<code>Box</code>, JVM还将事业<code>L</code>去加载类<code>Box</code>. 这里, 假设, <code>L</code>将加载动作委托给了父加载器<code>PL</code>. <code>Box</code>的initiator就是<code>L</code>, 但是真实加载器就成<code>PL</code>. 在这个例子中, <code>Point</code>的initiator就成了<code>PL</code>而不是<code>L</code>, 因为它和<code>Box</code>的真实加载器是一样的. 因此<code>L</code>从来都不会加载<code>Point</code>.</p>
+<p>Suppose that a class Window is loaded by a class loader L. Both the initiator and the real loader of Window are L. Since the definition of Window refers to Box, the JVM will request L to load Box. Here, suppose that L delegates this task to the parent class loader PL. The initiator of Box is L but the real loader is PL. In this case, the initiator of Point is not L but PL since it is the same as the real loader of Box. Thus L is never requested to load Point.</p>
+<p>Next, let’s consider a slightly modified example.</p>
+<p>下面的例子对刚才进行了一些稍微的修改:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Point</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">int</span> x, y;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getX</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> x; &#125;</span><br><span class="line">        :</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Box</span> </span>&#123;      <span class="comment">// the initiator is L but the real loader is PL</span></span><br><span class="line">    <span class="keyword">private</span> Point upperLeft, size;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Point <span class="title">getSize</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> size; &#125;</span><br><span class="line">        :</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Window</span> </span>&#123;    <span class="comment">// loaded by a class loader L</span></span><br><span class="line">    <span class="keyword">private</span> Box box;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">widthIs</span><span class="params">(<span class="keyword">int</span> w)</span> </span>&#123;</span><br><span class="line">        Point p = box.getSize();</span><br><span class="line">        <span class="keyword">return</span> w == p.getX();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>现在, <code>Window</code>的定义也指向了<code>Point</code>. 在这个例子中, 如果类加载器<code>L</code>要加载<code>Point</code>, 它必须也被代理给<code>PL</code>. 你必须避免有俩个类加载器俩次加载相同一个类. 这俩个类加载器中的一个必须代理给另一个.</p>
+<p>Now, the definition of Window also refers to Point. In this case, the class loader L must also delegate to PL if it is requested to load Point. You must avoid having two class loaders doubly load the same class. One of the two loaders must delegate to the other.</p>
+<p>当<code>Point</code>被加载的时候, 如果<code>L</code>没有被代理给<code>PL</code>, <code>widthIs()</code> 将会抛出一个<code>ClassCastException</code>. 因为<code>Box</code>的真实类加载器是<code>PL</code>, <code>Box</code>中关联的<code>Point</code>也会被<code>PL</code>加载. 因此, <code>getSize()</code>真实调用的实例是由<code>PL</code>加载的类<code>Point</code>产生的, 而<code>widthIs()</code>中的变量<code>p</code>是由<code>L</code>加载的类<code>Point</code>. JVM将他们视作俩个类型, 因此会因为类型不匹配抛出一个异常.</p>
+<p>If L does not delegate to PL when Point is loaded, widthIs() would throw a ClassCastException. Since the real loader of Box is PL, Point referred to in Box is also loaded by PL. Therefore, the resulting value of getSize() is an instance of Point loaded by PL whereas the type of the variable p in widthIs() is Point loaded by L. The JVM regards them as distinct types and thus it throws an exception because of type mismatch.</p>
+<p>这个行为看起来是有点不方便, 但是却很必须的. 看下面的代码:</p>
+<p>This behavior is somewhat inconvenient but necessary. If the following statement:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Point p = box.getSize();</span><br></pre></td></tr></table></figure>
+<p>这就不会抛出异常, 写<code>Window</code>的程序员破坏了<code>Point</code>对象的封装. 例如, 被<code>PL</code>加载的类<code>Point</code>中有个字段<code>x</code>是私有的. 如果<code>L</code>加载下面程序描述的<code>Point</code>, <code>Window</code>类就可以直接访问<code>x</code>的值.</p>
+<p>did not throw an exception, then the programmer of Window could break the encapsulation of Point objects. For example, the field x is private in Point loaded by PL. However, the Window class could directly access the value of x if L loads Point with the following definition:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Point</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> x, y;    <span class="comment">// not private</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getX</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> x; &#125;</span><br><span class="line">        :</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>更多关于Java类加载器的细节, 下面的文章会更优帮助:</p>
+<p>For more details of class loaders in Java, the following paper would be helpful:</p>
+<blockquote>
+<p>Sheng Liang and Gilad Bracha, “Dynamic Class Loading in the Java Virtual Machine”,<br>ACM OOPSLA’98, pp.36-44, 1998.</p>
+</blockquote>
+<h2 id="3-3-Using-javassist-Loader"><a href="#3-3-Using-javassist-Loader" class="headerlink" title="3.3 Using javassist.Loader"></a>3.3 Using javassist.Loader</h2><p>Javassist 提供了一个类加载器<code>javassist.Loader</code>. 这个类加载器使用<code>javassist.ClassPool</code>对象来读取class文件.</p>
+<p>Javassist provides a class loader javassist.Loader. This class loader uses a javassist.ClassPool object for reading a class file.</p>
+<p>例如, <code>javassist.Loader</code> 可以用来加载被Javassist修改过的class.</p>
+<p>For example, javassist.Loader can be used for loading a particular class modified with Javassist.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> javassist.*;</span><br><span class="line"><span class="keyword">import</span> test.Rectangle;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line">     ClassPool pool = ClassPool.getDefault();</span><br><span class="line">     Loader cl = <span class="keyword">new</span> Loader(pool);</span><br><span class="line"></span><br><span class="line">     CtClass ct = pool.get(<span class="string">&quot;test.Rectangle&quot;</span>);</span><br><span class="line">     ct.setSuperclass(pool.get(<span class="string">&quot;test.Point&quot;</span>));</span><br><span class="line"></span><br><span class="line">     Class c = cl.loadClass(<span class="string">&quot;test.Rectangle&quot;</span>);</span><br><span class="line">     Object rect = c.newInstance();</span><br><span class="line">         :</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这个应用程序修改了类<code>test.Rectangle</code>. <code>test.Rectangle</code>的父类被设置为了<code>test.Point</code>. 然后应用程序将修改过的class加载, 最后创建出一个新的<code>test.Rectangle</code>实例出来.</p>
+<p>This program modifies a class test.Rectangle. The superclass of test.Rectangle is set to a test.Point class. Then this program loads the modified class, and creates a new instance of the test.Rectangle class.</p>
+<p>如果用户想要当class被加载后, 后台会自动修改class, 可以通过向<code>javassist.Loader</code>添加事件监听器来完成. 当类加载器加载类的时候会自动通知注册了的事件监听器. 事件监听器必须下面的接口.</p>
+<p>If the users want to modify a class on demand when it is loaded, the users can add an event listener to a javassist.Loader. The added event listener is notified when the class loader loads a class. The event-listener class must implement the following interface:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Translator</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">start</span><span class="params">(ClassPool pool)</span></span></span><br><span class="line"><span class="function">        <span class="keyword">throws</span> NotFoundException, CannotCompileException</span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">onLoad</span><span class="params">(ClassPool pool, String classname)</span></span></span><br><span class="line"><span class="function">        <span class="keyword">throws</span> NotFoundException, CannotCompileException</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当通过调用<code>javassist.Loader</code>的<code>addTranslator()</code>向<code>javassist.Loader</code>添加完成事件监听器后, <code>start()</code>方法就会被调用. <code>onLoad()</code>方法会在<code>javassist.Loader</code>加载类之前被调用. 可以在<code>onLoad()</code> 方法中修改一个类的定义.</p>
+<p>The method start() is called when this event listener is added to a javassist.Loader object by addTranslator() in javassist.Loader. The method onLoad() is called before javassist.Loader loads a class. onLoad() can modify the definition of the loaded class.</p>
+<p>例如, 下面的事件监听器在class被加载之前全部被修改成<code>public</code>.</p>
+<p>For example, the following event listener changes all classes to public classes just before they are loaded.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyTranslator</span> <span class="keyword">implements</span> <span class="title">Translator</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">start</span><span class="params">(ClassPool pool)</span></span></span><br><span class="line"><span class="function">        <span class="keyword">throws</span> NotFoundException, CannotCompileException </span>&#123;&#125;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">onLoad</span><span class="params">(ClassPool pool, String classname)</span></span></span><br><span class="line"><span class="function">        <span class="keyword">throws</span> NotFoundException, CannotCompileException</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        CtClass cc = pool.get(classname);</span><br><span class="line">        cc.setModifiers(Modifier.PUBLIC);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意, <code>onLoad()</code>方法中不用调用<code>toBytecode()</code> 或者 <code>writeFile()</code> 方法, <code>javassist.Loader</code>会自动去调用那些方法.</p>
+</blockquote>
+<p>Note that onLoad() does not have to call toBytecode() or writeFile() since javassist.Loader calls these methods to obtain a class file.</p>
+<p>To run an application class MyApp with a MyTranslator object, write a main class as following:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> javassist.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Main2</span> </span>&#123;</span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line">     Translator t = <span class="keyword">new</span> MyTranslator();</span><br><span class="line">     ClassPool pool = ClassPool.getDefault();</span><br><span class="line">     Loader cl = <span class="keyword">new</span> Loader();</span><br><span class="line">     cl.addTranslator(pool, t);</span><br><span class="line">     cl.run(<span class="string">&quot;MyApp&quot;</span>, args);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>To run this program, do:</p>
+<p>运行程序:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">% java Main2 arg1 arg2...</span><br></pre></td></tr></table></figure>
+
+<p>类<code>MyApp</code>和程序中其他的类都会被<code>MyTranslator</code>修改.</p>
+<p>The class MyApp and the other application classes are translated by MyTranslator.</p>
+<p>注意, 程序中像<code>MyApp</code>这样的类不能访问oader classes, 例如<code>Main2, MyTranslator, and ClassPool</code>, 因为它们是被不同的加载器加载的. 应用程序的类是被<code>javassist.Loader</code>而loader classes(例如<code>Main2</code>)是被Java默认的类加载器加载的.</p>
+<p>Note that application classes like MyApp cannot access the loader classes such as Main2, MyTranslator, and ClassPool because they are loaded by different loaders. The application classes are loaded by javassist.Loader whereas the loader classes such as Main2 are by the default Java class loader.</p>
+<p><code>javassist.Loader</code>搜索类的顺序和<code>java.lang.ClassLoader</code>不一样. <code>ClassLoader</code>首先会将加载动作委托给他们父加载器, 只有当父加载器找不到, <code>ClassLoader</code>自己才会去加载. 而<code>javassist.Loader</code> 在委托给父类加载器之前, 自己首先加载一遍. 直接委托父加载器加载只取决于</p>
+<ul>
+<li>在调用<code>ClassPool</code>对象的<code>get()</code>方法是没有找到搜索的类</li>
+<li>或者通过<code>delegateLoadingOf()</code>设置指定由父加载器去进行加载.</li>
+</ul>
+<p>javassist.Loader searches for classes in a different order from java.lang.ClassLoader. ClassLoader first delegates the loading operations to the parent class loader and then attempts to load the classes only if the parent class loader cannot find them. On the other hand, javassist.Loader attempts to load the classes before delegating to the parent class loader. It delegates only if:</p>
+<ul>
+<li>the classes are not found by calling get() on a ClassPool object, or</li>
+<li>the classes have been specified by using delegateLoadingOf() to be loaded by the parent class loader.</li>
+</ul>
+<p>这种搜索顺序允许Javassist 加载修改过的类. 一旦它由于某些原因找不到修改过的类, 它仍然会将搜索动作委托给父加载器进行加载. 一旦类被父加载器加载到了, 那么类中其他的类也会被父加载器进行加载, 因此这些被父加载器加载的类是永远也不是被修改过的. 回想一下前文介绍的, 在类<code>C</code>中包含的类也会被<code>C</code>的真实加载器进行加载. 如果你的程序加载修改过的类失败了, 你应该确认一下使用那些类的其他类是否也被<code>javassist.Loader</code>进行加载的.</p>
+<p>This search order allows loading modified classes by Javassist. However, it delegates to the parent class loader if it fails to find modified classes for some reason. Once a class is loaded by the parent class loader, the other classes referred to in that class will be also loaded by the parent class loader and thus they are never modified. Recall that all the classes referred to in a class C are loaded by the real loader of C. If your program fails to load a modified class, you should make sure whether all the classes using that class have been loaded by javassist.Loader.</p>
+<h2 id="3-4-Writing-a-class-loader"><a href="#3-4-Writing-a-class-loader" class="headerlink" title="3.4 Writing a class loader"></a>3.4 Writing a class loader</h2><p>A simple class loader using Javassist is as follows:</p>
+<p>使用Javassist中的类加载器很简单:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> javassist.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SampleLoader</span> <span class="keyword">extends</span> <span class="title">ClassLoader</span> </span>&#123;</span><br><span class="line">    <span class="comment">/* Call MyApp.main().</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line">        SampleLoader s = <span class="keyword">new</span> SampleLoader();</span><br><span class="line">        Class c = s.loadClass(<span class="string">&quot;MyApp&quot;</span>);</span><br><span class="line">        c.getDeclaredMethod(<span class="string">&quot;main&quot;</span>, <span class="keyword">new</span> Class[] &#123; String[].class &#125;)</span><br><span class="line">         .invoke(<span class="keyword">null</span>, <span class="keyword">new</span> Object[] &#123; args &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> ClassPool pool;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">SampleLoader</span><span class="params">()</span> <span class="keyword">throws</span> NotFoundException </span>&#123;</span><br><span class="line">        pool = <span class="keyword">new</span> ClassPool();</span><br><span class="line">        pool.insertClassPath(<span class="string">&quot;./class&quot;</span>); <span class="comment">// MyApp.class must be there.</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Finds a specified class.</span></span><br><span class="line"><span class="comment">     * The bytecode for that class can be modified.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> Class <span class="title">findClass</span><span class="params">(String name)</span> <span class="keyword">throws</span> ClassNotFoundException </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            CtClass cc = pool.get(name);</span><br><span class="line">            <span class="comment">// modify the CtClass object here</span></span><br><span class="line">            <span class="keyword">byte</span>[] b = cc.toBytecode();</span><br><span class="line">            <span class="keyword">return</span> defineClass(name, b, <span class="number">0</span>, b.length);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (NotFoundException e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> ClassNotFoundException();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> ClassNotFoundException();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (CannotCompileException e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> ClassNotFoundException();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>类<code>MyApp</code>是一个应用程序. 执行程序之前, 首先要将该类放到<code>./class</code>目录下, 但是不能包含在类搜索路径里. 否则<code>MyApp.class</code>会被系统默认的类加载器进行加载(会被<code>SampleLoader</code>父加载器加载). 通过在构建器中调用 <code>insertClassPath()</code> 设置了路径的名称<code>./class</code>. 你也可以不用<code>./class</code>, 换一个其他的名称, 然后执行:</p>
+<p>The class MyApp is an application program. To execute this program, first put the class file under the ./class directory, which must not be included in the class search path. Otherwise, MyApp.class would be loaded by the default system class loader, which is the parent loader of SampleLoader. The directory name ./class is specified by insertClassPath() in the constructor. You can choose a different name instead of ./class if you want. Then do as follows:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">% java SampleLoader</span><br></pre></td></tr></table></figure>
+<p>类加载器会从<code>./class/MyApp.class</code>加载类<code>MyApp</code>, 然后调用<code>MyApp.main()</code>方法.</p>
+<p>The class loader loads the class MyApp (./class/MyApp.class) and calls MyApp.main() with the command line parameters.</p>
+<p>这是使用<code>Javassist</code>最简单的方式. 然而, 如果你写了一个复杂的类加载器, 你必须熟悉java类加载机制的细节. 例如, 上面的应用程序将<code>MyApp</code>放到了与<code>SampleLoader</code>所属的不同的一个名称空间里, 因为这俩个类是由不同的类加载器进行加载的. 因此<code>MyApp</code>不能直接访问类<code>SampleLoader</code>.</p>
+<p>This is the simplest way of using Javassist. However, if you write a more complex class loader, you may need detailed knowledge of Java’s class loading mechanism. For example, the program above puts the MyApp class in a name space separated from the name space that the class SampleLoader belongs to because the two classes are loaded by different class loaders. Hence, the MyApp class cannot directly access the class SampleLoader.</p>
+<h2 id="3-5-Modifying-a-system-class"><a href="#3-5-Modifying-a-system-class" class="headerlink" title="3.5 Modifying a system class"></a>3.5 Modifying a system class</h2><p>系统类例如<code>java.lang.String</code>除了系统类加载器之外不能被其他的类加载加载. 因此, 上面提到的<code>SampleLoader</code>或者<code>javassist.Loader</code>在加载时不能修改系统的类.</p>
+<p>The system classes like java.lang.String cannot be loaded by a class loader other than the system class loader. Therefore, SampleLoader or javassist.Loader shown above cannot modify the system classes at loading time.</p>
+<p>但是如果你的程序想要修改系统类, 那么系统类必须被静态修改. 例如下面的程序在<code>java.lang.String</code>添加了一个字段<code>hiddenValue</code>:</p>
+<p>If your application needs to do that, the system classes must be statically modified. For example, the following program adds a new field hiddenValue to java.lang.String:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">ClassPool pool = ClassPool.getDefault();</span><br><span class="line">CtClass cc = pool.get(<span class="string">&quot;java.lang.String&quot;</span>);</span><br><span class="line">CtField f = <span class="keyword">new</span> CtField(CtClass.intType, <span class="string">&quot;hiddenValue&quot;</span>, cc);</span><br><span class="line">f.setModifiers(Modifier.PUBLIC);</span><br><span class="line">cc.addField(f);</span><br><span class="line">cc.writeFile(<span class="string">&quot;.&quot;</span>);</span><br></pre></td></tr></table></figure>
+<p>这个程序产生了一个文件<code>./java/lang/String.class</code>.</p>
+<p>This program produces a file “./java/lang/String.class”.</p>
+<p>To run your program MyApp with this modified String class, do as follows:</p>
+<p>在<code>MyApp</code>中使用这个修改过的类<code>String</code>, 例如:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">% java -Xbootclasspath/p:. MyApp arg1 arg2...</span><br></pre></td></tr></table></figure>
+
+<p>假设<code>MyApp</code>定义如下:</p>
+<p>Suppose that the definition of MyApp is as follows:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MyApp</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        System.out.println(String.class.getField(<span class="string">&quot;hiddenValue&quot;</span>).getName());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果修改过的<code>String</code>被正确地加载, <code>MyApp</code>会打印<code>hiddenValue</code>的值.</p>
+<p>If the modified String class is correctly loaded, MyApp prints hiddenValue.</p>
+<blockquote>
+<p>注意, 应用程序使用这个技术在覆盖<code>rt.jar</code>中的系统类的时候不应该被部署, 否则会违反<code>Java 2 Runtime Environment binary code license</code> 授权.</p>
+</blockquote>
+<p>Note: Applications that use this technique for the purpose of overriding a system class in rt.jar should not be deployed as doing so would contravene the Java 2 Runtime Environment binary code license.</p>
+<h2 id="3-6-Reloading-a-class-at-runtime"><a href="#3-6-Reloading-a-class-at-runtime" class="headerlink" title="3.6 Reloading a class at runtime"></a>3.6 Reloading a class at runtime</h2><p>如果JVM在运行时JPDA开启了, 类就可以动态重加载了. JVM加载一个类后, 旧版本的class可以被卸载, 新版本的class可以再次加载进来. 这样一来就完成了在运行期动态修改类. 但是, 新版本的类定义必须兼容旧版本的类定义. JVM不允许这俩个版本的类的schema发生改变. 他们必须拥有相同的方法和字段.</p>
+<p>Javassist提供了一个工具类用于在运行期动态重加载. 更多的细节信息参考API文档<code>javassist.tools.HotSwapper</code>.</p>
+<p>If the JVM is launched with the JPDA (Java Platform Debugger Architecture) enabled, a class is dynamically reloadable. After the JVM loads a class, the old version of the class definition can be unloaded and a new one can be reloaded again. That is, the definition of that class can be dynamically modified during runtime. However, the new class definition must be somewhat compatible to the old one. The JVM does not allow schema changes between the two versions. They have the same set of methods and fields.</p>
+<p>Javassist provides a convenient class for reloading a class at runtime. For more information, see the API documentation of javassist.tools.HotSwapper.</p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://wangmingco.github.io/2019/05/03/JavaLibrary/Javasist%203%20Class%20loader/" title="Javasist Class Loader" target="_blank" rel="external">https://wangmingco.github.io/2019/05/03/JavaLibrary/Javasist 3 Class loader/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/wangmingco" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/wangmingco" target="_blank"><span class="text-dark">向南</span><small class="ml-1x">Coder</small></a></h3>
+        <div>个人简介。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2019/05/04/JavaLibrary/Javasist%204%20Introspection%20and%20customization/" title="Javasist Introspection and customization"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2019/05/02/JavaLibrary/Javasist%202%20ClassPool/" title="Javasist ClassPool"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>感谢您的支持，我会继续努力的!</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/images/donate/alipayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开支付宝扫一扫，即可进行扫码打赏哦</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/images/donate/wechatpayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开微信扫一扫，即可进行扫码打赏哦</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> 支付宝</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> 微信支付</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/wangmingco" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="https://www.douban.com/people/xxxyy/" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://www.zhihu.com/people/wangmingco" target="_blank" title="Zhihu" data-toggle=tooltip data-placement=top><i class="icon icon-zhihu"></i></a></li>
+        
+        <li><a href="https://www.douban.com/people/xxxyy/" target="_blank" title="Douban" data-toggle=tooltip data-placement=top><i class="icon icon-douban"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>

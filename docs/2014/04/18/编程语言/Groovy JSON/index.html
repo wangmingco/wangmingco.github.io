@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>Groovy JSON | 向南</title>
+  <meta name="description" content="本文是对Groovy部分官方文档进行了翻译  Groovy 原生支持Groovy对象和JSON之间的转换. groovy.json包内的类用于JSON的序列化和解析功能 JsonSlurperJsonSlurper用于将JSON文本或者其他数据内容解析成Groovy里的数据结构,例如maps&lt;&#x2F;code&gt;, lists, 或者其他原生基本类型 Integer&lt;&#x2F;code&gt;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Groovy JSON">
+<meta property="og:url" content="https://wangmingco.github.io/2014/04/18/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/Groovy%20JSON/index.html">
+<meta property="og:site_name" content="向南">
+<meta property="og:description" content="本文是对Groovy部分官方文档进行了翻译  Groovy 原生支持Groovy对象和JSON之间的转换. groovy.json包内的类用于JSON的序列化和解析功能 JsonSlurperJsonSlurper用于将JSON文本或者其他数据内容解析成Groovy里的数据结构,例如maps&lt;&#x2F;code&gt;, lists, 或者其他原生基本类型 Integer&lt;&#x2F;code&gt;">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2014-04-17T16:00:00.000Z">
+<meta property="article:modified_time" content="2021-11-18T02:27:59.695Z">
+<meta property="article:author" content="向南">
+<meta name="twitter:card" content="summary">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://wangmingco.github.io/2014/04/18/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/Groovy%20JSON/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="向南" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/wangmingco" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">向南</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Coder</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Beijing, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">项目</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books">
+            
+            <i class="icon icon-book-fill"></i>
+            
+            <span class="menu-title">书单</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">友链</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/wangmingco" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="https://www.douban.com/people/xxxyy/" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://www.zhihu.com/people/wangmingco" target="_blank" title="Zhihu" data-toggle=tooltip data-placement=top><i class="icon icon-zhihu"></i></a></li>
+        
+        <li><a href="https://www.douban.com/people/xxxyy/" target="_blank" title="Douban" data-toggle=tooltip data-placement=top><i class="icon icon-douban"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/ASM/">ASM</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Groovy/">Groovy</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/JVM/">JVM</a><span class="category-list-count">12</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">21</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java-%E7%B1%BB%E5%BA%93/">Java 类库</a><span class="category-list-count">12</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java-%E7%BD%91%E7%BB%9C%E5%BA%93/">Java 网络库</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Javasist/">Javasist</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Jedis/">Jedis</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Mybatis/">Mybatis</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Netty/">Netty</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Nginx/">Nginx</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/NoSql/">NoSql</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/PHP/">PHP</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/PYTHON2/">PYTHON2</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Shell/">Shell</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ZooKeeper/">ZooKeeper</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/awk/">awk</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/haskell/">haskell</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/vertx/">vertx</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><span class="category-list-count">4</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%80%A7%E8%83%BD%E7%9B%91%E6%8E%A7/">性能监控</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%9F%A5%E4%B9%8E/">知乎</a><span class="category-list-count">15</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><span class="category-list-count">11</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Archiva/" rel="tag">Archiva</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/CRaSH/" rel="tag">CRaSH</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Dropwizard/" rel="tag">Dropwizard</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Guava/" rel="tag">Guava</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Guice/" rel="tag">Guice</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JMeter/" rel="tag">JMeter</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jackson/" rel="tag">Jackson</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/" rel="tag">JavaScript</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Jetty/" rel="tag">Jetty</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Log4J2/" rel="tag">Log4J2</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Lombok/" rel="tag">Lombok</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Memcached/" rel="tag">Memcached</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MessagePack/" rel="tag">MessagePack</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MongoDB/" rel="tag">MongoDB</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Netty/" rel="tag">Netty</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/OWNER/" rel="tag">OWNER</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PEG-js/" rel="tag">PEG.js</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Redis/" rel="tag">Redis</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ReflectASM/" rel="tag">ReflectASM</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Retrofit/" rel="tag">Retrofit</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Typesafe-Config/" rel="tag">Typesafe Config</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/asm/" rel="tag">asm</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vertx2/" rel="tag">vertx2</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vertx3/" rel="tag">vertx3</a><span class="tag-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/Archiva/" style="font-size: 13px;">Archiva</a> <a href="/tags/CRaSH/" style="font-size: 13px;">CRaSH</a> <a href="/tags/Dropwizard/" style="font-size: 13px;">Dropwizard</a> <a href="/tags/Guava/" style="font-size: 13px;">Guava</a> <a href="/tags/Guice/" style="font-size: 13px;">Guice</a> <a href="/tags/JMeter/" style="font-size: 13px;">JMeter</a> <a href="/tags/Jackson/" style="font-size: 13px;">Jackson</a> <a href="/tags/JavaScript/" style="font-size: 13.5px;">JavaScript</a> <a href="/tags/Jetty/" style="font-size: 13px;">Jetty</a> <a href="/tags/Log4J2/" style="font-size: 13px;">Log4J2</a> <a href="/tags/Lombok/" style="font-size: 13px;">Lombok</a> <a href="/tags/Memcached/" style="font-size: 13px;">Memcached</a> <a href="/tags/MessagePack/" style="font-size: 13px;">MessagePack</a> <a href="/tags/MongoDB/" style="font-size: 13.5px;">MongoDB</a> <a href="/tags/Netty/" style="font-size: 14px;">Netty</a> <a href="/tags/OWNER/" style="font-size: 13px;">OWNER</a> <a href="/tags/PEG-js/" style="font-size: 13px;">PEG.js</a> <a href="/tags/Redis/" style="font-size: 13.5px;">Redis</a> <a href="/tags/ReflectASM/" style="font-size: 13px;">ReflectASM</a> <a href="/tags/Retrofit/" style="font-size: 13px;">Retrofit</a> <a href="/tags/Typesafe-Config/" style="font-size: 13px;">Typesafe Config</a> <a href="/tags/asm/" style="font-size: 13.75px;">asm</a> <a href="/tags/mysql/" style="font-size: 13.75px;">mysql</a> <a href="/tags/vertx2/" style="font-size: 13.25px;">vertx2</a> <a href="/tags/vertx3/" style="font-size: 13.75px;">vertx3</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">二月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">十一月 2018</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">八月 2015</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">七月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">九月 2014</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">四月 2014</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/09/">九月 2013</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E7%9F%A5%E4%B9%8E/">知乎</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/05/13/zhihu/java_thread_state/" class="title">Java 线程状态</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-05-13T08:36:00.000Z" itemprop="datePublished">2020-05-13</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E7%9F%A5%E4%B9%8E/">知乎</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/04/14/zhihu/java_script_runner/" class="title">写一个在线Java脚本执行器</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-04-14T11:14:00.000Z" itemprop="datePublished">2020-04-14</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E7%9F%A5%E4%B9%8E/">知乎</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/04/14/zhihu/springboot_vue_admin/" class="title">基于SpringBoot/Vue/ElementUI 构建权限系统</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-04-14T10:42:00.000Z" itemprop="datePublished">2020-04-14</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E7%9F%A5%E4%B9%8E/">知乎</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/04/13/zhihu/SpringBoot_Loader/" class="title">SpringBoot Loader 浅析</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-04-13T10:22:00.000Z" itemprop="datePublished">2020-04-13</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E7%9F%A5%E4%B9%8E/">知乎</a>
+              </p>
+              <p class="item-title">
+                <a href="/2020/04/02/zhihu/PEG_js/" class="title">PEG.js 文档 [译]</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2020-04-02T10:45:00.000Z" itemprop="datePublished">2020-04-02</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-编程语言/Groovy JSON" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Groovy JSON
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2014/04/18/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/Groovy%20JSON/" class="article-date">
+	  <time datetime="2014-04-17T16:00:00.000Z" itemprop="datePublished">2014-04-18</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/Groovy/">Groovy</a>
+  </span>
+
+        
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2014/04/18/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/Groovy%20JSON/#comments" class="article-comment-link">评论</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <blockquote>
+<p>本文是对Groovy部分官方文档进行了翻译</p>
+</blockquote>
+<p>Groovy 原生支持Groovy对象和JSON之间的转换. <code>groovy.json</code>包内的类用于JSON的序列化和解析功能</p>
+<h2 id="JsonSlurper"><a href="#JsonSlurper" class="headerlink" title="JsonSlurper"></a>JsonSlurper</h2><p><code>JsonSlurper</code>用于将JSON文本或者其他数据内容解析成Groovy里的数据结构,例如<code>maps&lt;/code&gt;, </code>lists</code>, 或者其他原生基本类型 <code>Integer&lt;/code&gt;, </code>Double</code>, <code>Boolean&lt;/code&gt;, </code>String`。</p>
+<p>这个类重载了很多方法, 而且还添加了一些特殊的方法, 例如<code>parseText&lt;/code&gt;, </code>parseFile<code>等.下面这个例子中我们使用了</code>parseText<code> 方法, 它会解析一个JSON字符串, 然后递归地将它转换成</code>list</code>, <code>map</code>结构. 一些其他的`parse*</code> 方法和这个方法很类似, 都返回了JSON字符串, 只不过其他的方法接受的参数不一样.</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> jsonSlurper = <span class="keyword">new</span> JsonSlurper()</span><br><span class="line"><span class="keyword">def</span> object = jsonSlurper.parseText(<span class="string">&#x27;&#123; &quot;name&quot;: &quot;John Doe&quot; &#125; /* some comment */&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">assert</span> object <span class="keyword">instanceof</span> Map</span><br><span class="line"><span class="keyword">assert</span> object.name == <span class="string">&#x27;John Doe&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>需要注意的是, 产生的结果是一个纯map, 可以像一个普通的Groovy对象实例持有它. <code>JsonSlurper</code>根据<a target="_blank" rel="noopener" href="http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf">ECMA-404 JSON Interchange Standard</a>定义来解析JSON, 同时支持JavaScript的注释和时间类型.</p>
+<p>除了支持maps之外, <code>JsonSlurper</code> 还支持将JSON数组解析成list的功能</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> jsonSlurper = <span class="keyword">new</span> JsonSlurper()</span><br><span class="line"><span class="keyword">def</span> object = jsonSlurper.parseText(<span class="string">&#x27;&#123; &quot;myList&quot;: [4, 8, 15, 16, 23, 42] &#125;&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">assert</span> object <span class="keyword">instanceof</span> Map</span><br><span class="line"><span class="keyword">assert</span> object.myList <span class="keyword">instanceof</span> List</span><br><span class="line"><span class="keyword">assert</span> object.myList == [<span class="number">4</span>, <span class="number">8</span>, <span class="number">15</span>, <span class="number">16</span>, <span class="number">23</span>, <span class="number">42</span>]</span><br></pre></td></tr></table></figure>
+
+<p>JSON标准上只支持下面这些原生数据类型：<code>string&lt;/code&gt;, </code>number</code>, <code>object&lt;/code&gt;, </code>true</code>, <code>false&lt;/code&gt;, </code>null</code>. <code>JsonSlurper</code> 将那些JSON类型转换成Groovy类型.</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> jsonSlurper = <span class="keyword">new</span> JsonSlurper()</span><br><span class="line"><span class="keyword">def</span> object = jsonSlurper.parseText <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    &#123; &quot;simple&quot;: 123,</span></span><br><span class="line"><span class="string">      &quot;fraction&quot;: 123.66,</span></span><br><span class="line"><span class="string">      &quot;exponential&quot;: 123e12</span></span><br><span class="line"><span class="string">    &#125;&#x27;&#x27;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">assert</span> object <span class="keyword">instanceof</span> Map</span><br><span class="line"><span class="keyword">assert</span> object.simple.<span class="keyword">class</span> == Integer</span><br><span class="line"><span class="keyword">assert</span> object.fraction.<span class="keyword">class</span> == BigDecimal</span><br><span class="line"><span class="keyword">assert</span> object.exponential.<span class="keyword">class</span> == BigDecimal</span><br></pre></td></tr></table></figure>
+
+<p><code>JsonSlurper</code> 生成的结果就是纯Groovy对象实例, 她的内部不会包含任何的JSON相关的类对象, 它的用法是相当透明的. 事实上<code>JsonSlurper</code>的结果遵循<code>GPath</code>表达式. <code>GPath</code>是一个非常强大的表达式语言, 它支持多种不同的数据格式(例如<code>XmlSlurper</code>支持<code>XML</code> 就是其中一个例子)</p>
+<p>如果想要了解更多的内容, 你可以直接去<a target="_blank" rel="noopener" href="http://docs.groovy-lang.org/latest/html/documentation/core-semantics.html#gpath_expressions">GPath expressions</a>看一看.<br>下面给出了JSON类型与Groovy数据类型之间的对应关系.</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">JSON			Groovy</span><br><span class="line">string			java.lang.String</span><br><span class="line">number			java.lang.BigDecimal or java.lang.Integer</span><br><span class="line">object			java.util.LinkedHashMap</span><br><span class="line">array			java.util.ArrayList</span><br><span class="line"><span class="literal">true</span>			<span class="literal">true</span></span><br><span class="line"><span class="literal">false</span>			<span class="literal">false</span></span><br><span class="line"><span class="literal">null</span>			<span class="literal">null</span></span><br><span class="line">date			java.util.Date based on the yyyy-MM-dd’T’<span class="attr">HH:</span><span class="attr">mm:</span>ssZ date format</span><br></pre></td></tr></table></figure>
+
+<p>如果JSON中的一个值是<code>null&lt;/code&gt;, </code>JsonSlurper<code>支持它转换成Groovy中的</code>null</code>.这就与其他JSON解析器形成了对比, 代表一个空值与库提供的单一对象。</p>
+<h3 id="Parser-Variants"><a href="#Parser-Variants" class="headerlink" title="Parser Variants"></a>Parser Variants</h3><p>Groovy 有多个<code>JsonSlurper</code> 解析器实现. 每一个解析器都对应着不同的需求, 每一个特定的解析都能很好的处理特定需求, 所以默认的解析器并不是适应于所有的情况. 下面就对各个解析器做个简介:</p>
+<p><code>JsonParserCharArray</code> 解析器接受一个JSON字符串, 然后其内部使用一个字节数组进行解析. During value conversion it copies character sub-arrays (a mechanism known as “chopping”) and operates on them.</p>
+<ul>
+<li><p><code>JsonFastParser</code>解析器是<code>JsonParserCharArray</code>解析器的变种, 它是最快的解析器. 尽管它是最快的,但是基于某些原因,它并不是默认的解析器. <code>JsonFastParser</code>解析器也被称为索引覆盖(index-overlay)解析器. 当解析给定JSON字符串的时候,该解析器会极力避免创建新的字节数组或者字符串实例. 它一直指向原生的字节数组。 另外, 它会尽可能的推迟对象的创建. If parsed maps are put into long-term caches care must be taken as the map objects might not be created and still consist of pointer to the original char buffer only. <code>JsonFastParser</code>采取了一种特殊的切割模型, 它会尽早地分割char buffer, 以便能维持一份对原生buffer比较小的拷贝. 如果你想使用<code>JsonFastParser&lt;/code&gt;, 那么给你的建议是保持</code>JsonFastParser`的JSON buffer在2MB左右, 而且时刻要保持长期缓存限制.</p>
+</li>
+<li><p><code>JsonParserLax</code> 是<code>JsonFastParser</code>的一个变种实现. 它与<code>JsonFastParser</code> 有一些相似的想能特点, 但是不同的是它不是仅仅依靠`ECMA-404 JSON grammar</code>. 例如,在下面例子中它支持不带引号的字符串注释.</p>
+</li>
+</ul>
+<p><code>JsonParserUsingCharacterSource</code> 用于解析非常大的文件. 它使用一种称为<code>"character windowing"</code>的技术去解析非常大(超过2MB)的JSON文件,而且性能上也非常稳定</p>
+<p><code>JsonSlurper</code>的默认实现是 <code>JsonParserCharArray&lt;/code&gt;.  </code>JsonParserType`包含了解析器种类的枚举类型:</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Implementation					Constant</span><br><span class="line">JsonParserCharArray				JsonParserType#CHAR_BUFFER</span><br><span class="line">JsonFastParser					JsonParserType#INDEX_OVERLAY</span><br><span class="line">JsonParserLax					JsonParserType#LAX</span><br><span class="line">JsonParserUsingCharacterSource	JsonParserType#CHARACTER_SOURCE</span><br></pre></td></tr></table></figure>
+
+<p>如果想要改变解析器的实现也非常简单, 只需要通过调用<code>JsonSlurper#setType()&lt;/code&gt;方法给</code>JsonParserType`设置上不同的值就可以了</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> jsonSlurper = <span class="keyword">new</span> JsonSlurper(<span class="attr">type:</span> JsonParserType.INDEX_OVERLAY)</span><br><span class="line"><span class="keyword">def</span> object = jsonSlurper.parseText(<span class="string">&#x27;&#123; &quot;myList&quot;: [4, 8, 15, 16, 23, 42] &#125;&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">assert</span> object <span class="keyword">instanceof</span> Map</span><br><span class="line"><span class="keyword">assert</span> object.myList <span class="keyword">instanceof</span> List</span><br><span class="line"><span class="keyword">assert</span> object.myList == [<span class="number">4</span>, <span class="number">8</span>, <span class="number">15</span>, <span class="number">16</span>, <span class="number">23</span>, <span class="number">42</span>]</span><br></pre></td></tr></table></figure>
+
+<h3 id="JsonOutput"><a href="#JsonOutput" class="headerlink" title="JsonOutput"></a>JsonOutput</h3><p><code>JsonOutput</code>用于将Groovy对象序列化成JSON字符串.</p>
+<p><code>JsonOutput</code> 重载了<code>toJson</code>静态方法. 每个不同的<code>toJson</code>方法都会接受一个不同的参数类型.</p>
+<p><code>toJson</code>方法返回的是一个包含JSOn格式的字符串</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> json = JsonOutput.toJson([<span class="attr">name:</span> <span class="string">&#x27;John Doe&#x27;</span>, <span class="attr">age:</span> <span class="number">42</span>])</span><br><span class="line"></span><br><span class="line"><span class="keyword">assert</span> json == <span class="string">&#x27;&#123;&quot;name&quot;:&quot;John Doe&quot;,&quot;age&quot;:42&#125;&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p><code>JsonOutput</code>不仅支持原生类型, map, list等类型序列化到JSON, 甚至还支持序列化`POGOs</code>(一种比较老的Groovy对象)</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span> &#123;</span> String name &#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> json = JsonOutput.toJson([ <span class="keyword">new</span> Person(<span class="attr">name:</span> <span class="string">&#x27;John&#x27;</span>), <span class="keyword">new</span> Person(<span class="attr">name:</span> <span class="string">&#x27;Max&#x27;</span>) ])</span><br><span class="line"></span><br><span class="line"><span class="keyword">assert</span> json == <span class="string">&#x27;[&#123;&quot;name&quot;:&quot;John&quot;&#125;,&#123;&quot;name&quot;:&quot;Max&quot;&#125;]&#x27;</span></span><br></pre></td></tr></table></figure>
+
+<p>刚才那个例子中, JSON输出默认没有进行pretty输出. 因此<code>JsonSlurper</code>还提供了<code>prettyPrint</code>方法</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> json = JsonOutput.toJson([<span class="attr">name:</span> <span class="string">&#x27;John Doe&#x27;</span>, <span class="attr">age:</span> <span class="number">42</span>])</span><br><span class="line"></span><br><span class="line"><span class="keyword">assert</span> json == <span class="string">&#x27;&#123;&quot;name&quot;:&quot;John Doe&quot;,&quot;age&quot;:42&#125;&#x27;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">assert</span> JsonOutput.prettyPrint(json) == <span class="string">&#x27;&#x27;&#x27;\</span></span><br><span class="line"><span class="string">&#123;</span></span><br><span class="line"><span class="string">    &quot;name&quot;: &quot;John Doe&quot;,</span></span><br><span class="line"><span class="string">    &quot;age&quot;: 42</span></span><br><span class="line"><span class="string">&#125;&#x27;&#x27;&#x27;</span>.stripIndent()</span><br></pre></td></tr></table></figure>
+
+<p><code>prettyPrint</code>方法只接受一个String类型的字符串, 它不能和<code>JsonOutput</code>里其他的方式结合起来使用, it can be applied on arbitrary JSON String instances.</p>
+<p>在Groovy中还可以使用<code>JsonBuilder&lt;/code&gt;, </code>StreamingJsonBuilder<code>方式创建JSON. 这俩个构建起都提供了一个</code>DSL</code>, 当构建器生成一个JSON的时候,可以制定一个对象图.</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// an inclusive range</span></span><br><span class="line"><span class="keyword">def</span> range = <span class="string">&#x27;a&#x27;</span>..<span class="string">&#x27;d&#x27;</span></span><br><span class="line"><span class="keyword">assert</span> range.size() == <span class="number">4</span></span><br><span class="line"><span class="keyword">assert</span> range.get(<span class="number">2</span>) == <span class="string">&#x27;c&#x27;</span></span><br><span class="line"><span class="keyword">assert</span> range[<span class="number">2</span>] == <span class="string">&#x27;c&#x27;</span></span><br><span class="line"><span class="keyword">assert</span> range <span class="keyword">instanceof</span> java.util.List</span><br><span class="line"><span class="keyword">assert</span> range.contains(<span class="string">&#x27;a&#x27;</span>)</span><br><span class="line"><span class="keyword">assert</span> range.contains(<span class="string">&#x27;d&#x27;</span>)</span><br><span class="line"><span class="keyword">assert</span> !range.contains(<span class="string">&#x27;e&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>You can iterate on a range using a classic for loop:</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> (i <span class="keyword">in</span> <span class="number">1.</span><span class="number">.10</span>) &#123;</span><br><span class="line">    println <span class="string">&quot;Hello $&#123;i&#125;&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>but alternatively you can achieve the same effect in a more Groovy idiomatic style, by iterating a range with each method:</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">(<span class="number">1.</span><span class="number">.10</span>).each &#123; i -&gt;</span><br><span class="line">    println <span class="string">&quot;Hello $&#123;i&#125;&quot;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Ranges can be also used in the switch statement:</p>
+<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">switch</span> (years) &#123;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">1.</span><span class="number">.10</span>: interestRate = <span class="number">0.076</span>; <span class="keyword">break</span>;</span><br><span class="line">    <span class="keyword">case</span> <span class="number">11.</span><span class="number">.25</span>: interestRate = <span class="number">0.052</span>; <span class="keyword">break</span>;</span><br><span class="line">    <span class="symbol">default:</span> interestRate = <span class="number">0.037</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://wangmingco.github.io/2014/04/18/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/Groovy%20JSON/" title="Groovy JSON" target="_blank" rel="external">https://wangmingco.github.io/2014/04/18/编程语言/Groovy JSON/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/wangmingco" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/wangmingco" target="_blank"><span class="text-dark">向南</span><small class="ml-1x">Coder</small></a></h3>
+        <div>个人简介。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2014/09/03/jvm/JVM%20%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D/" title="JVM 内存分配"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2014/04/17/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/Groovy%20ANT/" title="Groovy ANT"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>感谢您的支持，我会继续努力的!</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/images/donate/alipayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开支付宝扫一扫，即可进行扫码打赏哦</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/images/donate/wechatpayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开微信扫一扫，即可进行扫码打赏哦</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> 支付宝</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> 微信支付</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/wangmingco" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="https://www.douban.com/people/xxxyy/" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://www.zhihu.com/people/wangmingco" target="_blank" title="Zhihu" data-toggle=tooltip data-placement=top><i class="icon icon-zhihu"></i></a></li>
+        
+        <li><a href="https://www.douban.com/people/xxxyy/" target="_blank" title="Douban" data-toggle=tooltip data-placement=top><i class="icon icon-douban"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>
