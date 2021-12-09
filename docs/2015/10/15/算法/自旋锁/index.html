@@ -26,7 +26,7 @@
 <meta property="og:description" content="自旋锁spinlock自旋锁是指当一个线程尝试获取某个锁时，如果该锁已被其他线程占用，就一直循环检测锁是否被释放，而不是进入线程挂起或睡眠状态。自旋锁适用于锁保护的临界区很小的情况，临界区很小的话，锁占用的时间就很短。SimpleSpinLock里有一个owner属性持有锁当前拥有者的线程的引用，如果该引用为null，则表示锁未被占用，不为null则被占用。这里用AtomicReference是为">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2015-10-14T16:00:00.000Z">
-<meta property="article:modified_time" content="2021-11-18T02:53:53.384Z">
+<meta property="article:modified_time" content="2021-11-18T03:12:28.733Z">
 <meta property="article:author" content="向南">
 <meta name="twitter:card" content="summary">
   <!-- Canonical links -->
