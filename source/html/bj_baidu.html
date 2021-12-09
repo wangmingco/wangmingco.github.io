@@ -1,0 +1,133 @@
+<!DOCTYPE html> 
+<html>
+<head> 
+<meta name="viewport" content="initial-scale=1.0, user-scalable=no" /> 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+<title>北京旅游景点</title> 
+<style type="text/css"> 
+html{height:100%} 
+body{height:100%;margin:0px;padding:0px} 
+#container{height:100%} 
+</style> 
+<script type="text/javascript" src="https://api.map.baidu.com/api?v=1.0&type=webgl&ak=GZQT8L85QtZfRfSYEoW82abcNiaGjKmw">
+</script>
+</head> 
+  
+<body> 
+    <div id="container"></div>
+
+<script type="text/javascript">
+    function initMap() {
+        var map = new BMapGL.Map("container");
+
+        // 创建地图实例 
+        var point = new BMapGL.Point(116.404, 39.915);
+        // 创建点坐标 
+        map.centerAndZoom(point, 15);
+        // 初始化地图，设置中心点坐标和地图级别 
+
+        map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
+        var scaleCtrl = new BMapGL.ScaleControl();  // 添加比例尺控件
+        map.addControl(scaleCtrl);
+        var zoomCtrl = new BMapGL.ZoomControl();  // 添加缩放控件
+        map.addControl(zoomCtrl);
+
+        var bowuguan = [
+            {x: 116.403757, y: 39.916727, title: '故宫'},
+            {x: 116.403757, y: 39.916727, title: '中国国家博物馆'},
+            {x: 116.365278, y: 39.931588, title: '北京鲁迅博物馆'},
+            {x: 116.417259, y: 39.930527, title: '中国美术馆'},
+            {x: 116.404162, y: 39.908892, title: '毛主席纪念堂'},
+            {x: 116.726914, y: 39.967915, title: '中国体育博物馆'},
+            {x: 116.375341, y: 39.914214, title: '民族文化宫博物馆'},
+            {x: 116.377722, y: 39.928967, title: '中国地质博物馆'},
+            {x: 116.469233, y: 39.946976, title: '中国农业博物馆'},
+            {x: 116.341009, y: 39.943129, title: '中国古动物馆'},
+            {x: 116.357315, y: 39.987388, title: '北京航空航天博物馆'},
+            {x: 116.232474, y: 39.857753, title: '中国人民抗日战争纪念馆'},
+            {x: 116.404705, y: 40.012682, title: '中国科学技术馆'},
+            {x: 116.330207, y: 39.914976, title: '中国人民革命军事博物馆'},
+            {x: 116.368633, y: 40.187427, title: '中国航空博物馆'},
+            {x: 116.406116, y: 39.889525, title: '北京自然博物馆'},
+            {x: 116.343134, y: 39.94404, title: '北京天文馆'},
+            {x: 116.348486, y: 39.911876, title: '首都博物馆'},
+            {x: 116.344611, y: 39.974916, title: '大钟寺古钟博物馆'},
+            {x: 116.565726, y: 39.909385, title: '北京艺术博物馆'},
+            {x: 116.400119, y: 39.884358, title: '北京古代建筑博物馆'},
+            {x: 116.41515, y: 40.002016, title: '炎黄艺术馆'},
+            {x: 116.255634, y: 40.306283, title: '明十三陵博物馆'},
+            {x: 116.440066, y: 39.912603, title: '北京古观象台'},
+            {x: 116.386496, y: 39.955723, title: '北京古代钱币博物馆'},
+            {x: 115.94351, y: 39.693463, title: '北京西周燕都遗址博物馆'},
+            {x: 116.365499, y: 39.868291, title: '北京辽金城垣博物馆'},
+            {x: 116.303623, y: 39.812871, title: '北京大葆台西汉墓博物馆'},
+            {x: 116.312399, y: 40.001644, title: '北京大学赛克勒考古与艺术博物馆'},
+            {x: 116.876273, y: 40.24019, title: '焦庄户地道战遗址纪念馆'},
+            {x: 116.324769, y: 39.954873, title: '中央民族大学民族博物馆'},
+            {x: 116.368283, y: 40.18738, title: '北京航空馆'},
+            {x: 116.337993, y: 39.748714, title: '中国印刷博物馆'},
+            {x: 116.318473, y: 40.019756, title: '圆明园展览馆'},
+            {x: 116.397809, y: 39.989379, title: '北京中华民族博物院'},
+            {x: 116.540397, y: 40.013309, title: '观复博物馆'},
+            {x: 116.33965, y: 39.944841, title: '中国钱币博物馆'},
+            {x: 116.212632, y: 40.012586, title: '中国蜜蜂博物馆'},
+            {x: 116.22742, y: 39.856445, title: '卢沟桥历史博物馆'},
+            {x: 116.433211, y: 39.976518, title: '北京中医药大学中医药博物馆'},
+            {x: 116.467464, y: 39.782489, title: '北京麋鹿苑博物馆'},
+            {x: 116.139442, y: 40.168155, title: '坦克博物馆'},
+            {x: 116.33965, y: 39.944841, title: '中国印钞造币博物馆'},
+            {x: 116.336798, y: 39.890101, title: '中国铁道博物馆'},
+            {x: 116.32553, y: 39.982485, title: '北京市海淀区博物馆'},
+            {x: 116.684891, y: 40.305098, title: '老爷车博物馆'},
+            {x: 116.437639, y: 39.916824, title: '中国邮政邮票博物馆'},
+            {x: 116.320303, y: 39.975885, title: '中国人民大学博物馆'},
+            {x: 116.30852, y: 39.835739, title: '北京汽车博物馆'}
+        ]
+        addToMap(bowuguan, map, 'red')
+
+        var jingdian = [
+            {x: 116.419342, y: 39.888663, title: '天坛'},
+            {x: 116.400824, y: 39.997574, title: '鸟巢'},
+            {x: 116.34482, y: 39.946348, title: '动物园'},
+            {x: 116.419654, y: 39.953183, title: '国子监'},
+            {x: 116.423632, y: 39.953638, title: '雍和宫'},
+            {x: 116.404153, y: 39.933751, title: '景山'},
+            {x: 116.315938, y: 40.005466, title: '圆明园'},
+            {x: 116.291621, y: 40.004603, title: '颐和园'},
+            {x: 116.395376, y: 39.932886, title: '北海公园'},
+            {x: 116.392791, y: 39.941922, title: '恭王府'},
+            {x: 116.32865, y: 39.505009, title: '北京野生动物园'},
+            {x: 116.502072, y: 39.991088, title: '798艺术区 '},
+        ]
+        addToMap(jingdian, map, 'blue')
+    }
+
+    function addToMap(array, map, color) {
+        array.forEach(function(item, index) {
+            map.addOverlay(new BMapGL.Marker(new BMapGL.Point(item.x, item.y)));
+
+            var opts = {
+                position: new BMapGL.Point(item.x, item.y), // 指定文本标注所在的地理位置
+                offset: new BMapGL.Size(12, -30) // 设置文本偏移量
+            };
+            // 创建文本标注对象
+            var label = new BMapGL.Label(item.title, opts);
+            // 自定义文本标注样式
+            label.setStyle({
+                color: color,
+                borderRadius: '5px',
+                borderColor: '#ccc',
+                padding: '10px',
+                fontSize: '13px',
+                height: '20px',
+                lineHeight: '20px',
+                fontFamily: '微软雅黑'
+            });
+            map.addOverlay(label);
+        })
+    }
+
+    initMap()
+</script> 
+</body> 
+</html>
