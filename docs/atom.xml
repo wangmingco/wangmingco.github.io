@@ -40,6 +40,29 @@
   </entry>
   
   <entry>
+    <title>开发环境视频</title>
+    <link href="https://wangmingco.github.io/2021/06/09/html/videos/"/>
+    <id>https://wangmingco.github.io/2021/06/09/html/videos/</id>
+    <published>2021-06-09T07:40:00.000Z</published>
+    <updated>2021-12-16T05:04:32.741Z</updated>
+    
+    <content type="html"><![CDATA[<p><a href="/html/video.html">开发环境视频</a></p><p>    <div style="width:820px; height:1000px;border:none;text-align:center">        <iframe         allowtransparency="yes"         frameborder="0"         width="820px"         height="1000px"         scrolling="auto"         style="box-shadow: 0px 0px 20px -10px #888;"         src="/html/video.html"/>    </div></p>    <p></script></p></p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;&lt;a href=&quot;/html/video.html&quot;&gt;开发环境视频&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;
+    &lt;div style=&quot;width:820px; height:1000px;border:none;text-align:center&quot;&gt;
+        &lt;iframe </summary>
+      
+    
+    
+    
+    
+  </entry>
+  
+  <entry>
     <title>Java 线程状态</title>
     <link href="https://wangmingco.github.io/2020/05/13/zhihu/java_thread_state/"/>
     <id>https://wangmingco.github.io/2020/05/13/zhihu/java_thread_state/</id>
@@ -449,29 +472,6 @@
     
     
     <category term="PEG.js" scheme="https://wangmingco.github.io/tags/PEG-js/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>Mac下使用VSCode搭建Common Lisp 开发环境</title>
-    <link href="https://wangmingco.github.io/2018/12/03/zhihu/Common_Lisp/"/>
-    <id>https://wangmingco.github.io/2018/12/03/zhihu/Common_Lisp/</id>
-    <published>2018-12-03T08:44:00.000Z</published>
-    <updated>2021-11-24T03:00:01.135Z</updated>
-    
-    <content type="html"><![CDATA[<p><a href="https://zhuanlan.zhihu.com/p/51458514">Mac下使用VSCode搭建Common Lisp 开发环境</a></p>]]></content>
-    
-    
-      
-      
-    <summary type="html">&lt;p&gt;&lt;a href=&quot;https://zhuanlan.zhihu.com/p/51458514&quot;&gt;Mac下使用VSCode搭建Common Lisp 开发环境&lt;/a&gt;&lt;/p&gt;
-</summary>
-      
-    
-    
-    
-    <category term="知乎" scheme="https://wangmingco.github.io/categories/%E7%9F%A5%E4%B9%8E/"/>
-    
     
   </entry>
   

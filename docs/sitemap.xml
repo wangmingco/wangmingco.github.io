@@ -2,6 +2,13 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://wangmingco.github.io/2021/06/09/html/videos/</loc>
+    
+    <lastmod>2021-12-16</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://wangmingco.github.io/2021/12/09/html/bj_baidu/</loc>
     
     <lastmod>2021-12-09</lastmod>
@@ -1096,7 +1103,7 @@
 
   <url>
     <loc>https://wangmingco.github.io/</loc>
-    <lastmod>2021-12-09</lastmod>
+    <lastmod>2021-12-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -1104,175 +1111,175 @@
   
   <url>
     <loc>https://wangmingco.github.io/tags/asm/</loc>
-    <lastmod>2021-12-09</lastmod>
+    <lastmod>2021-12-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/tags/Archiva/</loc>
-    <lastmod>2021-12-09</lastmod>
+    <lastmod>2021-12-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/tags/CRaSH/</loc>
-    <lastmod>2021-12-09</lastmod>
+    <lastmod>2021-12-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/tags/Guava/</loc>
-    <lastmod>2021-12-09</lastmod>
+    <lastmod>2021-12-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/tags/JMeter/</loc>
-    <lastmod>2021-12-09</lastmod>
+    <lastmod>2021-12-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/tags/Jackson/</loc>
-    <lastmod>2021-12-09</lastmod>
+    <lastmod>2021-12-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/tags/Jetty/</loc>
-    <lastmod>2021-12-09</lastmod>
+    <lastmod>2021-12-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/tags/MessagePack/</loc>
-    <lastmod>2021-12-09</lastmod>
+    <lastmod>2021-12-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/tags/Netty/</loc>
-    <lastmod>2021-12-09</lastmod>
+    <lastmod>2021-12-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/tags/OWNER/</loc>
-    <lastmod>2021-12-09</lastmod>
+    <lastmod>2021-12-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/tags/ReflectASM/</loc>
-    <lastmod>2021-12-09</lastmod>
+    <lastmod>2021-12-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/tags/Retrofit/</loc>
-    <lastmod>2021-12-09</lastmod>
+    <lastmod>2021-12-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/tags/Typesafe-Config/</loc>
-    <lastmod>2021-12-09</lastmod>
+    <lastmod>2021-12-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/tags/Dropwizard/</loc>
-    <lastmod>2021-12-09</lastmod>
+    <lastmod>2021-12-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/tags/Guice/</loc>
-    <lastmod>2021-12-09</lastmod>
+    <lastmod>2021-12-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/tags/Log4J2/</loc>
-    <lastmod>2021-12-09</lastmod>
+    <lastmod>2021-12-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/tags/Lombok/</loc>
-    <lastmod>2021-12-09</lastmod>
+    <lastmod>2021-12-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/tags/vertx2/</loc>
-    <lastmod>2021-12-09</lastmod>
+    <lastmod>2021-12-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/tags/vertx3/</loc>
-    <lastmod>2021-12-09</lastmod>
+    <lastmod>2021-12-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/tags/Memcached/</loc>
-    <lastmod>2021-12-09</lastmod>
+    <lastmod>2021-12-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/tags/MongoDB/</loc>
-    <lastmod>2021-12-09</lastmod>
+    <lastmod>2021-12-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/tags/Redis/</loc>
-    <lastmod>2021-12-09</lastmod>
+    <lastmod>2021-12-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/tags/JavaScript/</loc>
-    <lastmod>2021-12-09</lastmod>
+    <lastmod>2021-12-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/tags/PEG-js/</loc>
-    <lastmod>2021-12-09</lastmod>
+    <lastmod>2021-12-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/tags/mysql/</loc>
-    <lastmod>2021-12-09</lastmod>
+    <lastmod>2021-12-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
@@ -1281,168 +1288,168 @@
   
   <url>
     <loc>https://wangmingco.github.io/categories/ASM/</loc>
-    <lastmod>2021-12-09</lastmod>
+    <lastmod>2021-12-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/categories/Java-%E7%B1%BB%E5%BA%93/</loc>
-    <lastmod>2021-12-09</lastmod>
+    <lastmod>2021-12-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/categories/Javasist/</loc>
-    <lastmod>2021-12-09</lastmod>
+    <lastmod>2021-12-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/categories/Java-%E7%BD%91%E7%BB%9C%E5%BA%93/</loc>
-    <lastmod>2021-12-09</lastmod>
+    <lastmod>2021-12-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/categories/Netty/</loc>
-    <lastmod>2021-12-09</lastmod>
+    <lastmod>2021-12-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/categories/Mybatis/</loc>
-    <lastmod>2021-12-09</lastmod>
+    <lastmod>2021-12-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/categories/%E6%80%A7%E8%83%BD%E7%9B%91%E6%8E%A7/</loc>
-    <lastmod>2021-12-09</lastmod>
+    <lastmod>2021-12-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/categories/Jedis/</loc>
-    <lastmod>2021-12-09</lastmod>
+    <lastmod>2021-12-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/categories/Nginx/</loc>
-    <lastmod>2021-12-09</lastmod>
+    <lastmod>2021-12-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/categories/Java/</loc>
-    <lastmod>2021-12-09</lastmod>
+    <lastmod>2021-12-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/categories/JVM/</loc>
-    <lastmod>2021-12-09</lastmod>
+    <lastmod>2021-12-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/categories/vertx/</loc>
-    <lastmod>2021-12-09</lastmod>
+    <lastmod>2021-12-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/categories/NoSql/</loc>
-    <lastmod>2021-12-09</lastmod>
+    <lastmod>2021-12-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/categories/%E5%89%8D%E7%AB%AF/</loc>
-    <lastmod>2021-12-09</lastmod>
+    <lastmod>2021-12-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/categories/ZooKeeper/</loc>
-    <lastmod>2021-12-09</lastmod>
+    <lastmod>2021-12-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/categories/%E7%9F%A5%E4%B9%8E/</loc>
-    <lastmod>2021-12-09</lastmod>
+    <lastmod>2021-12-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/categories/%E7%AE%97%E6%B3%95/</loc>
-    <lastmod>2021-12-09</lastmod>
+    <lastmod>2021-12-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/</loc>
-    <lastmod>2021-12-09</lastmod>
+    <lastmod>2021-12-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/categories/awk/</loc>
-    <lastmod>2021-12-09</lastmod>
+    <lastmod>2021-12-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/categories/Groovy/</loc>
-    <lastmod>2021-12-09</lastmod>
+    <lastmod>2021-12-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/categories/PHP/</loc>
-    <lastmod>2021-12-09</lastmod>
+    <lastmod>2021-12-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/categories/haskell/</loc>
-    <lastmod>2021-12-09</lastmod>
+    <lastmod>2021-12-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/categories/PYTHON2/</loc>
-    <lastmod>2021-12-09</lastmod>
+    <lastmod>2021-12-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/categories/Shell/</loc>
-    <lastmod>2021-12-09</lastmod>
+    <lastmod>2021-12-16</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
