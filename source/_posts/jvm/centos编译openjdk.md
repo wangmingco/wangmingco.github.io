@@ -35,5 +35,7 @@ make
 
 整个安装编译环境以及编译过程如下:
 [@asciinema](/videos/jdk.cast)
-或者打开 [Centos 编译 OpenJDK](/html/compile_jdk.html)
+或者打开 
+
+[Centos 编译 OpenJDK](/html/compile_jdk.html)
 
