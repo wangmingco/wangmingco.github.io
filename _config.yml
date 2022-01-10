@@ -53,6 +53,10 @@ prismjs:
   preprocess: true
   line_number: true
   tab_replace: ''
+  
+# hexo-filter-asciinema
+asciinema:
+  enable: true
 
 # Home page setting
 # path: Root path for your blogs index page. (default = '')

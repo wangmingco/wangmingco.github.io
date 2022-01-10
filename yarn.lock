@@ -1168,6 +1168,11 @@
     "resolve" "^1.11.0"
     "tildify" "^2.0.0"
 
+"hexo-filter-asciinema@1.0.6":
+  "integrity" "sha512-mJPDN+rzpHzpf7lrO34zqR1+YNQ3eEdmocRVFWJ8BtpS+D3Xfoksu++h6esbU200LlCVi+Tr93oALGWR6WuCcg=="
+  "resolved" "https://registry.npmmirror.com/hexo-filter-asciinema/download/hexo-filter-asciinema-1.0.6.tgz"
+  "version" "1.0.6"
+
 "hexo-front-matter@^0.2.3":
   "integrity" "sha1-x8qO9CDqNr2F6ECKLoyb9J76YF4="
   "resolved" "https://registry.nlark.com/hexo-front-matter/download/hexo-front-matter-0.2.3.tgz"
@@ -1240,15 +1245,6 @@
   dependencies:
     "hexo-pagination" "1.0.0"
     "timsort" "^0.3.0"
-
-"hexo-generator-json-content@^4.2.3":
-  "integrity" "sha1-HKuvUzGcTKW+QaNKUB8oDnbK5gs="
-  "resolved" "https://registry.nlark.com/hexo-generator-json-content/download/hexo-generator-json-content-4.2.3.tgz"
-  "version" "4.2.3"
-  dependencies:
-    "hexo-util" "latest"
-    "keyword-extractor" "latest"
-    "moment" "latest"
 
 "hexo-generator-sitemap@^2.1.0":
   "integrity" "sha1-79k4BJ3b+alhoHf8xZR5GLpbITo="
@@ -1356,7 +1352,7 @@
     "html-entities" "^1.2.0"
     "striptags" "^2.1.1"
 
-"hexo-util@^2.0.0", "hexo-util@^2.1.0", "hexo-util@^2.4.0", "hexo-util@^2.5.0", "hexo-util@latest":
+"hexo-util@^2.0.0", "hexo-util@^2.1.0", "hexo-util@^2.4.0", "hexo-util@^2.5.0":
   "integrity" "sha1-3lY1NBEWuiVjp4mg6861WodSIa0="
   "resolved" "https://registry.nlark.com/hexo-util/download/hexo-util-2.5.0.tgz?cache=0&sync_timestamp=1620209007934&other_urls=https%3A%2F%2Fregistry.nlark.com%2Fhexo-util%2Fdownload%2Fhexo-util-2.5.0.tgz"
   "version" "2.5.0"
@@ -1784,11 +1780,6 @@
     "jsonparse" "^1.2.0"
     "through" ">=2.2.7 <3"
 
-"keyword-extractor@latest":
-  "integrity" "sha1-L7JKJlTzYXlzOuGYo2k5VwPAVyE="
-  "resolved" "https://registry.nlark.com/keyword-extractor/download/keyword-extractor-0.0.20.tgz"
-  "version" "0.0.20"
-
 "kind-of@^3.0.2", "kind-of@^3.0.3", "kind-of@^3.2.0":
   "integrity" "sha1-MeohpzS6ubuw8yRm2JOupR5KPGQ="
   "resolved" "https://registry.npm.taobao.org/kind-of/download/kind-of-3.2.2.tgz"
@@ -2045,7 +2036,7 @@
   dependencies:
     "moment" ">= 2.9.0"
 
-"moment@^2.10.6", "moment@^2.22.2", "moment@>= 2.9.0", "moment@latest":
+"moment@^2.10.6", "moment@^2.22.2", "moment@>= 2.9.0":
   "integrity" "sha1-sr52n6MZQL6e7qZGnAdeNQBvo9M="
   "resolved" "https://registry.nlark.com/moment/download/moment-2.29.1.tgz"
   "version" "2.29.1"
