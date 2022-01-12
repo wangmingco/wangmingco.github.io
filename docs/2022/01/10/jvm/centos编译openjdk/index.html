@@ -21,16 +21,16 @@
   <meta http-equiv="window-target" content="_top" />
   
   
-  <title>Centos 编译 OpenJDK | 向南</title>
-  <meta name="description" content="编译按照如下过程进行编译(测试机是一台2核4G内存的云虚拟机，编译过程较慢且偶尔会失败，最好是使用一个多核机器进行编译) 1234567891011121314151617181920echo &quot;进入 openjdk-jdk-11-28版本JDK，如果没有请下载:&quot;cd openjdk-jdk-11-28echo &quot;查看系统版本&quot;cat &#x2F;proc&#x2F;ver">
+  <title>Centos7 编译调试 OpenJDK11 | 向南</title>
+  <meta name="description" content="编译按照如下过程进行编译(测试机是一台2核4G内存的云虚拟机，编译过程较慢且偶尔会失败，最好是使用一个多核机器进行编译)  本次构建是JDK11当前最新版jdk11u-jdk-11.0.14-8, 构建过程出现问题，参考构建教程 jdk11u-jdk-11.0.14-8&#x2F;doc&#x2F;building.html.  1234567891011121314151617181920212223242526">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Centos 编译 OpenJDK">
+<meta property="og:title" content="Centos7 编译调试 OpenJDK11">
 <meta property="og:url" content="https://wangmingco.github.io/2022/01/10/jvm/centos%E7%BC%96%E8%AF%91openjdk/index.html">
 <meta property="og:site_name" content="向南">
-<meta property="og:description" content="编译按照如下过程进行编译(测试机是一台2核4G内存的云虚拟机，编译过程较慢且偶尔会失败，最好是使用一个多核机器进行编译) 1234567891011121314151617181920echo &quot;进入 openjdk-jdk-11-28版本JDK，如果没有请下载:&quot;cd openjdk-jdk-11-28echo &quot;查看系统版本&quot;cat &#x2F;proc&#x2F;ver">
+<meta property="og:description" content="编译按照如下过程进行编译(测试机是一台2核4G内存的云虚拟机，编译过程较慢且偶尔会失败，最好是使用一个多核机器进行编译)  本次构建是JDK11当前最新版jdk11u-jdk-11.0.14-8, 构建过程出现问题，参考构建教程 jdk11u-jdk-11.0.14-8&#x2F;doc&#x2F;building.html.  1234567891011121314151617181920212223242526">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-01-09T16:00:00.000Z">
-<meta property="article:modified_time" content="2022-01-11T02:21:24.624Z">
+<meta property="article:modified_time" content="2022-01-12T02:31:55.074Z">
 <meta property="article:author" content="向南">
 <meta name="twitter:card" content="summary">
   <!-- Canonical links -->
@@ -272,7 +272,7 @@
                 <a class="category-link" href="/categories/JVM/">JVM</a>
               </p>
               <p class="item-title">
-                <a href="/2022/01/10/jvm/centos%E7%BC%96%E8%AF%91openjdk/" class="title">Centos 编译 OpenJDK</a>
+                <a href="/2022/01/10/jvm/centos%E7%BC%96%E8%AF%91openjdk/" class="title">Centos7 编译调试 OpenJDK11</a>
               </p>
               <p class="item-date">
                 <time datetime="2022-01-09T16:00:00.000Z" itemprop="datePublished">2022-01-10</time>
@@ -360,7 +360,7 @@
         
   
     <h1 class="article-title" itemprop="name">
-      Centos 编译 OpenJDK
+      Centos7 编译调试 OpenJDK11
     </h1>
   
 
@@ -390,15 +390,18 @@
       
         <script src="/assets/asciinema-player.js"></script><link rel="stylesheet" type="text/css" href="/assets/asciinema-player.css" />
 <h2 id="编译"><a href="#编译" class="headerlink" title="编译"></a>编译</h2><p>按照如下过程进行编译(测试机是一台2核4G内存的云虚拟机，编译过程较慢且偶尔会失败，最好是使用一个多核机器进行编译)</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">echo &quot;进入 openjdk-jdk-11-28版本JDK，如果没有请下载:&quot;</span><br><span class="line"></span><br><span class="line">cd openjdk-jdk-11-28</span><br><span class="line"></span><br><span class="line">echo &quot;查看系统版本&quot;</span><br><span class="line">cat /proc/version</span><br><span class="line">rpm -q centos-release</span><br><span class="line"></span><br><span class="line">echo &quot;安装依赖环境&quot;</span><br><span class="line">yum install -y freetype-devel cups-devel libXtst-devel libXt-devel libXrender-devel libXi-devel alsa-lib-devel libffi-devel autoconf fontconfig-devel</span><br><span class="line"></span><br><span class="line">echo &quot;安装Boot-JDK, 编译openjdk-11，需要以jdk-11为bootjdk&quot;</span><br><span class="line">yum install -y java-11-openjdk-devel</span><br><span class="line"></span><br><span class="line">echo &quot;安装开发工具&quot;</span><br><span class="line">yum groupinstall -y &quot;Development Tools&quot;</span><br><span class="line"></span><br><span class="line">echo &quot;开始编译&quot;</span><br><span class="line">sh ./configure --enable-debug</span><br><span class="line">make all</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>本次构建是JDK11当前最新版<a target="_blank" rel="noopener" href="https://github.com/openjdk/jdk11u/archive/refs/tags/jdk-11.0.14+8.zip">jdk11u-jdk-11.0.14-8</a>, 构建过程出现问题，参考构建教程 <code>jdk11u-jdk-11.0.14-8/doc/building.html</code>.</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 查看系统版本</span></span><br><span class="line">cat /proc/version</span><br><span class="line">rpm -q centos-release</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 安装依赖环境</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># 安装 FreeType</span></span></span><br><span class="line">yum install -y freetype-devel </span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># 安装 CUPS</span></span></span><br><span class="line">yum install -y cups-devel </span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># 安装 ALSA</span></span></span><br><span class="line">yum install -y alsa-lib-devel</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># 安装 libffi</span></span></span><br><span class="line">yum install -y libffi-devel</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># 安装 Autoconf</span></span></span><br><span class="line">yum install -y autoconf</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># 安装 X11</span></span></span><br><span class="line">yum install -y libxext-dev libx11-dev libXtst-devel libXt-devel libXrender-devel libXi-devel libXrandr-devel</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># 安装 fontconfig</span></span></span><br><span class="line">yum install -y fontconfig</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 安装Boot-JDK, 编译openjdk-11，需要以jdk-11为bootjdk</span></span><br><span class="line">yum install -y java-11-openjdk-devel</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 安装开发工具</span></span><br><span class="line">yum groupinstall -y &quot;Development Tools&quot;</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 开始编译</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> sh ./configure --enable-debug</span></span><br><span class="line">sh ./configure --with-debug-level=slowdebug --with-native-debug-symbols=external</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> make all</span></span><br><span class="line">make images</span><br></pre></td></tr></table></figure>
 
 <blockquote>
-<p>openjdk-jdk-11-28/make/common 版本JDK默认是ascii编码，如果想要使用UTF8编码的话，修改 <code>openjdk-jdk-11-28/make/common/SetupJavaCompilers.gmk</code> 文件，将<code>-encoding ascii</code> 修改成 <code>-encoding utf-8</code></p>
+<p>jdk11u-jdk-11.0.14-8 版本JDK默认是ascii编码，如果想要使用UTF8编码的话，修改 <code>jdk11u-jdk-11.0.14-8/make/common/SetupJavaCompilers.gmk</code> 文件，将<code>-encoding ascii</code> 修改成 <code>-encoding utf-8</code></p>
 </blockquote>
 <p>整个安装编译环境以及编译过程如下:</p>
-<div id="/videos/jdk.cast"></div><script>AsciinemaPlayer.create("/videos/jdk.cast",document.getElementById("/videos/jdk.cast"));</script>
+<div id="/videos/centos7_compile_openjdk11.cast.cast"></div><script>AsciinemaPlayer.create("/videos/centos7_compile_openjdk11.cast.cast",document.getElementById("/videos/centos7_compile_openjdk11.cast.cast"));</script>
 
-<p>或者打开    <a href="/html/compile_jdk.html">Centos 编译 OpenJDK</a></p>
+<p>或者打开    <a href="/html/centos7_compile_debug_openjdk11.html">Centos7 编译调试 OpenJDK11</a></p>
 <h2 id="debug"><a href="#debug" class="headerlink" title="debug"></a>debug</h2><p>在vscode中进行远程debug</p>
 
       
@@ -409,7 +412,7 @@
     
     <li class="post-copyright-link hidden-xs">
       <strong>本文链接：</strong>
-      <a href="https://wangmingco.github.io/2022/01/10/jvm/centos%E7%BC%96%E8%AF%91openjdk/" title="Centos 编译 OpenJDK" target="_blank" rel="external">https://wangmingco.github.io/2022/01/10/jvm/centos编译openjdk/</a>
+      <a href="https://wangmingco.github.io/2022/01/10/jvm/centos%E7%BC%96%E8%AF%91openjdk/" title="Centos7 编译调试 OpenJDK11" target="_blank" rel="external">https://wangmingco.github.io/2022/01/10/jvm/centos编译openjdk/</a>
     </li>
     
     <li class="post-copyright-license">

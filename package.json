@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "hexo": "^5.0.0",
+    "hexo-filter-asciinema": "1.0.6",
     "hexo-generator-archive": "^1.0.0",
     "hexo-generator-baidu-sitemap": "^0.1.9",
     "hexo-generator-category": "^1.0.0",
@@ -24,8 +25,8 @@
     "hexo-renderer-marked": "^4.0.0",
     "hexo-renderer-stylus": "^2.0.0",
     "hexo-server": "^2.0.0",
+    "hexo-tag-dplayer": "^0.3.3",
     "hexo-theme-landscape": "^0.0.3",
-    "hexo-wordcount": "^6.0.1",
-    "hexo-filter-asciinema": "1.0.6"
+    "hexo-wordcount": "^6.0.1"
   }
 }

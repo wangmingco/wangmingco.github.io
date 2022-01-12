@@ -33,13 +33,10 @@ hexo server
 hexo generate
 ```
 
-安装插件
+换主题需要在主题的head里添加搜索引擎爬取标记
 ```
-npm install hexo-wordcount --save
-npm install hexo-generator-json-content --save
-npm install hexo-generator-feed --save
-npm install hexo-generator-sitemap --save
-npm install hexo-generator-baidu-sitemap --save
-npm install hexo-filter-asciinema --save
-npm install hexo-tag-html5video --save
+<!-- google 爬取标记 -->
+<meta name="google-site-verification" content="aH2bcbMuMlpfF61i9p--iBH54wvMywGXfWg8U6RpxFA" />
+<!-- bing 爬取标记 -->
+<meta name="msvalidate.01" content="CBAB9A13FF212142D6C250D9C0D31F28" />
 ```
