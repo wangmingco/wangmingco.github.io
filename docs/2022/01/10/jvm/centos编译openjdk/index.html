@@ -30,7 +30,7 @@
 <meta property="og:description" content="编译按照如下过程进行编译(测试机是一台2核4G内存的云虚拟机，编译过程较慢且偶尔会失败，最好是使用一个多核机器进行编译)  本次构建是JDK11当前最新版jdk11u-jdk-11.0.14-8, 构建过程出现问题，参考构建教程 jdk11u-jdk-11.0.14-8&#x2F;doc&#x2F;building.html.  1234567891011121314151617181920212223242526">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-01-09T16:00:00.000Z">
-<meta property="article:modified_time" content="2022-01-12T05:09:59.566Z">
+<meta property="article:modified_time" content="2022-01-12T05:27:54.693Z">
 <meta property="article:author" content="向南">
 <meta name="twitter:card" content="summary">
   <!-- Canonical links -->
@@ -402,7 +402,7 @@
 <p>jdk11u-jdk-11.0.14-8 版本JDK默认是ascii编码，如果想要使用UTF8编码的话，修改 <code>jdk11u-jdk-11.0.14-8/make/common/SetupJavaCompilers.gmk</code> 文件，将<code>-encoding ascii</code> 修改成 <code>-encoding utf-8</code></p>
 </blockquote>
 <p>整个安装编译环境以及编译过程如下:</p>
-<div id="/videos/centos7_compile_openjdk11.cast.cast"></div><script>AsciinemaPlayer.create("/videos/centos7_compile_openjdk11.cast.cast",document.getElementById("/videos/centos7_compile_openjdk11.cast.cast"));</script>
+<div id="/videos/centos7_compile_openjdk11.cast"></div><script>AsciinemaPlayer.create("/videos/centos7_compile_openjdk11.cast",document.getElementById("/videos/centos7_compile_openjdk11.cast"));</script>
 
 <p>或者打开    <a href="/html/centos7_compile_debug_openjdk11.html">Centos7 编译调试 OpenJDK11</a></p>
 <p>升级GCC11(下面的方式只针对当前session有效)</p>

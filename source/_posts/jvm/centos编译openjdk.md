@@ -57,7 +57,7 @@ make images
 
 整个安装编译环境以及编译过程如下:
 
-[@asciinema](/videos/centos7_compile_openjdk11.cast.cast)
+[@asciinema](/videos/centos7_compile_openjdk11.cast)
 
 或者打开    [Centos7 编译调试 OpenJDK11](/html/centos7_compile_debug_openjdk11.html)
 
