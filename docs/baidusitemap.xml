@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://wangmingco.github.io/2019/04/28/zhihu/</loc>
+    <lastmod>2022-01-12</lastmod>
+  </url>
+  <url>
     <loc>https://wangmingco.github.io/2022/01/10/jvm/centos%E7%BC%96%E8%AF%91openjdk/</loc>
     <lastmod>2022-01-12</lastmod>
   </url>
@@ -11,66 +15,6 @@
   <url>
     <loc>https://wangmingco.github.io/2021/12/09/html/bj_baidu/</loc>
     <lastmod>2021-12-09</lastmod>
-  </url>
-  <url>
-    <loc>https://wangmingco.github.io/2020/04/14/zhihu/springboot_vue_admin/</loc>
-    <lastmod>2021-11-24</lastmod>
-  </url>
-  <url>
-    <loc>https://wangmingco.github.io/2020/04/13/zhihu/SpringBoot_Loader/</loc>
-    <lastmod>2021-11-24</lastmod>
-  </url>
-  <url>
-    <loc>https://wangmingco.github.io/2020/04/02/zhihu/PEG_js/</loc>
-    <lastmod>2021-11-24</lastmod>
-  </url>
-  <url>
-    <loc>https://wangmingco.github.io/2019/02/13/zhihu/LinkedBlockingQueue/</loc>
-    <lastmod>2021-11-24</lastmod>
-  </url>
-  <url>
-    <loc>https://wangmingco.github.io/2020/05/13/zhihu/java_thread_state/</loc>
-    <lastmod>2021-11-24</lastmod>
-  </url>
-  <url>
-    <loc>https://wangmingco.github.io/2019/07/03/zhihu/java_string_intern/</loc>
-    <lastmod>2021-11-24</lastmod>
-  </url>
-  <url>
-    <loc>https://wangmingco.github.io/2020/04/14/zhihu/java_script_runner/</loc>
-    <lastmod>2021-11-24</lastmod>
-  </url>
-  <url>
-    <loc>https://wangmingco.github.io/2019/04/14/zhihu/java_net_io/</loc>
-    <lastmod>2021-11-24</lastmod>
-  </url>
-  <url>
-    <loc>https://wangmingco.github.io/2019/03/25/zhihu/java_dyn_proxy/</loc>
-    <lastmod>2021-11-24</lastmod>
-  </url>
-  <url>
-    <loc>https://wangmingco.github.io/2019/05/20/zhihu/java_disc_io/</loc>
-    <lastmod>2021-11-24</lastmod>
-  </url>
-  <url>
-    <loc>https://wangmingco.github.io/2019/05/20/zhihu/Java_DirectBuffer_GC/</loc>
-    <lastmod>2021-11-24</lastmod>
-  </url>
-  <url>
-    <loc>https://wangmingco.github.io/2018/11/17/zhihu/Java_Agent/</loc>
-    <lastmod>2021-11-24</lastmod>
-  </url>
-  <url>
-    <loc>https://wangmingco.github.io/2018/12/03/zhihu/Common_Lisp/</loc>
-    <lastmod>2021-11-24</lastmod>
-  </url>
-  <url>
-    <loc>https://wangmingco.github.io/2019/12/09/zhihu/springboot_netty/</loc>
-    <lastmod>2021-11-24</lastmod>
-  </url>
-  <url>
-    <loc>https://wangmingco.github.io/2019/04/28/zhihu/CGLib/</loc>
-    <lastmod>2021-11-24</lastmod>
   </url>
   <url>
     <loc>https://wangmingco.github.io/2015/10/08/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/shell/</loc>
