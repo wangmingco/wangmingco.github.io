@@ -59,8 +59,6 @@ make images
 
 [@asciinema](/videos/centos7_compile_openjdk11.cast)
 
-或者打开    [Centos7 编译调试 OpenJDK11](/html/centos7_compile_debug_openjdk11.html)
-
 升级GCC11(下面的方式只针对当前session有效)
 ```
 sudo yum install centos-release-scl
@@ -70,5 +68,11 @@ scl enable devtoolset-11 bash
 
 ## debug
 
-在vscode中进行远程debug
+在vscode中进行远程debug, 在vscode中安装如下插件
+* vscode c/c++ 开发支持 [C/C++ for Visual Studio Code](https://github.com/microsoft/vscode-cpptools)
+* Remote-SSH 远程支持 [Visual Studio Code Remote - SSH]()
 
+
+{% dplayer 'url=/videos/centos7_debug_openjdk11.mp4' "api=https://api.prprpr.me/dplayer/" "theme=#FADFA3" "autoplay=false" %} 
+
+在vscode里可以很方便的修改源码，然后重新编译，debug，yyds
