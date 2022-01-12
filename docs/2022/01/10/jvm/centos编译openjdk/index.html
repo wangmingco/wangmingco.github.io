@@ -30,7 +30,7 @@
 <meta property="og:description" content="编译按照如下过程进行编译(测试机是一台2核4G内存的云虚拟机，编译过程较慢且偶尔会失败，最好是使用一个多核机器进行编译)  本次构建是JDK11当前最新版jdk11u-jdk-11.0.14-8, 构建过程出现问题，参考构建教程 jdk11u-jdk-11.0.14-8&#x2F;doc&#x2F;building.html.  1234567891011121314151617181920212223242526">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2022-01-09T16:00:00.000Z">
-<meta property="article:modified_time" content="2022-01-12T02:31:55.074Z">
+<meta property="article:modified_time" content="2022-01-12T05:09:59.566Z">
 <meta property="article:author" content="向南">
 <meta name="twitter:card" content="summary">
   <!-- Canonical links -->
@@ -190,7 +190,7 @@
         
         <li><a href="https://gitee.com/wangmingco" target="_blank" title="Gitee" data-toggle=tooltip data-placement=top><i class="icon icon-gitee"></i></a></li>
         
-        <li><a href="https://www.douban.com/people/xxxyy/" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        <li><a href="https://weibo.com/wangmingco" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
         
         <li><a href="https://www.zhihu.com/people/wangmingco" target="_blank" title="Zhihu" data-toggle=tooltip data-placement=top><i class="icon icon-zhihu"></i></a></li>
         
@@ -396,12 +396,18 @@
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 查看系统版本</span></span><br><span class="line">cat /proc/version</span><br><span class="line">rpm -q centos-release</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 安装依赖环境</span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># 安装 FreeType</span></span></span><br><span class="line">yum install -y freetype-devel </span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># 安装 CUPS</span></span></span><br><span class="line">yum install -y cups-devel </span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># 安装 ALSA</span></span></span><br><span class="line">yum install -y alsa-lib-devel</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># 安装 libffi</span></span></span><br><span class="line">yum install -y libffi-devel</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># 安装 Autoconf</span></span></span><br><span class="line">yum install -y autoconf</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># 安装 X11</span></span></span><br><span class="line">yum install -y libxext-dev libx11-dev libXtst-devel libXt-devel libXrender-devel libXi-devel libXrandr-devel</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># 安装 fontconfig</span></span></span><br><span class="line">yum install -y fontconfig</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 安装Boot-JDK, 编译openjdk-11，需要以jdk-11为bootjdk</span></span><br><span class="line">yum install -y java-11-openjdk-devel</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 安装开发工具</span></span><br><span class="line">yum groupinstall -y &quot;Development Tools&quot;</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> 开始编译</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> sh ./configure --enable-debug</span></span><br><span class="line">sh ./configure --with-debug-level=slowdebug --with-native-debug-symbols=external</span><br><span class="line"><span class="meta"></span></span><br><span class="line"><span class="meta">#</span><span class="bash"> make all</span></span><br><span class="line">make images</span><br></pre></td></tr></table></figure>
 
 <blockquote>
+<p>本次编译使用centos7自带的gcc4.8版本，如果使用高版本，大于文档说的7.4版本，可能会出现编译错误, 那么在运行<code>./configure</code>时打开<code>--disable-warnings-as-errors</code> 配置,即可</p>
+</blockquote>
+<blockquote>
 <p>jdk11u-jdk-11.0.14-8 版本JDK默认是ascii编码，如果想要使用UTF8编码的话，修改 <code>jdk11u-jdk-11.0.14-8/make/common/SetupJavaCompilers.gmk</code> 文件，将<code>-encoding ascii</code> 修改成 <code>-encoding utf-8</code></p>
 </blockquote>
 <p>整个安装编译环境以及编译过程如下:</p>
 <div id="/videos/centos7_compile_openjdk11.cast.cast"></div><script>AsciinemaPlayer.create("/videos/centos7_compile_openjdk11.cast.cast",document.getElementById("/videos/centos7_compile_openjdk11.cast.cast"));</script>
 
 <p>或者打开    <a href="/html/centos7_compile_debug_openjdk11.html">Centos7 编译调试 OpenJDK11</a></p>
+<p>升级GCC11(下面的方式只针对当前session有效)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo yum install centos-release-scl</span><br><span class="line">sudo yum install devtoolset-11-gcc*</span><br><span class="line">scl enable devtoolset-11 bash</span><br></pre></td></tr></table></figure>
+
 <h2 id="debug"><a href="#debug" class="headerlink" title="debug"></a>debug</h2><p>在vscode中进行远程debug</p>
 
       
@@ -537,7 +543,7 @@
         
         <li><a href="https://gitee.com/wangmingco" target="_blank" title="Gitee" data-toggle=tooltip data-placement=top><i class="icon icon-gitee"></i></a></li>
         
-        <li><a href="https://www.douban.com/people/xxxyy/" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        <li><a href="https://weibo.com/wangmingco" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
         
         <li><a href="https://www.zhihu.com/people/wangmingco" target="_blank" title="Zhihu" data-toggle=tooltip data-placement=top><i class="icon icon-zhihu"></i></a></li>
         

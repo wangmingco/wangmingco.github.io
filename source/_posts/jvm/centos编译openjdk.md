@@ -51,6 +51,8 @@ sh ./configure --with-debug-level=slowdebug --with-native-debug-symbols=external
 make images
 ```
 
+> 本次编译使用centos7自带的gcc4.8版本，如果使用高版本，大于文档说的7.4版本，可能会出现编译错误, 那么在运行`./configure`时打开`--disable-warnings-as-errors` 配置,即可
+
 > jdk11u-jdk-11.0.14-8 版本JDK默认是ascii编码，如果想要使用UTF8编码的话，修改 `jdk11u-jdk-11.0.14-8/make/common/SetupJavaCompilers.gmk` 文件，将`-encoding ascii` 修改成 `-encoding utf-8`
 
 整个安装编译环境以及编译过程如下:
@@ -58,6 +60,13 @@ make images
 [@asciinema](/videos/centos7_compile_openjdk11.cast.cast)
 
 或者打开    [Centos7 编译调试 OpenJDK11](/html/centos7_compile_debug_openjdk11.html)
+
+升级GCC11(下面的方式只针对当前session有效)
+```
+sudo yum install centos-release-scl
+sudo yum install devtoolset-11-gcc*
+scl enable devtoolset-11 bash
+```
 
 ## debug
 
