@@ -68,13 +68,39 @@ VALUES
 业务交易表和三方交易表的数据前9条是相同的，最后一条数据不同，通过join操作，能找出这个不同。
 
 ```sql
-select `lob_name`, `trade_id`, `trade_amount`, `trade_time`
-from lob_trade left outer join third_trade 
-on lob_trade.trade_id = third_trade.merchant_trade_id
-union all
-select `merchant_name`, `merchant_trade_id`, `merchant_trade_amount`, `merchant_trade_time`
-from lob_trade right outer join third_trade 
-on lob_trade.trade_id = third_trade.merchant_trade_id
+SELECT *
+FROM
+    (SELECT `id` AS `lob_id`, `lob_name`, `trade_id`, `trade_amount`, `trade_time` FROM lob_trade) AS lt
+LEFT OUTER JOIN
+    (SELECT `id` AS `third_id`, `merchant_name`, `merchant_trade_id`, `merchant_trade_amount`, `merchant_trade_time` FROM third_trade ) AS tt
+ON lt.trade_id = tt.merchant_trade_id
+
+UNION
+
+SELECT *
+FROM
+    (SELECT `id` AS `lob_id`, `lob_name`, `trade_id`, `trade_amount`, `trade_time` FROM lob_trade) AS lt
+RIGHT OUTER JOIN
+    (SELECT `id` AS `third_id`, `merchant_name`, `merchant_trade_id`, `merchant_trade_amount`, `merchant_trade_time` FROM third_trade ) AS tt
+ON lt.trade_id = tt.merchant_trade_id
 ```
 
+得到数据
 
+```
+| lob_id | lob_name | trade_id | trade_amount | trade_time     | third_id | merchant_name | merchant_trade_id | merchant_trade_amount | merchant_trade_time |
+|--------|----------|----------|--------------|----------------|----------|---------------|-------------------|-----------------------|---------------------|
+| 1      | maicai   | 110001   | 1            | 2022/6/1 16:44 | 1        | maicai        | 110001            | 1                     | 2022/6/1 16:44      |
+| 2      | maicai   | 110002   | 2            | 2022/6/1 16:44 | 2        | maicai        | 110002            | 2                     | 2022/6/1 16:44      |
+| 3      | maicai   | 110003   | 3            | 2022/6/1 16:44 | 3        | maicai        | 110003            | 3                     | 2022/6/1 16:44      |
+| 4      | maicai   | 110004   | 4            | 2022/6/1 16:44 | 4        | maicai        | 110004            | 4                     | 2022/6/1 16:44      |
+| 5      | maicai   | 110005   | 5            | 2022/6/1 16:44 | 5        | maicai        | 110005            | 5                     | 2022/6/1 16:44      |
+| 6      | maicai   | 110006   | 6            | 2022/6/1 16:44 | 6        | maicai        | 110006            | 6                     | 2022/6/1 16:44      |
+| 7      | maicai   | 110007   | 7            | 2022/6/1 16:44 | 7        | maicai        | 110007            | 7                     | 2022/6/1 16:44      |
+| 8      | maicai   | 110008   | 8            | 2022/6/1 16:44 | 8        | maicai        | 110008            | 8                     | 2022/6/1 16:44      |
+| 9      | maicai   | 110009   | 9            | 2022/6/1 16:44 | 9        | maicai        | 110009            | 9                     | 2022/6/1 16:44      |
+| 10     | maicai   | 110020   | 20           | 2022/6/1 16:44 | NULL     | NULL          | NULL              | NULL                  | NULL                |
+| NULL   | NULL     | NULL     | NULL         | NULL           | 10       | maicai        | 110030            | 30                    | 2022/6/1 16:44      |
+```
+
+最后只需要判断id列数据是否为空即可
