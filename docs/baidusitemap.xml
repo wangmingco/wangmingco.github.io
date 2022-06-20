@@ -1,8 +1,36 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://wangmingco.github.io/2019/04/28/zhihu/</loc>
-    <lastmod>2022-01-12</lastmod>
+    <loc>https://wangmingco.github.io/2022/06/20/%E6%95%B0%E6%8D%AE%E5%BA%93/sql/</loc>
+    <lastmod>2022-06-20</lastmod>
+  </url>
+  <url>
+    <loc>https://wangmingco.github.io/2022/06/01/%E6%9D%82%E6%96%87/duizhang/</loc>
+    <lastmod>2022-06-20</lastmod>
+  </url>
+  <url>
+    <loc>https://wangmingco.github.io/2018/10/30/%E6%9D%82%E6%96%87/work-knife/</loc>
+    <lastmod>2022-05-17</lastmod>
+  </url>
+  <url>
+    <loc>https://wangmingco.github.io/2018/05/28/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/PHP%20%E5%8A%A0%E5%AF%86%20HTTP/</loc>
+    <lastmod>2022-05-17</lastmod>
+  </url>
+  <url>
+    <loc>https://wangmingco.github.io/2020/11/24/%E6%9D%82%E6%96%87/git-ssh/</loc>
+    <lastmod>2022-05-17</lastmod>
+  </url>
+  <url>
+    <loc>https://wangmingco.github.io/2019/04/28/%E6%9D%82%E6%96%87/zhihu/</loc>
+    <lastmod>2022-05-17</lastmod>
+  </url>
+  <url>
+    <loc>https://wangmingco.github.io/2022/04/12/%E5%89%8D%E7%AB%AF/REACT%20%E8%AF%AD%E6%B3%95/</loc>
+    <lastmod>2022-05-17</lastmod>
+  </url>
+  <url>
+    <loc>https://wangmingco.github.io/2018/11/18/%E7%AE%97%E6%B3%95/distributed-id/</loc>
+    <lastmod>2022-05-17</lastmod>
   </url>
   <url>
     <loc>https://wangmingco.github.io/2022/01/10/jvm/centos%E7%BC%96%E8%AF%91openjdk/</loc>
@@ -193,10 +221,6 @@
     <lastmod>2021-11-18</lastmod>
   </url>
   <url>
-    <loc>https://wangmingco.github.io/2018/10/30/work-knife/</loc>
-    <lastmod>2021-11-18</lastmod>
-  </url>
-  <url>
     <loc>https://wangmingco.github.io/2015/08/10/vertx/vertx3_web/</loc>
     <lastmod>2021-11-18</lastmod>
   </url>
@@ -310,10 +334,6 @@
   </url>
   <url>
     <loc>https://wangmingco.github.io/2014/09/04/jvm/JVM%20%E6%96%B9%E6%B3%95%E8%B0%83%E7%94%A8/</loc>
-    <lastmod>2021-11-18</lastmod>
-  </url>
-  <url>
-    <loc>https://wangmingco.github.io/2018/11/18/distributed-id/</loc>
     <lastmod>2021-11-18</lastmod>
   </url>
   <url>
