@@ -1,5 +1,6 @@
 ---
 category: Java
+tag: JavaSE
 date: 2015-09-08
 title: java8 流
 ---

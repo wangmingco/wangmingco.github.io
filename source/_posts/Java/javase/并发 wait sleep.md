@@ -1,5 +1,6 @@
 ---
 category: Java
+tag: JavaSE
 date: 2016-09-23
 title: wait sleep 不同
 ---

@@ -1,5 +1,6 @@
 ---
 category: Java
+tag: JavaSE
 title: JMX 笔记
 date: 2018-11-14 14:13:00
 ---

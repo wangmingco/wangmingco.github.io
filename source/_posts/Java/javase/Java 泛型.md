@@ -1,5 +1,6 @@
 ---
 category: Java
+tag: JavaSE
 date: 2015-06-08
 title: java泛型
 ---

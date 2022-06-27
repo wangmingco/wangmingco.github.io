@@ -1,5 +1,6 @@
 ---
 category: Java
+tag: JavaSE
 date: 2016-02-02
 title: volatile 使用
 ---

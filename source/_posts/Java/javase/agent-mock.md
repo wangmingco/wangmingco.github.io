@@ -1,5 +1,6 @@
 ---
 category: Java
+tag: JavaSE
 title: 通过Java Agent的redefineClasses实现Mock功能
 date: 2018-11-05 20:15:00
 ---

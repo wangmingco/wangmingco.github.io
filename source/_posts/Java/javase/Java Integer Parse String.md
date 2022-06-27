@@ -1,5 +1,6 @@
 ---
 category: Java
+tag: JavaSE
 date: 2016-06-13
 title: Integer Parse ValueOf
 ---

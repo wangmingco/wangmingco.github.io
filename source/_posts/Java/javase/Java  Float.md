@@ -1,5 +1,6 @@
 ---
 category: Java
+tag: JavaSE
 date: 2016-10-31
 title: Java Float 
 ---

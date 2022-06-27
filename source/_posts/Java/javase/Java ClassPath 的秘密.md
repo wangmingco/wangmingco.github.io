@@ -1,5 +1,6 @@
 ﻿---
 category: Java
+tag: JavaSE
 date: 2016-08-26
 title: Java ClassPath 的秘密
 ---

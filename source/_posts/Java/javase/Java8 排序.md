@@ -1,5 +1,6 @@
 ---
 category: Java
+tag: JavaSE
 date: 2016-07-12
 title: java8 排序
 ---

@@ -1,5 +1,6 @@
 ---
 category: Java
+tag: JavaSE
 date: 2016-06-07
 title: ThreadLocal 实战
 ---

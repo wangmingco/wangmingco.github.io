@@ -1,5 +1,6 @@
 ---
 category: Java
+tag: JavaSE
 title: 通过Function转换list和map
 date: 2016-12-30 14:13:00
 ---
