@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+   <!-- google 爬取标记 -->
+   <meta name="google-site-verification" content="aH2bcbMuMlpfF61i9p--iBH54wvMywGXfWg8U6RpxFA" />
+   <!-- bing 爬取标记 -->
+   <meta name="msvalidate.01" content="CBAB9A13FF212142D6C250D9C0D31F28" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>PYTHON2 基础语法 | 向南</title>
+  <meta name="description" content="##   控制流程if1234567tmp &#x3D; 0if tmp &gt; 0 :    print(&quot;&gt;&quot;)elif tmp &lt; 0 :    print(&quot;&lt;&quot;)else :    print(&quot;&#x3D;&quot;)  while123456tmp &#x3D; 0while tmp &lt; 3 :    print(tmp)    tmp">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PYTHON2 基础语法">
+<meta property="og:url" content="https://wangmingco.github.io/2015/08/06/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/python/python2%20%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/index.html">
+<meta property="og:site_name" content="向南">
+<meta property="og:description" content="##   控制流程if1234567tmp &#x3D; 0if tmp &gt; 0 :    print(&quot;&gt;&quot;)elif tmp &lt; 0 :    print(&quot;&lt;&quot;)else :    print(&quot;&#x3D;&quot;)  while123456tmp &#x3D; 0while tmp &lt; 3 :    print(tmp)    tmp">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2015-08-05T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-05-17T01:50:39.742Z">
+<meta property="article:author" content="向南">
+<meta name="twitter:card" content="summary">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://wangmingco.github.io/2015/08/06/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/python/python2%20%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="向南" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/wangmingco" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">向南</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Coder</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Beijing, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">项目</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books">
+            
+            <i class="icon icon-book-fill"></i>
+            
+            <span class="menu-title">书单</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">友链</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/wangmingco" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="https://gitee.com/wangmingco" target="_blank" title="Gitee" data-toggle=tooltip data-placement=top><i class="icon icon-gitee"></i></a></li>
+        
+        <li><a href="https://weibo.com/wangmingco" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://www.zhihu.com/people/wangmingco" target="_blank" title="Zhihu" data-toggle=tooltip data-placement=top><i class="icon icon-zhihu"></i></a></li>
+        
+        <li><a href="https://www.douban.com/people/xxxyy/" target="_blank" title="Douban" data-toggle=tooltip data-placement=top><i class="icon icon-douban"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Groovy/">Groovy</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">91</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Nginx/">Nginx</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/NoSql/">NoSql</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/PHP/">PHP</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/PYTHON2/">PYTHON2</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Shell/">Shell</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ZooKeeper/">ZooKeeper</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/awk/">awk</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/haskell/">haskell</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9D%82%E6%96%87/">杂文</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><span class="category-list-count">11</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java-%E4%B8%89%E6%96%B9%E5%BA%93/" rel="tag">Java 三方库</a><span class="tag-list-count">21</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/" rel="tag">JavaScript</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Javasist/" rel="tag">Javasist</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Memcached/" rel="tag">Memcached</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MongoDB/" rel="tag">MongoDB</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Netty/" rel="tag">Netty</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PEG-js/" rel="tag">PEG.js</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React/" rel="tag">React</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Redis/" rel="tag">Redis</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/asm/" rel="tag">asm</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmh/" rel="tag">jmh</a><span class="tag-list-count">14</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm/" rel="tag">jvm</a><span class="tag-list-count">13</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vertx2/" rel="tag">vertx2</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vertx3/" rel="tag">vertx3</a><span class="tag-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/Java-%E4%B8%89%E6%96%B9%E5%BA%93/" style="font-size: 14px;">Java 三方库</a> <a href="/tags/JavaScript/" style="font-size: 13.56px;">JavaScript</a> <a href="/tags/Javasist/" style="font-size: 13.33px;">Javasist</a> <a href="/tags/Memcached/" style="font-size: 13px;">Memcached</a> <a href="/tags/MongoDB/" style="font-size: 13.22px;">MongoDB</a> <a href="/tags/Netty/" style="font-size: 13.67px;">Netty</a> <a href="/tags/PEG-js/" style="font-size: 13px;">PEG.js</a> <a href="/tags/React/" style="font-size: 13px;">React</a> <a href="/tags/Redis/" style="font-size: 13.22px;">Redis</a> <a href="/tags/asm/" style="font-size: 13.33px;">asm</a> <a href="/tags/jmh/" style="font-size: 13.89px;">jmh</a> <a href="/tags/jvm/" style="font-size: 13.78px;">jvm</a> <a href="/tags/mysql/" style="font-size: 13.44px;">mysql</a> <a href="/tags/vertx2/" style="font-size: 13.11px;">vertx2</a> <a href="/tags/vertx3/" style="font-size: 13.33px;">vertx3</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/06/">六月 2022</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/05/">五月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">四月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">一月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">六月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">十一月 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">九月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">16</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">八月 2015</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">七月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">九月 2014</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">四月 2014</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/09/">九月 2013</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/06/20/%E6%95%B0%E6%8D%AE%E5%BA%93/sql/" class="title">SQL</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-06-19T16:00:00.000Z" itemprop="datePublished">2022-06-20</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E6%9D%82%E6%96%87/">杂文</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/06/01/%E6%9D%82%E6%96%87/duizhang/" class="title">对账</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-05-31T16:00:00.000Z" itemprop="datePublished">2022-06-01</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Java/">Java</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/05/17/Java/lib/Mybatis%20SqlSession/" class="title">Mybatis SqlSession</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-05-17T01:50:39.685Z" itemprop="datePublished">2022-05-17</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/04/12/%E5%89%8D%E7%AB%AF/REACT%20%E8%AF%AD%E6%B3%95/" class="title">React 总结</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-04-12T02:21:00.000Z" itemprop="datePublished">2022-04-12</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Java/">Java</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/01/10/Java/jvm/centos%E7%BC%96%E8%AF%91openjdk/" class="title">Centos7 编译调试 OpenJDK11</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-01-09T16:00:00.000Z" itemprop="datePublished">2022-01-10</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-编程语言/python/python2 基础语法" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      PYTHON2 基础语法
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2015/08/06/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/python/python2%20%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/" class="article-date">
+	  <time datetime="2015-08-05T16:00:00.000Z" itemprop="datePublished">2015-08-06</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/PYTHON2/">PYTHON2</a>
+  </span>
+
+        
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2015/08/06/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/python/python2%20%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/#comments" class="article-comment-link">评论</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <script src="/assets/asciinema-player.js"></script><link rel="stylesheet" type="text/css" href="/assets/asciinema-player.css" />## 
+
+<h2 id="控制流程"><a href="#控制流程" class="headerlink" title="控制流程"></a>控制流程</h2><h3 id="if"><a href="#if" class="headerlink" title="if"></a>if</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">tmp = <span class="number">0</span></span><br><span class="line"><span class="keyword">if</span> tmp &gt; <span class="number">0</span> :</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;&gt;&quot;</span>)</span><br><span class="line"><span class="keyword">elif</span> tmp &lt; <span class="number">0</span> :</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;&lt;&quot;</span>)</span><br><span class="line"><span class="keyword">else</span> :</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;=&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<h3 id="while"><a href="#while" class="headerlink" title="while"></a>while</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">tmp = <span class="number">0</span></span><br><span class="line"><span class="keyword">while</span> tmp &lt; <span class="number">3</span> :</span><br><span class="line">    <span class="built_in">print</span>(tmp)</span><br><span class="line">    tmp +=<span class="number">1</span></span><br><span class="line"><span class="keyword">else</span> :</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;over&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<h3 id="for"><a href="#for" class="headerlink" title="for"></a>for</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> [<span class="number">0</span>,<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>]:</span><br><span class="line">    <span class="built_in">print</span>(i)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> i &gt; <span class="number">2</span> :</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line">    <span class="keyword">else</span> :</span><br><span class="line">        <span class="keyword">continue</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;loop over&#x27;</span>)</span><br></pre></td></tr></table></figure>
+
+<p>或者</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#  从0开始步增到10</span></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, <span class="number">10</span>, <span class="number">1</span>)</span><br><span class="line">    <span class="built_in">print</span>(i)</span><br></pre></td></tr></table></figure>
+
+<h2 id="模块"><a href="#模块" class="headerlink" title="模块"></a>模块</h2><p>模块是一个包含函数和变量的文件。为了在其他程序中重用模块，模块的文件名必须以.py为扩展名。</p>
+<h3 id="使用sys模块"><a href="#使用sys模块" class="headerlink" title="使用sys模块"></a>使用<code>sys</code>模块</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> argv <span class="keyword">in</span> sys.argv :</span><br><span class="line">    <span class="built_in">print</span>(argv)</span><br></pre></td></tr></table></figure>
+
+<p>使用<code>from..import..</code>, <code>import</code>可以使用<code>*</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sys <span class="keyword">import</span> argv</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> argvtmp <span class="keyword">in</span> argv :</span><br><span class="line">    <span class="built_in">print</span>(argvtmp)</span><br></pre></td></tr></table></figure>
+
+<p>模块的name,下面的语法输出当前模块的name</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">print</span>(__name__)</span><br></pre></td></tr></table></figure>
+
+<h3 id="自定义模块"><a href="#自定义模块" class="headerlink" title="自定义模块"></a>自定义模块</h3><ul>
+<li>建立<code>mymodule.py</code>文件<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Filename: mymodule.py</span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">printModuleName</span>():</span></span><br><span class="line">    <span class="built_in">print</span>(__name__)</span><br></pre></td></tr></table></figure></li>
+<li>建立<code>test_mymodule.py</code>文件<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> mymodule</span><br><span class="line"></span><br><span class="line">mymodule.printModuleName()</span><br></pre></td></tr></table></figure></li>
+</ul>
+<ol>
+<li>需要注意的是<code>mymodule.py</code>文件的<code>Filename</code>必须和文件名相同</li>
+<li>如果<code>module</code>的name是<code>__main__</code>说明这个module是由用户启动的</li>
+</ol>
+<h2 id="集合"><a href="#集合" class="headerlink" title="集合"></a>集合</h2><h3 id="列表"><a href="#列表" class="headerlink" title="列表"></a>列表</h3><ul>
+<li>声明一个列表 <code>list = [123, &quot;ad&quot;]</code></li>
+<li>索引第一个元素 <code>list[0]</code></li>
+<li>在尾部添加一个元素 <code>list.append(2.56)</code></li>
+<li>对第一个元素重新赋值 <code>list[0] = &quot;0&quot;</code></li>
+<li>获取列表长度 <code>len(list)</code></li>
+<li>删除第一个元素 <code>del list[0]</code></li>
+</ul>
+<h3 id="元组"><a href="#元组" class="headerlink" title="元组"></a>元组</h3><p>元组和列表十分类似，只不过元组和字符串一样是 不可变的 即你不能修改元组</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">tumple = (<span class="number">123</span>, <span class="string">&quot;adf&quot;</span>)</span><br><span class="line"><span class="built_in">print</span>(tumple[<span class="number">0</span>])</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">len</span>(tumple))</span><br></pre></td></tr></table></figure>
+
+<h3 id="字典"><a href="#字典" class="headerlink" title="字典"></a>字典</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">map</span> = &#123;</span><br><span class="line">       <span class="string">&quot;key1&quot;</span>:<span class="string">&quot;value1&quot;</span>,</span><br><span class="line">       <span class="string">&quot;key2&quot;</span>:<span class="string">&quot;value2&quot;</span>,</span><br><span class="line">       <span class="string">&quot;key3&quot;</span>:<span class="string">&quot;value3&quot;</span>,</span><br><span class="line">       &#125;</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">map</span>)</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">len</span>(<span class="built_in">map</span>))</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">map</span>[<span class="string">&quot;key1&quot;</span>])</span><br><span class="line"><span class="keyword">del</span> <span class="built_in">map</span>[<span class="string">&quot;key1&quot;</span>]</span><br><span class="line"><span class="built_in">print</span>(<span class="built_in">map</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> key <span class="keyword">in</span> <span class="built_in">map</span>:</span><br><span class="line">    <span class="built_in">print</span>(key + <span class="string">&quot;   &quot;</span> + <span class="built_in">map</span>[key])</span><br><span class="line"><span class="keyword">if</span> <span class="string">&quot;key2&quot;</span> <span class="keyword">in</span> <span class="built_in">map</span>:</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;map contains key2&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="built_in">help</span>(<span class="built_in">dict</span>)</span><br></pre></td></tr></table></figure>
+
+<h3 id="序列"><a href="#序列" class="headerlink" title="序列"></a>序列</h3><p>序列的两个主要特点是索引操作符和切片操作符</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">shoplist = [<span class="string">&#x27;apple&#x27;</span>, <span class="string">&#x27;mango&#x27;</span>, <span class="string">&#x27;carrot&#x27;</span>, <span class="string">&#x27;banana&#x27;</span>]</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;Item 0 is&#x27;</span>, shoplist[<span class="number">0</span>])</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;Item -1 is&#x27;</span>, shoplist[-<span class="number">1</span>])</span><br><span class="line"></span><br><span class="line"><span class="comment">### Slicing on a list</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;Item 1 to 3 is&#x27;</span>, shoplist[<span class="number">1</span>:<span class="number">3</span>])</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;Item 2 to end is&#x27;</span>, shoplist[<span class="number">2</span>:])</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;Item 1 to -1 is&#x27;</span>, shoplist[<span class="number">1</span>:-<span class="number">1</span>])</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;Item start to end is&#x27;</span>, shoplist[:])</span><br><span class="line"></span><br><span class="line"><span class="comment">### Slicing on a string</span></span><br><span class="line">name = <span class="string">&#x27;swaroop&#x27;</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;characters 1 to 3 is&#x27;</span>, name[<span class="number">1</span>:<span class="number">3</span>])</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;characters 2 to end is&#x27;</span>, name[<span class="number">2</span>:])</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;characters 1 to -1 is&#x27;</span>, name[<span class="number">1</span>:-<span class="number">1</span>])</span><br><span class="line"><span class="built_in">print</span>(<span class="string">&#x27;characters start to end is&#x27;</span>, name[:])</span><br></pre></td></tr></table></figure>
+
+<h2 id="多线程"><a href="#多线程" class="headerlink" title="多线程"></a>多线程</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> socket</span><br><span class="line"><span class="keyword">import</span> threading</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"></span><br><span class="line">count = <span class="number">0</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">socketSendData</span>():</span></span><br><span class="line">    client=socket.socket(socket.AF_INET,socket.SOCK_STREAM)</span><br><span class="line">    client.connect((<span class="string">&#x27;www.baidu.com&#x27;</span>,<span class="number">80</span>))</span><br><span class="line">    time.sleep(<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, <span class="number">20000</span>, <span class="number">1</span>):</span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">       t = threading.Thread(target=socketSendData)</span><br><span class="line">       info = t.start()</span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">       count += <span class="number">1</span></span><br><span class="line">       <span class="built_in">print</span> <span class="string">&quot;Error: unable to start thread  &quot;</span> + <span class="built_in">str</span>(count)</span><br></pre></td></tr></table></figure>
+
+<h2 id="异常"><a href="#异常" class="headerlink" title="异常"></a>异常</h2><p>捕获异常</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">try</span>:</span><br><span class="line">   fh = <span class="built_in">open</span>(<span class="string">&quot;test&quot;</span>, <span class="string">&quot;w&quot;</span>)</span><br><span class="line"><span class="keyword">except</span> IOError:</span><br><span class="line">   <span class="built_in">print</span> <span class="string">&quot;Error: open error&quot;</span></span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">   <span class="built_in">print</span> <span class="string">&quot;hava open file&quot;</span></span><br><span class="line">   fh.close()</span><br></pre></td></tr></table></figure>
+<p>抛出异常<code>raise [Exception [, args [, traceback]]]</code>例如</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(num &lt; <span class="number">100</span>):</span><br><span class="line">  <span class="keyword">raise</span> RuntimeError(<span class="string">&quot;num is greater than 100!&quot;</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="面向对象"><a href="#面向对象" class="headerlink" title="面向对象"></a>面向对象</h2><h3 id="self"><a href="#self" class="headerlink" title="self"></a>self</h3><p>类的方法与普通的函数只有一个特别的区别——它们必须有一个额外的第一个参数名称<code>self</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="创建一个类"><a href="#创建一个类" class="headerlink" title="创建一个类"></a>创建一个类</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span>:</span></span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">p = Person()</span><br><span class="line"><span class="built_in">print</span> p</span><br></pre></td></tr></table></figure>
+
+<h3 id="对象的方法"><a href="#对象的方法" class="headerlink" title="对象的方法"></a>对象的方法</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">run</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;run&quot;</span>)</span><br><span class="line"></span><br><span class="line">p = Person()</span><br><span class="line">p.run()</span><br></pre></td></tr></table></figure>
+
+<h4 id="init-方法"><a href="#init-方法" class="headerlink" title="__init__方法"></a>__init__方法</h4><p><code>__init__</code>方法在类的一个对象被建立时，马上运行</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">run</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;run&quot;</span>)</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;init&quot;</span>)</span><br><span class="line"></span><br><span class="line">p = Person()</span><br><span class="line">p.run()</span><br></pre></td></tr></table></figure>
+
+<h4 id="del-方法"><a href="#del-方法" class="headerlink" title="__del__方法"></a>__del__方法</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Person</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;init&quot;</span>)</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__del__</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;__destory__&quot;</span>)</span><br><span class="line"></span><br><span class="line">p = Person()</span><br></pre></td></tr></table></figure>
+
+<h3 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h3><ul>
+<li><p>类的变量: 由一个类的所有对象（实例）共享使用。只有一个类变量的拷贝，所以当某个对象对类的变量做了改动的时候，这个改动会反映到所有其他的实例上。</p>
+</li>
+<li><p>对象的变量: 由类的每个对象/实例拥有。因此每个对象有自己对这个域的一份拷贝，即它们不是共享的，在同一个类的不同实例中，虽然对象的变量有相同的名称，但是是互不相关的。通过一个例子会使这个易于理解。</p>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Father</span>:</span></span><br><span class="line">    age = <span class="number">0</span></span><br><span class="line"></span><br><span class="line">father = Father()</span><br><span class="line">father.age = <span class="number">10</span></span><br><span class="line">Father.age = <span class="number">20</span></span><br><span class="line"><span class="built_in">print</span>(father.age)</span><br><span class="line"><span class="built_in">print</span>(Father.age)</span><br></pre></td></tr></table></figure>
+
+<h4 id="权限控制"><a href="#权限控制" class="headerlink" title="权限控制"></a>权限控制</h4><p>对象的属性(变量和方法)如果名字以<code>__</code>开头则不能被外部访问,但是如果名称构成形式为<code>__xxx__</code>则被称为特殊属性,是可以被外界访问的.</p>
+<h3 id="继承"><a href="#继承" class="headerlink" title="继承"></a>继承</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Father</span>:</span></span><br><span class="line">    name = <span class="string">&quot;Tom&quot;</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">run</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;run&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Son</span>(<span class="params">Father</span>):</span></span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line">son = Son()</span><br><span class="line"><span class="built_in">print</span>(son.name)</span><br><span class="line">son.run()</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="init-del-在继承中的使用"><a href="#init-del-在继承中的使用" class="headerlink" title="__init__, __del__在继承中的使用"></a><code>__init__</code>, <code>__del__</code>在继承中的使用</h4><p>Python不会自动调用父类的constructor</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Mother</span>:</span></span><br><span class="line">    <span class="keyword">pass</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Father</span>:</span></span><br><span class="line">    name = <span class="string">&quot;Tom&quot;</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">run</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;run&quot;</span>)</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;Father init&quot;</span>)</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__del__</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;Father del&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Son</span>(<span class="params">Father, Mother</span>):</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;Son init&quot;</span>)</span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__del__</span>(<span class="params">self</span>):</span></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;Son del&quot;</span>)</span><br><span class="line"></span><br><span class="line">son = Son()</span><br><span class="line"><span class="built_in">print</span>(son.name)</span><br><span class="line">son.run()</span><br></pre></td></tr></table></figure>
+
+<h2 id="字符串函数"><a href="#字符串函数" class="headerlink" title="字符串函数"></a>字符串函数</h2><h3 id="修改"><a href="#修改" class="headerlink" title="修改"></a>修改</h3><ul>
+<li><code>capitalize(...)</code> : Python capitalize()将字符串的第一个字母变成大写,其他字母变小写。<code>print &quot;abc&quot;.capitalize()</code></li>
+<li><code>center(...)</code> : 返回一个原字符串居中,并使用空格填充至长度 width 的新字符串。默认填充字符为空格。<code>print &quot;abc&quot;.center(10, &quot;1&quot;)</code>结果为<code>111abc1111</code></li>
+<li><code>expandtabs(...)</code> : <code>S.expandtabs(tabsize=8) -&gt; str</code> 把字符串中的 tab 符号(‘\t’)转为空格，默认的空格数 tabsize 是 8。</li>
+<li><code>format(...)</code> : <code>&quot;abcd&#123;0&#125;fg&quot;.format(&quot;sdf&quot;)</code> {0}被替换成sdf</li>
+<li><code>join(...)</code> : <code>S.join(iterable) -&gt; str</code> 用于将序列中的元素以指定的字符连接生成一个新的字符串。</li>
+<li><code>ljust(...)</code> : <code>S.ljust(width[, fillchar]) -&gt; str</code> 返回一个原字符串左对齐,并使用空格填充至指定长度的新字符串。如果指定的长度小于原字符串的长度则返回原字符串。</li>
+<li><code>rjust(...)</code> : <code>S.rjust(width[, fillchar]) -&gt; str</code> 返回一个原字符串右对齐,并使用空格填充至长度 width 的新字符串。如果指定的长度小于字符串的长度则返回原字符串。</li>
+<li><code>lower(...)</code> : <code>S.lower() -&gt; str</code> 转换字符串中所有大写字符为小写。</li>
+<li><code>lstrip(...)</code> : <code>S.lstrip([chars]) -&gt; str</code> 用于截掉字符串左边的空格或指定字符。</li>
+<li><code>replace(...)</code> : <code>S.replace(old, new[, count]) -&gt; str</code> 把字符串中的 old（旧字符串） 替换成 new(新字符串)，如果指定第三个参数max，则替换不超过 max 次。</li>
+<li><code>split(...)</code> : <code>S.split(sep=None, maxsplit=-1) -&gt; list of strings</code> 通过指定分隔符对字符串进行切片，如果参数num 有指定值，则仅分隔 num 个子字符串. 另外参考<code>rsplit(...)</code></li>
+<li><code>strip(...)</code> : <code>S.strip([chars]) -&gt; str</code> 用于移除字符串头尾指定的字符（默认为空格）。</li>
+<li><code>rstrip(...)</code> : <code>S.rstrip([chars]) -&gt; str</code> 删除 string 字符串末尾的指定字符（默认为空格）.</li>
+<li><code>swapcase(...)</code> : <code>S.swapcase() -&gt; str</code> 用于对字符串的大小写字母进行转换。</li>
+<li><code>translate(...)</code> : <code>S.translate(table) -&gt; str</code> 根据参数table给出的表(包含 256 个字符)转换字符串的字符, 要过滤掉的字符放到 del 参数中。</li>
+<li><code>upper(...)</code> : <code>S.upper() -&gt; str</code> 将字符串中的小写字母转为大写字母。</li>
+<li><code>zfill(...)</code> : <code>S.zfill(width) -&gt; str</code> 返回指定长度的字符串，原字符串右对齐，前面填充0。</li>
+<li><code>title(...)</code> : <code>S.title() -&gt; str</code> 返回”标题化”的字符串,就是说所有单词都是以大写开始，其余字母均为小写(见 istitle())。</li>
+</ul>
+<h3 id="查找"><a href="#查找" class="headerlink" title="查找"></a>查找</h3><ul>
+<li><code>count(...)</code> : 用于统计字符串里某个字符出现的次数。可选参数为在字符串搜索的开始与结束位置。<code>&quot;abcdefg&quot;.count(&quot;c&quot;, 2, 4)</code>结果为<code>1</code></li>
+<li><code>find(...)</code> : <code>S.find(sub[, start[, end]]) -&gt; int</code> 检测字符串中是否包含子字符串 str ，如果指定 beg（开始） 和 end（结束） 范围，则检查是否包含在指定范围内，如果包含子字符串返回开始的索引值，否则返回-1。</li>
+<li><code>rfind(...)</code> : <code>S.rfind(sub[, start[, end]]) -&gt; int</code> 返回字符串最后一次出现的位置，如果没有匹配项则返回-1。</li>
+<li><code>endswith(...)</code> : 用于判断字符串是否以指定后缀结尾，如果以指定后缀结尾返回True，否则返回False。可选参数”start”与”end”为检索字符串的开始与结束位置。<code>&quot;abcdefg&quot;.endswith(&quot;d&quot;, 2, 4)</code>结果为true</li>
+<li><code>index(...)</code> : <code>S.index(sub[, start[, end]]) -&gt; int</code>检测字符串中是否包含子字符串 str ，如果指定 beg（开始） 和 end（结束） 范围，则检查是否包含在指定范围内，该方法与 python find()方法一样，只不过如果str不在 string中会报一个异常。</li>
+<li><code>rindex(...)</code> : <code>S.rindex(sub[, start[, end]]) -&gt; int</code> 返回子字符串 str 在字符串中最后出现的位置，如果没有匹配的字符串会报异常，你可以指定可选参数[beg:end]设置查找的区间。</li>
+<li><code>partition(...)</code> : <code>S.partition(sep) -&gt; (head, sep, tail)</code> Search for the separator sep in S, and return the part before it,the separator itself, and the part after it.  If the separator is not found, return S and two empty strings.</li>
+<li><code>rpartition(...)</code> : <code>S.rpartition(sep) -&gt; (head, sep, tail)</code> 类似于 partition()函数,不过是从右边开始查找.</li>
+<li><code>startswith(...)</code> : <code>S.startswith(prefix[, start[, end]]) -&gt; bool</code> 用于检查字符串是否是以指定子字符串开头，如果是则返回 True，否则返回 False。如果参数 beg 和 end 指定值，则在指定范围内检查。</li>
+</ul>
+<h3 id="检测"><a href="#检测" class="headerlink" title="检测"></a>检测</h3><ul>
+<li><code>isalnum(...)</code> : <code>S.isalnum() -&gt; bool</code> 判断字符串是否包含字母数字。</li>
+<li><code>isalpha(...)</code> : <code>S.isalpha() -&gt; bool</code> 检测字符串是否只由字母组成。</li>
+<li><code>isdecimal(...)</code> : <code>S.isdecimal() -&gt; bool</code> 检查字符串是否只包含十进制字符。这种方法只存在于unicode对象。</li>
+<li><code>isdigit(...)</code> : <code>S.isdigit() -&gt; bool</code> 检测字符串是否只由数字组成。</li>
+<li><code>islower(...)</code> : <code>S.islower() -&gt; bool</code> 检测字符串是否由小写字母组成。</li>
+<li><code>isnumeric(...)</code> : <code>S.isnumeric() -&gt; bool</code> 检查是否只有数字字符组成的字符串。这种方法目前只对unicode对象。</li>
+<li><code>isspace(...)</code> : <code>S.isspace() -&gt; bool</code> 是否只由空格组成。</li>
+<li><code>istitle(...)</code> : <code>S.istitle() -&gt; bool</code> 检测字符串中所有的单词拼写首字母是否为大写，且其他字母为小写。</li>
+<li><code>isupper(...)</code> : <code>S.isupper() -&gt; bool</code> 检测字符串中所有的字母是否都为大写。</li>
+</ul>
+<h3 id="编码"><a href="#编码" class="headerlink" title="编码"></a>编码</h3><ul>
+<li><code>encode(...)</code> : encoding 指定的编码格式编码字符串。errors参数可以指定不同的错误处理方案。<code>S.encode(encoding=&#39;utf-8&#39;, errors=&#39;strict&#39;) -&gt; bytes</code> </li>
+</ul>
+<h3 id="遍历"><a href="#遍历" class="headerlink" title="遍历"></a>遍历</h3><ul>
+<li><code>splitlines(...)</code> : <code>S.splitlines([keepends]) -&gt; list of strings</code> 返回一个字符串的所有行，可选包括换行符列表(如果num提供，则为true)</li>
+</ul>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://wangmingco.github.io/2015/08/06/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/python/python2%20%E5%9F%BA%E7%A1%80%E8%AF%AD%E6%B3%95/" title="PYTHON2 基础语法" target="_blank" rel="external">https://wangmingco.github.io/2015/08/06/编程语言/python/python2 基础语法/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/wangmingco" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/wangmingco" target="_blank"><span class="text-dark">向南</span><small class="ml-1x">Coder</small></a></h3>
+        <div>个人简介。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2015/08/07/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/python/python2%20%E5%87%BD%E6%95%B0/" title="PYTHON2 函数"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2015/08/05/Java/vertx/vertx3_core/" title="Vertx 3 Core"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>感谢您的支持，我会继续努力的!</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/images/donate/alipayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开支付宝扫一扫，即可进行扫码打赏哦</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/images/donate/wechatpayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开微信扫一扫，即可进行扫码打赏哦</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> 支付宝</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> 微信支付</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/wangmingco" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="https://gitee.com/wangmingco" target="_blank" title="Gitee" data-toggle=tooltip data-placement=top><i class="icon icon-gitee"></i></a></li>
+        
+        <li><a href="https://weibo.com/wangmingco" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://www.zhihu.com/people/wangmingco" target="_blank" title="Zhihu" data-toggle=tooltip data-placement=top><i class="icon icon-zhihu"></i></a></li>
+        
+        <li><a href="https://www.douban.com/people/xxxyy/" target="_blank" title="Douban" data-toggle=tooltip data-placement=top><i class="icon icon-douban"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>

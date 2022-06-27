@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+   <!-- google 爬取标记 -->
+   <meta name="google-site-verification" content="aH2bcbMuMlpfF61i9p--iBH54wvMywGXfWg8U6RpxFA" />
+   <!-- bing 爬取标记 -->
+   <meta name="msvalidate.01" content="CBAB9A13FF212142D6C250D9C0D31F28" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>java8 流 | 向南</title>
+  <meta name="description" content="# 流 java8中新添加的流又称为Streams API. 它是对集合（Collection）对象功能的增强，它专注于对集合对象进行各种非常便利、高效的聚合操作（aggregate operation），或者大批量数据操作 (bulk data operation). 接下来我们构建一个流: 123Stream.of(1, 2, 3)      .filter(ele -&gt; ele.equ">
+<meta property="og:type" content="article">
+<meta property="og:title" content="java8 流">
+<meta property="og:url" content="https://wangmingco.github.io/2015/09/08/Java/javase/Java8%20%E6%B5%81/index.html">
+<meta property="og:site_name" content="向南">
+<meta property="og:description" content="# 流 java8中新添加的流又称为Streams API. 它是对集合（Collection）对象功能的增强，它专注于对集合对象进行各种非常便利、高效的聚合操作（aggregate operation），或者大批量数据操作 (bulk data operation). 接下来我们构建一个流: 123Stream.of(1, 2, 3)      .filter(ele -&gt; ele.equ">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/yu66/blog-website/images/java8/map.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/yu66/blog-website/images/java8/filter.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/yu66/blog-website/images/java8/flatMap.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/yu66/blog-website/images/java8/distinct.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/yu66/blog-website/images/java8/limit.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/yu66/blog-website/images/java8/peek.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/yu66/blog-website/images/java8/skip.jpg">
+<meta property="article:published_time" content="2015-09-07T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-05-17T01:50:39.703Z">
+<meta property="article:author" content="向南">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/yu66/blog-website/images/java8/map.jpg">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://wangmingco.github.io/2015/09/08/Java/javase/Java8%20%E6%B5%81/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="向南" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/wangmingco" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">向南</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Coder</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Beijing, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">项目</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books">
+            
+            <i class="icon icon-book-fill"></i>
+            
+            <span class="menu-title">书单</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">友链</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/wangmingco" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="https://gitee.com/wangmingco" target="_blank" title="Gitee" data-toggle=tooltip data-placement=top><i class="icon icon-gitee"></i></a></li>
+        
+        <li><a href="https://weibo.com/wangmingco" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://www.zhihu.com/people/wangmingco" target="_blank" title="Zhihu" data-toggle=tooltip data-placement=top><i class="icon icon-zhihu"></i></a></li>
+        
+        <li><a href="https://www.douban.com/people/xxxyy/" target="_blank" title="Douban" data-toggle=tooltip data-placement=top><i class="icon icon-douban"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Groovy/">Groovy</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">91</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Nginx/">Nginx</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/NoSql/">NoSql</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/PHP/">PHP</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/PYTHON2/">PYTHON2</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Shell/">Shell</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ZooKeeper/">ZooKeeper</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/awk/">awk</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/haskell/">haskell</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><span class="category-list-count">9</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9D%82%E6%96%87/">杂文</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><span class="category-list-count">11</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java-%E4%B8%89%E6%96%B9%E5%BA%93/" rel="tag">Java 三方库</a><span class="tag-list-count">21</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/" rel="tag">JavaScript</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Javasist/" rel="tag">Javasist</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Memcached/" rel="tag">Memcached</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MongoDB/" rel="tag">MongoDB</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Netty/" rel="tag">Netty</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PEG-js/" rel="tag">PEG.js</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React/" rel="tag">React</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Redis/" rel="tag">Redis</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/asm/" rel="tag">asm</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmh/" rel="tag">jmh</a><span class="tag-list-count">14</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm/" rel="tag">jvm</a><span class="tag-list-count">13</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vertx2/" rel="tag">vertx2</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vertx3/" rel="tag">vertx3</a><span class="tag-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/Java-%E4%B8%89%E6%96%B9%E5%BA%93/" style="font-size: 14px;">Java 三方库</a> <a href="/tags/JavaScript/" style="font-size: 13.56px;">JavaScript</a> <a href="/tags/Javasist/" style="font-size: 13.33px;">Javasist</a> <a href="/tags/Memcached/" style="font-size: 13px;">Memcached</a> <a href="/tags/MongoDB/" style="font-size: 13.22px;">MongoDB</a> <a href="/tags/Netty/" style="font-size: 13.67px;">Netty</a> <a href="/tags/PEG-js/" style="font-size: 13px;">PEG.js</a> <a href="/tags/React/" style="font-size: 13px;">React</a> <a href="/tags/Redis/" style="font-size: 13.22px;">Redis</a> <a href="/tags/asm/" style="font-size: 13.33px;">asm</a> <a href="/tags/jmh/" style="font-size: 13.89px;">jmh</a> <a href="/tags/jvm/" style="font-size: 13.78px;">jvm</a> <a href="/tags/mysql/" style="font-size: 13.44px;">mysql</a> <a href="/tags/vertx2/" style="font-size: 13.11px;">vertx2</a> <a href="/tags/vertx3/" style="font-size: 13.33px;">vertx3</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/06/">六月 2022</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/05/">五月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">四月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">一月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">六月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/04/">四月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">十一月 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">九月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">16</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">八月 2015</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">七月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">九月 2014</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">四月 2014</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/09/">九月 2013</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/06/20/%E6%95%B0%E6%8D%AE%E5%BA%93/sql/" class="title">SQL</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-06-19T16:00:00.000Z" itemprop="datePublished">2022-06-20</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E6%9D%82%E6%96%87/">杂文</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/06/01/%E6%9D%82%E6%96%87/duizhang/" class="title">对账</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-05-31T16:00:00.000Z" itemprop="datePublished">2022-06-01</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Java/">Java</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/05/17/Java/lib/Mybatis%20SqlSession/" class="title">Mybatis SqlSession</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-05-17T01:50:39.685Z" itemprop="datePublished">2022-05-17</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/04/12/%E5%89%8D%E7%AB%AF/REACT%20%E8%AF%AD%E6%B3%95/" class="title">React 总结</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-04-12T02:21:00.000Z" itemprop="datePublished">2022-04-12</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Java/">Java</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/01/10/Java/jvm/centos%E7%BC%96%E8%AF%91openjdk/" class="title">Centos7 编译调试 OpenJDK11</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-01-09T16:00:00.000Z" itemprop="datePublished">2022-01-10</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-Java/javase/Java8 流" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      java8 流
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2015/09/08/Java/javase/Java8%20%E6%B5%81/" class="article-date">
+	  <time datetime="2015-09-07T16:00:00.000Z" itemprop="datePublished">2015-09-08</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/Java/">Java</a>
+  </span>
+
+        
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2015/09/08/Java/javase/Java8%20%E6%B5%81/#comments" class="article-comment-link">评论</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <script src="/assets/asciinema-player.js"></script><link rel="stylesheet" type="text/css" href="/assets/asciinema-player.css" /># 流
+<p>java8中新添加的流又称为<code>Streams API</code>. 它是对集合（Collection）对象功能的增强，它专注于对集合对象进行各种非常便利、高效的聚合操作（aggregate operation），或者大批量数据操作 (bulk data operation).</p>
+<p>接下来我们构建一个流:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Stream.of(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)</span><br><span class="line">      .filter(ele -&gt; ele.equals(<span class="string">&quot;123&quot;</span>))</span><br><span class="line">      .count();</span><br></pre></td></tr></table></figure>
+<p>我们通过上述代码构建流一个流,这里有俩个概念要说:</p>
+<ul>
+<li>惰性求值方法:像<code>filter</code>方法,它只是在刻画Stream,它并不会被调用.(在Stream方法中凡事返回Stream对象的都是这种方法)</li>
+<li>及早求值方法:像<code>count</code>方法,它会从Stream中最终产生值.(在Stream方法中凡事返回空或者另一个值都是这种方法)</li>
+</ul>
+<h2 id="常用的流操作"><a href="#常用的流操作" class="headerlink" title="常用的流操作"></a>常用的流操作</h2><h3 id="collect"><a href="#collect" class="headerlink" title="collect()"></a>collect()</h3><p>该方法会产生一个列表,是一个及早求值方法.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Stream.of(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)</span><br><span class="line">      .filter(ele -&gt; ele.equals(<span class="string">&quot;123&quot;</span>))</span><br><span class="line">      .collect(Collectors.toList());</span><br></pre></td></tr></table></figure>
+<p>当然我们还可以调用<code>Collectors.toSet()</code>等其他方法,构建其他集合</p>
+<h3 id="map"><a href="#map" class="headerlink" title="map"></a>map</h3><p><img src="https://raw.githubusercontent.com/yu66/blog-website/images/java8/map.jpg"><br>该操作会将一个流中的值转换为一个新的流</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Stream.of(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)</span><br><span class="line">      .map(num -&gt; &#123;</span><br><span class="line">          <span class="keyword">if</span> (num &gt; <span class="number">1</span>) &#123;</span><br><span class="line">             <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">          &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">             <span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">          &#125;</span><br><span class="line">       &#125;)</span><br><span class="line">       .collect(Collectors.toSet())</span><br><span class="line">       .forEach(ele -&gt; System.out.println(ele));</span><br></pre></td></tr></table></figure>
+
+<h3 id="filter"><a href="#filter" class="headerlink" title="filter"></a>filter</h3><p><img src="https://raw.githubusercontent.com/yu66/blog-website/images/java8/filter.jpg"><br>遍历数据并检查其中的元素是否符合某种条件</p>
+<p>这个操作看起来和<code>map</code>很像, 但是<code>map</code>是根据操作的结果产生新的流,而<code>filter</code>是判断流中的数据是否符合条件保留下来</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">Stream.of(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)</span><br><span class="line">               .filter(ele -&gt; &#123;</span><br><span class="line">                   <span class="keyword">if</span> (ele &gt; <span class="number">1</span>) &#123;</span><br><span class="line">                       <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">                   &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                       <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">                   &#125;</span><br><span class="line">               &#125;)</span><br><span class="line">               .collect(Collectors.toSet())</span><br><span class="line">               .forEach(ele -&gt; System.out.println(ele));</span><br></pre></td></tr></table></figure>
+
+<h3 id="flatMap"><a href="#flatMap" class="headerlink" title="flatMap"></a>flatMap</h3><p><img src="https://raw.githubusercontent.com/yu66/blog-website/images/java8/flatMap.jpg"><br>用于Stream替换值然后将多个流连接到一起</p>
+<p>首先我们看一种情况,流里有俩个列表</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"> Stream.of(Arrays.asList(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>),Arrays.asList(<span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>))</span><br><span class="line">                .collect(Collectors.toSet())</span><br><span class="line">                .forEach(ele -&gt; System.out.println(ele));</span><br><span class="line"></span><br><span class="line">输出的结果是:</span><br><span class="line">[<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]</span><br><span class="line">[<span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>]</span><br></pre></td></tr></table></figure>
+<p>如果我们想将这俩个列表组合到一起呢?</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Stream.of(Arrays.asList(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>),Arrays.asList(<span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>))</span><br><span class="line">                    .flatMap(list -&gt; &#123;</span><br><span class="line">                        <span class="keyword">return</span> list.stream();</span><br><span class="line">                    &#125;)</span><br><span class="line">                .collect(Collectors.toSet())</span><br><span class="line">                .forEach(ele -&gt; System.out.println(ele));</span><br></pre></td></tr></table></figure>
+<p>看到了吧,我们首先讲列表转换成流,然后由<code>flatMap</code>操作将流组合到一起</p>
+<h3 id="max"><a href="#max" class="headerlink" title="max"></a>max</h3><p>查找流中的最大值</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Integer max = Stream.of(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)</span><br><span class="line">                .max(Comparator.comparing(ele -&gt; ele))</span><br><span class="line">                .get();</span><br><span class="line">        System.out.println(max);</span><br></pre></td></tr></table></figure>
+<p>我们需要向<code>max</code>操作中传递一个排序的动作. <code>Comparator.comparing()</code>这个静态方法是java8新添加的方法,它实现流一个方便的比较器.以前我们需要比较俩个对象的某项属性的值,现在只需要提供一个取值方法就好了.</p>
+<h3 id="min"><a href="#min" class="headerlink" title="min"></a>min</h3><p>查找流中的最小值</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Integer min = Stream.of(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)</span><br><span class="line">                .min(Comparator.comparing(ele -&gt; ele))</span><br><span class="line">                .get();</span><br><span class="line">        System.out.println(min);</span><br></pre></td></tr></table></figure>
+<p>和<code>max</code>相似</p>
+<h3 id="reduce"><a href="#reduce" class="headerlink" title="reduce"></a>reduce</h3><p>从一组值生成一个值.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Integer sum = Stream.of(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)</span><br><span class="line">                .reduce((inSum, element) -&gt; &#123;</span><br><span class="line">                    <span class="keyword">return</span> inSum + element;</span><br><span class="line">                &#125;).get();</span><br><span class="line">        System.out.println(sum);</span><br></pre></td></tr></table></figure>
+<p><code>reduce</code>中的<code>BinaryOperator</code>类型的lambda表达式第一个参数是上个元素执行<code>reduce</code>操作的结果, 第二个参数是流中的每个元素.</p>
+<p>另外Stream中还有其他的<code>reduce</code>操作,可以指定开始结束的的位置</p>
+<h1 id="元素顺序"><a href="#元素顺序" class="headerlink" title="元素顺序"></a>元素顺序</h1><p>在一个有序集合中创建一个流时，流中元素就按照出现的顺序进行排列:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Arrays.asList(<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>).stream().forEach(ele -&gt; System.out.println(ele));</span><br></pre></td></tr></table></figure>
+<p>上面这个输出顺序总是<code>1, 2, 3</code>.</p>
+<p>而如果一个集合本身是无序的话，那么生成的流也是无序的，最后由流生成的集合也是无序的</p>
+<h1 id="使用收集器"><a href="#使用收集器" class="headerlink" title="使用收集器"></a>使用收集器</h1><p><code>java.util.stream.Collectors</code>这是java提供的一种通用的，从流生成复杂值结构的收集器.</p>
+<h2 id="转换成其他集合"><a href="#转换成其他集合" class="headerlink" title="转换成其他集合"></a>转换成其他集合</h2><p>Collectors提供了转换成其他集合的方式</p>
+<ul>
+<li><code>Collectors.toCollection()</code>： 接受一个函数作为参数，来创建集合</li>
+<li><code>Collectors.toConcurrentMap()</code></li>
+<li><code>Collectors.toList()</code>： 不需要指定具体的类型，Stream会自动挑选出合适的类型</li>
+<li><code>Collectors.toMap()</code></li>
+<li><code>Collectors.toSet()</code>： 不需要指定具体的类型，Stream会自动挑选出合适的类型</li>
+</ul>
+<h2 id="groupingBy"><a href="#groupingBy" class="headerlink" title="groupingBy"></a>groupingBy</h2><p>数据分组</p>
+<p>lambda表达式类型</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Function</span>&lt;<span class="title">T</span>, <span class="title">R</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function">R <span class="title">apply</span><span class="params">(T t)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">List&lt;Integer&gt; list = Arrays.asList(<span class="number">1</span>, <span class="number">10</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">2</span>, <span class="number">9</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">11</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>);</span><br><span class="line">		Map&lt;Integer, List&lt;Integer&gt;&gt; group = list.stream().collect(Collectors.groupingBy(ele -&gt; &#123;</span><br><span class="line">			<span class="keyword">if</span> (ele &gt; <span class="number">5</span>) &#123;</span><br><span class="line">				<span class="keyword">return</span> <span class="number">1</span>;</span><br><span class="line">			&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">				<span class="keyword">return</span> <span class="number">2</span>;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 最后结果为</span></span><br><span class="line">&#123;<span class="number">1</span>:[</span><br><span class="line">		<span class="number">10</span>,</span><br><span class="line">		<span class="number">9</span>,</span><br><span class="line">		<span class="number">11</span>,</span><br><span class="line">		<span class="number">6</span>,</span><br><span class="line">		<span class="number">7</span>,</span><br><span class="line">		<span class="number">8</span></span><br><span class="line">	],</span><br><span class="line"> <span class="number">2</span>:[</span><br><span class="line">		<span class="number">1</span>,</span><br><span class="line">		<span class="number">2</span>,</span><br><span class="line">		<span class="number">3</span>,</span><br><span class="line">		<span class="number">2</span>,</span><br><span class="line">		<span class="number">4</span>,</span><br><span class="line">		<span class="number">5</span></span><br><span class="line">	]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>当然分组的key,我们还可以取其他的类型,这完全取决于我们的返回值</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Map&lt;String, List&lt;Integer&gt;&gt; group = list.stream().collect(Collectors.groupingBy(ele -&gt; &#123;</span><br><span class="line">			<span class="keyword">if</span> (ele &gt; <span class="number">5</span>) &#123;</span><br><span class="line">				<span class="keyword">return</span> <span class="string">&quot;1&quot;</span>;</span><br><span class="line">			&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">				<span class="keyword">return</span> <span class="string">&quot;2&quot;</span>;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;));</span><br></pre></td></tr></table></figure>
+
+<h2 id="groupingByConcurrent"><a href="#groupingByConcurrent" class="headerlink" title="groupingByConcurrent"></a>groupingByConcurrent</h2><p>并发版本的<code>group by</code>实现</p>
+<p>lambda表达式类型</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Function</span>&lt;<span class="title">T</span>, <span class="title">R</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function">R <span class="title">apply</span><span class="params">(T t)</span></span>;</span><br><span class="line">｝</span><br></pre></td></tr></table></figure>
+<p>示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">List&lt;Integer&gt; list = Arrays.asList(<span class="number">1</span>, <span class="number">10</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">2</span>);</span><br><span class="line">ConcurrentMap&lt;Integer, List&lt;Integer&gt;&gt; result = list.stream().collect(Collectors.groupingByConcurrent(ele -&gt; ele - <span class="number">3</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 结果</span></span><br><span class="line">&#123;-<span class="number">2</span>:[<span class="number">1</span>],</span><br><span class="line"> -<span class="number">1</span>:[</span><br><span class="line">		<span class="number">2</span>,</span><br><span class="line">		<span class="number">2</span></span><br><span class="line">	],</span><br><span class="line">  <span class="number">0</span>:[<span class="number">3</span>],</span><br><span class="line">  <span class="number">7</span>:[<span class="number">10</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="partitioningBy"><a href="#partitioningBy" class="headerlink" title="partitioningBy"></a>partitioningBy</h2><p>数据分组,key为<code>True</code>和<code>False</code></p>
+<p>lambda表达式类型</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Predicate</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">boolean</span> <span class="title">test</span><span class="params">(T t)</span></span>;</span><br><span class="line">｝</span><br></pre></td></tr></table></figure>
+<p>示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">List&lt;Integer&gt; list = Arrays.asList(<span class="number">1</span>, <span class="number">10</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">2</span>, <span class="number">9</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">11</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>);</span><br><span class="line">Map&lt;Boolean, List&lt;Integer&gt;&gt; result = list.stream().collect(Collectors.partitioningBy(ele -&gt; ele == <span class="number">1</span>));</span><br><span class="line">System.out.println(JSON.toJSONString(result, <span class="keyword">true</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 结果为</span></span><br><span class="line">&#123;<span class="keyword">false</span>:[</span><br><span class="line">		<span class="number">10</span>,</span><br><span class="line">		<span class="number">2</span>,</span><br><span class="line">		<span class="number">3</span>,</span><br><span class="line">		<span class="number">2</span>,</span><br><span class="line">		<span class="number">9</span>,</span><br><span class="line">		<span class="number">4</span>,</span><br><span class="line">		<span class="number">5</span>,</span><br><span class="line">		<span class="number">11</span>,</span><br><span class="line">		<span class="number">6</span>,</span><br><span class="line">		<span class="number">7</span>,</span><br><span class="line">		<span class="number">8</span></span><br><span class="line">	],</span><br><span class="line"><span class="keyword">true</span>:[<span class="number">1</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="averagingDouble"><a href="#averagingDouble" class="headerlink" title="averagingDouble"></a>averagingDouble</h2><p>lambda表达式类型</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ToDoubleFunction</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">double</span> <span class="title">applyAsDouble</span><span class="params">(T value)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">List&lt;Integer&gt; list = Arrays.asList(<span class="number">1</span>, <span class="number">10</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">2</span>);</span><br><span class="line">Double result = list.stream().collect(Collectors.averagingDouble(ele -&gt; ele - <span class="number">3</span>));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 结果</span></span><br><span class="line"><span class="number">0.6</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="averagingInt"><a href="#averagingInt" class="headerlink" title="averagingInt"></a>averagingInt</h2><p>lambda表达式类型</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ToIntFunction</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">applyAsInt</span><span class="params">(T value)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">List&lt;Integer&gt; list = Arrays.asList(<span class="number">1</span>, <span class="number">10</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">2</span>);</span><br><span class="line">Double result = list.stream().collect(Collectors.averagingInt(ele -&gt; ele - <span class="number">3</span>));</span><br><span class="line"><span class="comment">// 结果</span></span><br><span class="line"><span class="number">0.6</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="averagingLong"><a href="#averagingLong" class="headerlink" title="averagingLong"></a>averagingLong</h2><p>对流中数据进行进行平均数操作</p>
+<p>lambda表达式类型</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ToLongFunction</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">long</span> <span class="title">applyAsLong</span><span class="params">(T value)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">List&lt;Integer&gt; list = Arrays.asList(<span class="number">1</span>, <span class="number">10</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">2</span>, <span class="number">9</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">11</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>);</span><br><span class="line">Double result = list.stream().collect(Collectors.averagingLong(ele -&gt; ele));</span><br></pre></td></tr></table></figure>
+
+<h2 id="summarizingInt"><a href="#summarizingInt" class="headerlink" title="summarizingInt"></a>summarizingInt</h2><p>lambda表达式类型</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ToIntFunction</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">applyAsInt</span><span class="params">(T value)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">List&lt;Integer&gt; list = Arrays.asList(<span class="number">1</span>, <span class="number">10</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">2</span>, <span class="number">9</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">11</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>);</span><br><span class="line">IntSummaryStatistics result = list.stream().collect(Collectors.summarizingInt(ele -&gt; ele));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 结果为</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="string">&quot;average&quot;</span>:<span class="number">5.666666666666667</span>,</span><br><span class="line">	<span class="string">&quot;count&quot;</span>:<span class="number">12</span>,</span><br><span class="line">	<span class="string">&quot;max&quot;</span>:<span class="number">11</span>,</span><br><span class="line">	<span class="string">&quot;min&quot;</span>:<span class="number">1</span>,</span><br><span class="line">	<span class="string">&quot;sum&quot;</span>:<span class="number">68</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="summarizingLong"><a href="#summarizingLong" class="headerlink" title="summarizingLong"></a>summarizingLong</h2><p>统计流中数据分布</p>
+<p>lambda表达式类型</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ToLongFunction</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">long</span> <span class="title">applyAsLong</span><span class="params">(T value)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">List&lt;Integer&gt; list = Arrays.asList(<span class="number">1</span>, <span class="number">10</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">2</span>, <span class="number">9</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">11</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>);</span><br><span class="line">LongSummaryStatistics result = list.stream().collect(Collectors.summarizingLong(ele -&gt; ele));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 结果为</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="string">&quot;average&quot;</span>:<span class="number">5.666666666666667</span>,</span><br><span class="line">	<span class="string">&quot;count&quot;</span>:<span class="number">12</span>,</span><br><span class="line">	<span class="string">&quot;max&quot;</span>:<span class="number">11</span>,</span><br><span class="line">	<span class="string">&quot;min&quot;</span>:<span class="number">1</span>,</span><br><span class="line">	<span class="string">&quot;sum&quot;</span>:<span class="number">68</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="summarizingDouble"><a href="#summarizingDouble" class="headerlink" title="summarizingDouble"></a>summarizingDouble</h2><p>统计流中数据分布</p>
+<p>lambda表达式类型</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ToDoubleFunction</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">double</span> <span class="title">applyAsDouble</span><span class="params">(T value)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">List&lt;Integer&gt; list = Arrays.asList(<span class="number">1</span>, <span class="number">10</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">2</span>, <span class="number">9</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">11</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>);</span><br><span class="line">DoubleSummaryStatistics result = list.stream().collect(Collectors.summarizingDouble(ele -&gt; ele));</span><br><span class="line"></span><br><span class="line"><span class="comment">// 结果</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="string">&quot;average&quot;</span>:<span class="number">5.666666666666667</span>,</span><br><span class="line">	<span class="string">&quot;count&quot;</span>:<span class="number">12</span>,</span><br><span class="line">	<span class="string">&quot;max&quot;</span>:<span class="number">11</span>,</span><br><span class="line">	<span class="string">&quot;min&quot;</span>:<span class="number">1</span>,</span><br><span class="line">	<span class="string">&quot;sum&quot;</span>:<span class="number">68</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="counting"><a href="#counting" class="headerlink" title="counting"></a>counting</h2><p>统计流中数据数量</p>
+<p>示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">List&lt;Integer&gt; list = Arrays.asList(<span class="number">1</span>, <span class="number">10</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">2</span>, <span class="number">9</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">11</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>);</span><br><span class="line">Long result = list.stream().collect(Collectors.counting());</span><br></pre></td></tr></table></figure>
+
+<h2 id="maxBy"><a href="#maxBy" class="headerlink" title="maxBy"></a>maxBy</h2><p>取出一个列表中的最大值,不过我们要自己定义一个对比规则</p>
+<p>lambda表达式类型</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Comparator</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">compare</span><span class="params">(T o1, T o2)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">List&lt;Integer&gt; list = Arrays.asList(<span class="number">1</span>, <span class="number">10</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">2</span>, <span class="number">9</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">11</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>);</span><br><span class="line">Optional&lt;Integer&gt; result = list.stream().collect(Collectors.maxBy((ele1, ele2) -&gt; ele1 - ele2));</span><br></pre></td></tr></table></figure>
+
+<h2 id="minBy"><a href="#minBy" class="headerlink" title="minBy"></a>minBy</h2><p>取出一个列表中的最大值,不过我们要自己定义一个对比规则</p>
+<p>lambda表达式类型</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Comparator</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">compare</span><span class="params">(T o1, T o2)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">List&lt;Integer&gt; list = Arrays.asList(<span class="number">1</span>, <span class="number">10</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">2</span>, <span class="number">9</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">11</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>);</span><br><span class="line">Optional&lt;Integer&gt; result = list.stream().collect(Collectors.minBy((ele1, ele2) -&gt; ele1 - ele2));</span><br></pre></td></tr></table></figure>
+
+<h2 id="summingDouble"><a href="#summingDouble" class="headerlink" title="summingDouble"></a>summingDouble</h2><p>对列表数据取和操作,结果为<code>Double</code></p>
+<p>lambda表达式类型</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ToDoubleFunction</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">double</span> <span class="title">applyAsDouble</span><span class="params">(T value)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">List&lt;Integer&gt; list = Arrays.asList(<span class="number">1</span>, <span class="number">10</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">2</span>, <span class="number">9</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">11</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>);</span><br><span class="line">Double result = list.stream().collect(Collectors.summingDouble(ele -&gt; ele));</span><br><span class="line"><span class="comment">// 结果为68</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="summingInt"><a href="#summingInt" class="headerlink" title="summingInt"></a>summingInt</h2><p>对列表数据取和操作,结果为<code>Int</code></p>
+<p>lambda表达式类型</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ToIntFunction</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">applyAsInt</span><span class="params">(T value)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">List&lt;Integer&gt; list = Arrays.asList(<span class="number">1</span>, <span class="number">10</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">2</span>, <span class="number">9</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">11</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>);</span><br><span class="line">Integer result = list.stream().collect(Collectors.summingInt(ele -&gt; ele));</span><br></pre></td></tr></table></figure>
+
+<h2 id="summingLong"><a href="#summingLong" class="headerlink" title="summingLong"></a>summingLong</h2><p>对列表数据取和操作,结果为<code>Long</code></p>
+<p>lambda表达式类型</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">ToLongFunction</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">long</span> <span class="title">applyAsLong</span><span class="params">(T value)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">List&lt;Integer&gt; list = Arrays.asList(<span class="number">1</span>, <span class="number">10</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">2</span>, <span class="number">9</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">11</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>);</span><br><span class="line">Long result = list.stream().collect(Collectors.summingLong(ele -&gt; ele));</span><br></pre></td></tr></table></figure>
+
+<h2 id="joining"><a href="#joining" class="headerlink" title="joining"></a>joining</h2><p>将流中的数据拼接成一个字符串. 需要注意的是如果流中的数据不是<code>String</code>类型的数据,可以通过<code>map</code>操作将流中数据转换成<code>String</code>类型</p>
+<p>lambda表达式类型</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Function</span>&lt;<span class="title">T</span>, <span class="title">R</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function">R <span class="title">apply</span><span class="params">(T t)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">List&lt;String&gt; list = Arrays.asList(<span class="string">&quot;1&quot;</span>, <span class="string">&quot;10&quot;</span>, <span class="string">&quot;2&quot;</span>, <span class="string">&quot;3&quot;</span>, <span class="string">&quot;2&quot;</span>);</span><br><span class="line">String result = list.stream().collect(Collectors.joining(<span class="string">&quot;,&quot;</span>, <span class="string">&quot;(&quot;</span>, <span class="string">&quot;)&quot;</span>));</span><br><span class="line"><span class="comment">// 结果</span></span><br><span class="line"><span class="string">&quot;(1,10,2,3,2)&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="reducing"><a href="#reducing" class="headerlink" title="reducing"></a>reducing</h2><p>lambda表达式类型</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">R <span class="title">apply</span><span class="params">(T t, U u)</span></span>;</span><br></pre></td></tr></table></figure>
+<p>示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h2 id="mapping"><a href="#mapping" class="headerlink" title="mapping"></a>mapping</h2><p>lambda表达式类型</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Function</span>&lt;<span class="title">T</span>, <span class="title">R</span>&gt; </span>&#123;</span><br><span class="line">    <span class="function">R <span class="title">apply</span><span class="params">(T t)</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">List&lt;String&gt; list = Arrays.asList(<span class="string">&quot;1&quot;</span>, <span class="string">&quot;10&quot;</span>, <span class="string">&quot;2&quot;</span>, <span class="string">&quot;3&quot;</span>, <span class="string">&quot;2&quot;</span>);</span><br><span class="line">List&lt;String&gt; result = list.stream().collect(Collectors.mapping(ele -&gt; ele + <span class="number">1</span>, Collectors.toList()));</span><br><span class="line"><span class="comment">// 结果</span></span><br><span class="line">[</span><br><span class="line">	<span class="string">&quot;11&quot;</span>,</span><br><span class="line">	<span class="string">&quot;101&quot;</span>,</span><br><span class="line">	<span class="string">&quot;21&quot;</span>,</span><br><span class="line">	<span class="string">&quot;31&quot;</span>,</span><br><span class="line">	<span class="string">&quot;21&quot;</span></span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<h2 id="distinct"><a href="#distinct" class="headerlink" title="distinct"></a>distinct</h2><p><img src="https://raw.githubusercontent.com/yu66/blog-website/images/java8/distinct.jpg"></p>
+<h2 id="limit"><a href="#limit" class="headerlink" title="limit"></a>limit</h2><p><img src="https://raw.githubusercontent.com/yu66/blog-website/images/java8/limit.jpg"></p>
+<h2 id="peek"><a href="#peek" class="headerlink" title="peek"></a>peek</h2><p><img src="https://raw.githubusercontent.com/yu66/blog-website/images/java8/peek.jpg"></p>
+<h2 id="skip"><a href="#skip" class="headerlink" title="skip"></a>skip</h2><p><img src="https://raw.githubusercontent.com/yu66/blog-website/images/java8/skip.jpg"></p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://wangmingco.github.io/2015/09/08/Java/javase/Java8%20%E6%B5%81/" title="java8 流" target="_blank" rel="external">https://wangmingco.github.io/2015/09/08/Java/javase/Java8 流/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/wangmingco" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/wangmingco" target="_blank"><span class="text-dark">向南</span><small class="ml-1x">Coder</small></a></h3>
+        <div>个人简介。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2015/09/08/Java/javase/Java8%20lambda/" title="java lambda"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2015/09/08/Java/lib/Archiva/" title="Archiva 初探"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>感谢您的支持，我会继续努力的!</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/images/donate/alipayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开支付宝扫一扫，即可进行扫码打赏哦</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/images/donate/wechatpayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开微信扫一扫，即可进行扫码打赏哦</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> 支付宝</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> 微信支付</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/wangmingco" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="https://gitee.com/wangmingco" target="_blank" title="Gitee" data-toggle=tooltip data-placement=top><i class="icon icon-gitee"></i></a></li>
+        
+        <li><a href="https://weibo.com/wangmingco" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://www.zhihu.com/people/wangmingco" target="_blank" title="Zhihu" data-toggle=tooltip data-placement=top><i class="icon icon-zhihu"></i></a></li>
+        
+        <li><a href="https://www.douban.com/people/xxxyy/" target="_blank" title="Douban" data-toggle=tooltip data-placement=top><i class="icon icon-douban"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>
