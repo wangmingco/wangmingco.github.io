@@ -22,15 +22,15 @@
   
   
   <title>前端跨域原理 | 向南</title>
-  <meta name="description" content="123456789| 域名1 | 域名2    | 说明      | 是否允许通信 ||--------|----------|----------|| http:&#x2F;&#x2F;www.a.com&#x2F;a.js |  http:&#x2F;&#x2F;www.a.com&#x2F;b.js| 同一域名下 | 允许 || http:&#x2F;&#x2F;www.a.com&#x2F;lab&#x2F;a.js | http:&#x2F;&#x2F;www.a.com&#x2F;script&#x2F;b.js| 同">
+  <meta name="description" content="域名1 域名2 说明 是否允许通信    http:&#x2F;&#x2F;www.a.com&#x2F;a.js http:&#x2F;&#x2F;www.a.com&#x2F;b.js 同一域名下 允许   http:&#x2F;&#x2F;www.a.com&#x2F;lab&#x2F;a.js http:&#x2F;&#x2F;www.a.com&#x2F;script&#x2F;b.js 同一域名下不同文件夹 允许   http:&#x2F;&#x2F;www.a.com:8000&#x2F;a.js http:&#x2F;&#x2F;www.a.com&#x2F;b.js">
 <meta property="og:type" content="article">
 <meta property="og:title" content="前端跨域原理">
 <meta property="og:url" content="https://wangmingco.github.io/2017/02/08/%E5%89%8D%E7%AB%AF/%E5%89%8D%E7%AB%AF%E8%B7%A8%E5%9F%9F%E5%8E%9F%E7%90%86/index.html">
 <meta property="og:site_name" content="向南">
-<meta property="og:description" content="123456789| 域名1 | 域名2    | 说明      | 是否允许通信 ||--------|----------|----------|| http:&#x2F;&#x2F;www.a.com&#x2F;a.js |  http:&#x2F;&#x2F;www.a.com&#x2F;b.js| 同一域名下 | 允许 || http:&#x2F;&#x2F;www.a.com&#x2F;lab&#x2F;a.js | http:&#x2F;&#x2F;www.a.com&#x2F;script&#x2F;b.js| 同">
+<meta property="og:description" content="域名1 域名2 说明 是否允许通信    http:&#x2F;&#x2F;www.a.com&#x2F;a.js http:&#x2F;&#x2F;www.a.com&#x2F;b.js 同一域名下 允许   http:&#x2F;&#x2F;www.a.com&#x2F;lab&#x2F;a.js http:&#x2F;&#x2F;www.a.com&#x2F;script&#x2F;b.js 同一域名下不同文件夹 允许   http:&#x2F;&#x2F;www.a.com:8000&#x2F;a.js http:&#x2F;&#x2F;www.a.com&#x2F;b.js">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2017-02-07T16:00:00.000Z">
-<meta property="article:modified_time" content="2022-06-27T03:43:49.643Z">
+<meta property="article:modified_time" content="2022-06-27T05:35:34.004Z">
 <meta property="article:author" content="向南">
 <meta property="article:tag" content="JavaScript">
 <meta name="twitter:card" content="summary">
@@ -395,8 +395,59 @@
     <div class="article-entry marked-body" itemprop="articleBody">
       
         <script src="/assets/asciinema-player.js"></script><link rel="stylesheet" type="text/css" href="/assets/asciinema-player.css" />
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">| 域名1 | 域名2    | 说明      | 是否允许通信 |</span><br><span class="line">|--------|----------|----------|</span><br><span class="line">| http://www.a.com/a.js |  http://www.a.com/b.js| 同一域名下 | 允许 |</span><br><span class="line">| http://www.a.com/lab/a.js | http://www.a.com/script/b.js| 同一域名下不同文件夹 | 允许 |</span><br><span class="line">| http://www.a.com:8000/a.js | http://www.a.com/b.js | 同一域名，不同端口 | 不允许 |</span><br><span class="line">| http://www.a.com/a.js | http://70.32.92.74/b.js | 域名和域名对应ip | 不允许 |</span><br><span class="line">| http://www.a.com/a.js | http://script.a.com/b.js | 主域相同，子域不同 | 不允许 |</span><br><span class="line">| http://www.a.com/a.js | http://a.com/b.js | 同一域名，不同二级域名（同上） | 不允许（cookie这种情况下也不允许访问）|</span><br><span class="line">| http://www.cnblogs.com/a.js | http://www.a.com/b.js| 不同域名| 不允许|</span><br></pre></td></tr></table></figure>
 
+<table>
+<thead>
+<tr>
+<th>域名1</th>
+<th>域名2</th>
+<th>说明</th>
+<th>是否允许通信</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><a target="_blank" rel="noopener" href="http://www.a.com/a.js">http://www.a.com/a.js</a></td>
+<td><a target="_blank" rel="noopener" href="http://www.a.com/b.js">http://www.a.com/b.js</a></td>
+<td>同一域名下</td>
+<td>允许</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="http://www.a.com/lab/a.js">http://www.a.com/lab/a.js</a></td>
+<td><a target="_blank" rel="noopener" href="http://www.a.com/script/b.js">http://www.a.com/script/b.js</a></td>
+<td>同一域名下不同文件夹</td>
+<td>允许</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="http://www.a.com:8000/a.js">http://www.a.com:8000/a.js</a></td>
+<td><a target="_blank" rel="noopener" href="http://www.a.com/b.js">http://www.a.com/b.js</a></td>
+<td>同一域名，不同端口</td>
+<td>不允许</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="http://www.a.com/a.js">http://www.a.com/a.js</a></td>
+<td><a target="_blank" rel="noopener" href="http://70.32.92.74/b.js">http://70.32.92.74/b.js</a></td>
+<td>域名和域名对应ip</td>
+<td>不允许</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="http://www.a.com/a.js">http://www.a.com/a.js</a></td>
+<td><a target="_blank" rel="noopener" href="http://script.a.com/b.js">http://script.a.com/b.js</a></td>
+<td>主域相同，子域不同</td>
+<td>不允许</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="http://www.a.com/a.js">http://www.a.com/a.js</a></td>
+<td><a target="_blank" rel="noopener" href="http://a.com/b.js">http://a.com/b.js</a></td>
+<td>同一域名，不同二级域名（同上）</td>
+<td>不允许（cookie这种情况下也不允许访问）</td>
+</tr>
+<tr>
+<td><a target="_blank" rel="noopener" href="http://www.cnblogs.com/a.js">http://www.cnblogs.com/a.js</a></td>
+<td><a target="_blank" rel="noopener" href="http://www.a.com/b.js">http://www.a.com/b.js</a></td>
+<td>不同域名</td>
+<td>不允许</td>
+</tr>
+</tbody></table>
 <p>特别注意两点：</p>
 <ol>
 <li>如果是协议和端口造成的跨域问题“前台”是无能为力的，</li>
