@@ -18,6 +18,18 @@ Log4J2会使用`ConfigurationFactory`从classpath上依次尝试加载下面的�
 9. log4j2.xml
 从上面的配置文件,我们可以看到Log4J2支持, JSON, YAML, properties, XML 等四种格式的配置文件.
 
+自定义配置文件路径
+```java
+File file = new File("D:\\work\\trunk\\Huimeng_Android\\Server\\code\\RydlServer\\Commons\\configs\\group\\log4j2.xml");
+System.setProperty("log4j.configurationFile", file.toURI().toString());
+((LoggerContext)LogManager.getContext(false)).reconfigure();
+```
+或者
+```java
+System.setProperty("log4j.configurationFile", "file:/D:/work/trunk/Huimeng_Android/Server/code/RydlServer/Commons/configs/group/log4j2.xml");
+((LoggerContext)LogManager.getContext(false)).reconfigure();
+```
+
 如果找不到配置文件的话, 就会使用默认的配置
 * 想root logger 关联一个ConsoleAppender (root logger的默认等级是Level.ERROR)
 * ConsoleAppender指定一个PatternLayout, 其格式内容为`%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n`
