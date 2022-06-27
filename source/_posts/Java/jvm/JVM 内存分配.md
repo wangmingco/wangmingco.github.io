@@ -219,7 +219,7 @@ public static void testAllocation() {
 分析如下：
 
 1. 首先在堆中分配3个2MB大小和1个4MB大小的byte数组, 在运行时通过`-Xms20M、 -Xmx20M`和`-Xmn10M`这3个参数限制Java堆大小为20MB,且不可扩展,其中10MB分配给新生代,剩下的10MB分配给老年代.
-2. `-XX:SurvivorRatio=8`决定了新生代中Eden区与一个`Survivor`区的空间比例是8比1,从输出的结果也能清晰地看到`“eden space 8192K、from space 1024K、to space 1024K”`的信息,新生代总可用空间为`9216KB`(`Eden`区+1个`Survivor`区的总容量).
+2. `-XX:SurvivorRatio=8`决定了新生代中Eden区与一个`Survivor`区的空间比例是8比1,从输出的结果也能清晰地看到`eden space 8192K、from space 1024K、to space 1024K`的信息,新生代总可用空间为`9216KB`(`Eden`区+1个`Survivor`区的总容量).
 3. 执行`testAllocation()`中分配`allocation4`对象的语句时会发生一次Minor GC,这次GC的结果是新生代6651KB变为148KB,而总内存占用量则几乎没有减少(因为allocation1、2、3三个对象都是存活的,虚拟机几乎没有找到可回收的对象).
 4. 这次GC发生的原因是给allocation4分配内存的时候,发现Eden已经被占用了6MB,剩余空间已不足以分配allocation4所需的4MB内存,因此发生Minor GC.GC期间虚拟机又发现已有的3个2MB大小的对象全部无法放入Survivor空间(Survivor空间只有1MB大小),所以只好通过分配担保机制提前转移到老年代去.
 5. 这次GC结束后,4MB的allocation4对象被顺利分配在Eden中.因此程序执行完的结果是Eden占用4MB(被allocation4占用),Survivor空闲,老年代被占用6MB(被allocation1、2、3占用)
