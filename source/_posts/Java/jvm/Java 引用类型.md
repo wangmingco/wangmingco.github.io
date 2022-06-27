@@ -1,5 +1,6 @@
 ---
-category: JVM
+category: Java
+tag: jvm
 date: 2016-05-05
 title: Java 引用类型
 ---

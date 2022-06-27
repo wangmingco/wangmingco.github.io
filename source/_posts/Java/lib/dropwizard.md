@@ -1,6 +1,6 @@
 ---
-category: Java 类库
-tag: Dropwizard
+category: Java
+tag: Java 三方库
 date: 2015-04-08
 title: Dropwizard 初探
 ---

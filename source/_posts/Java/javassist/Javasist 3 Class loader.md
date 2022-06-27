@@ -1,5 +1,6 @@
 ---
-category: Javasist
+category: Java
+tag: Javasist
 title: Javasist Class Loader
 date: 2019-05-03 20:15:00
 ---

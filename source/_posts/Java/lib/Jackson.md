@@ -1,6 +1,6 @@
 ---
-category: Java 类库
-tag: Jackson
+category: Java
+tag: Java 三方库
 date: 2016-10-11
 title: Jackson 笔记
 ---

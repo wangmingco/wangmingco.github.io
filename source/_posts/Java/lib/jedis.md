@@ -1,5 +1,6 @@
 ---
-category: Jedis
+category: Java
+tag: Java 三方库
 date: 2016-03-02
 title: Jedis 初探
 ---

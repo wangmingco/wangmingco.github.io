@@ -1,6 +1,6 @@
 ---
-category: Java 网络库
-tag: Jetty
+category: Java
+tag: Java 三方库
 date: 2016-07-25
 title: Jetty 嵌入模式
 ---

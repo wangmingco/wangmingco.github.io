@@ -1,5 +1,5 @@
 ---
-category: vertx
+category: Java
 tag: vertx2
 title: Vertx 2 Java Api Manaual
 date: 2015-07-08 16:20:00

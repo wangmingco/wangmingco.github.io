@@ -1,5 +1,6 @@
 ---
-category: JVM
+category: Java
+tag: jvm
 date: 2016-08-22
 title: hsperfdata
 ---

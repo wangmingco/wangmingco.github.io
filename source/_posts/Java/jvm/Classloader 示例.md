@@ -1,5 +1,6 @@
 ---
-category: JVM
+category: Java
+tag: jvm
 date: 2016-01-29
 title: 使用Classloader加载类
 ---

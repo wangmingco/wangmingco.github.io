@@ -1,5 +1,5 @@
 ---
-category: Netty
+category: Java
 tag: Netty
 date: 2015-11-23
 title: Netty Channel

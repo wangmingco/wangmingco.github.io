@@ -1,5 +1,6 @@
 ---
-category: Javasist
+category: Java
+tag: Javasist
 title: Javasist Introspection and customization
 date: 2019-05-04 20:15:00
 ---

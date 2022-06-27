@@ -1,5 +1,5 @@
 ---
-category: vertx
+category: Java
 tag: vertx3
 title: Vertx 3 Data Access
 date: 2015-08-27 21:10:00

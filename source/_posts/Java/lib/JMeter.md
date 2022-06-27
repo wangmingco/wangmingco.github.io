@@ -1,6 +1,6 @@
 ---
-category: Java 类库
-tag: JMeter
+category: Java
+tag: Java 三方库
 date: 2016-05-09
 title: JMeter
 ---

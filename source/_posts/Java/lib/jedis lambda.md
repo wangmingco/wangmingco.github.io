@@ -1,5 +1,6 @@
 ---
-category: Jedis
+category: Java
+tag: Java 三方库
 date: 2016-07-29
 title: 当Jedis 遇上 Lambda
 ---

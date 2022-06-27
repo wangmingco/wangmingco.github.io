@@ -1,5 +1,5 @@
 ---
-category: Netty
+category: Java
 tag: Netty
 date: 2016-02-02
 title: Netty ChannelHandler 和 ChannelPipeline

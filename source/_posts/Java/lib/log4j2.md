@@ -1,6 +1,6 @@
 ---
-category: Java 类库
-tag: Log4J2
+category: Java
+tag: Java 三方库
 date: 2016-05-12
 title: Log4J2 笔记
 ---

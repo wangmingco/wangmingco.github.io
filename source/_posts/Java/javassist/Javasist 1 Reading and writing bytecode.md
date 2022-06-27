@@ -1,5 +1,6 @@
 ---
-category: Javasist
+category: Java
+tag: Javasist
 title: Javasist Reading and writing bytecode
 date: 2019-05-01 20:15:00
 ---

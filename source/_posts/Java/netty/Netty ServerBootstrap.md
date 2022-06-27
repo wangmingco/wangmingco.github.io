@@ -1,5 +1,5 @@
 ---
-category: Netty
+category: Java
 tag: Netty
 date: 2016-02-22
 title: NettyServerBootstrap

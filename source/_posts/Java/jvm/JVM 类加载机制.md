@@ -1,5 +1,6 @@
 ---
-category: JVM
+category: Java
+tag: jvm
 date: 2014-09-09
 title: 类加载机制
 ---

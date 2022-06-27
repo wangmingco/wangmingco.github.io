@@ -1,6 +1,6 @@
 ﻿---
-category: Java 类库
-tag: Guava
+category: Java
+tag: Java 三方库
 date: 2013-09-13
 title: Guava Cache
 ---

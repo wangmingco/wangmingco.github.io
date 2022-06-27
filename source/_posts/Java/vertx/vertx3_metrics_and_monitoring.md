@@ -1,5 +1,5 @@
 ---
-category: vertx
+category: Java
 tag: vertx3
 title: Vertx 3 Metrics And Monitoring
 date: 2015-08-15 17:22:00

@@ -1,5 +1,6 @@
 ---
-category: Javasist
+category: Java
+tag: Javasist
 title: Javasist ClassPool
 date: 2019-05-02 20:15:00
 ---

@@ -1,6 +1,6 @@
 ---
-category: Java 网络库
-tag: Retrofit
+category: Java
+tag: Java 三方库
 date: 2016-01-20
 title: Retrofit 初探
 ---

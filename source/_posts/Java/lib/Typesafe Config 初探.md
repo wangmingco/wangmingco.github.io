@@ -1,6 +1,6 @@
 ---
-category: Java 类库
-tag: Typesafe Config
+category: Java
+tag: Java 三方库
 date: 2016-01-30
 title: Typesafe Config 初探
 ---

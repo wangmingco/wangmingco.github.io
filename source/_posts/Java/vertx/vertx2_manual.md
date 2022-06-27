@@ -1,5 +1,5 @@
 ---
-category: vertx
+category: Java
 tag: vertx2
 title: Vertx 2 Manual
 date: 2015-07-02 12:10:00

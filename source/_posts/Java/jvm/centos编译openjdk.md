@@ -1,5 +1,6 @@
 ---
-category: JVM
+category: Java
+tag: jvm
 date: 2022-01-10
 title: Centos7 编译调试 OpenJDK11
 ---

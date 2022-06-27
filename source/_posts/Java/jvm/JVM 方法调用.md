@@ -1,5 +1,6 @@
 ---
-category: JVM
+category: Java
+tag: jvm
 date: 2014-09-04
 title: JVM方法调用
 ---

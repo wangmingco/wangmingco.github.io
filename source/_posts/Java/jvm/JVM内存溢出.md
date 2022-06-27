@@ -1,5 +1,6 @@
 ---
-category: JVM
+category: Java
+tag: jvm
 date: 2014-09-06
 title: JVM内存溢出 
 ---

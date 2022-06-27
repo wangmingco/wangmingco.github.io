@@ -1,6 +1,6 @@
 ---
-category: Java 类库
-tag: Lombok
+category: Java
+tag: Java 三方库
 date: 2015-12-09
 title: Lombok 初探
 ---

@@ -1,5 +1,6 @@
 ---
-category: JVM
+category: Java
+tag: jvm
 date: 2016-11-03
 title: Spring-loaded
 ---

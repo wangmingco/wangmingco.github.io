@@ -1,6 +1,6 @@
 ---
-category: Java 类库
-tag: Archiva
+category: Java
+tag: Java 三方库
 date: 2015-09-08
 title: Archiva 初探
 ---

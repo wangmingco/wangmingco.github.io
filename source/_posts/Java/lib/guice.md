@@ -1,6 +1,6 @@
 ---
-category: Java 类库
-tag: Guice
+category: Java
+tag: Java 三方库
 date: 2015-12-08
 title: Guice 笔记
 ---

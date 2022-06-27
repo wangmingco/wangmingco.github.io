@@ -1,5 +1,5 @@
 ---
-category: Netty
+category: Java
 tag: Netty
 date: 2015-11-20
 title: Netty ByteBuf

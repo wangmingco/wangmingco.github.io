@@ -1,6 +1,6 @@
 ---
-category: Java 类库
-tag: OWNER
+category: Java
+tag: Java 三方库
 date: 2016-01-19
 title: OWNER 初探
 ---

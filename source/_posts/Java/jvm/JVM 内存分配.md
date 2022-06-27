@@ -1,5 +1,6 @@
 ---
-category: JVM
+category: Java
+tag: jvm
 date: 2014-09-03
 title: JVM 内存分配
 ---

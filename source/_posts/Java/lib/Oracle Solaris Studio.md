@@ -1,5 +1,6 @@
 ---
-category: 性能监控
+category: Java
+tag: Java 三方库
 date: 2016-05-11
 title: Oracle® Solaris Studio 
 ---

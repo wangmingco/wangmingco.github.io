@@ -1,6 +1,6 @@
 ---
-category: Java 类库
-tag: CRaSH
+category: Java
+tag: Java 三方库
 date: 2016-05-15
 title: CRaSH 安装启动
 ---

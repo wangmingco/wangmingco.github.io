@@ -1,5 +1,6 @@
 ---
-category: Mybatis
+category: Java
+tag: Java 三方库
 date: 2015-12-09
 title: Guice Mybatis 使用笔记
 ---
