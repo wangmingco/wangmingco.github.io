@@ -2,6 +2,188 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://wangmingco.github.io/2016/12/03/Java/jol/JOL_27_Colocation/</loc>
+    
+    <lastmod>2022-06-28</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2016/12/03/Java/jol/JOL_26_Defragmentation/</loc>
+    
+    <lastmod>2022-06-28</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2016/12/03/Java/jol/JOL_25_Compaction/</loc>
+    
+    <lastmod>2022-06-28</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2022/06/20/%E6%95%B0%E6%8D%AE%E5%BA%93/sql/</loc>
+    
+    <lastmod>2022-06-28</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2016/12/05/Java/jol/JOL_24_Arrays/</loc>
+    
+    <lastmod>2022-06-28</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2016/12/04/Java/jol/JOL_23_Roots/</loc>
+    
+    <lastmod>2022-06-28</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2016/12/04/Java/jol/JOL_22_Promotion/</loc>
+    
+    <lastmod>2022-06-28</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2016/12/04/Java/jol/JOL_21_Layouts/</loc>
+    
+    <lastmod>2022-06-28</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2016/12/04/Java/jol/JOL_20_Allocation/</loc>
+    
+    <lastmod>2022-06-28</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2016/12/04/Java/jol/JOL_19_AL_LL/</loc>
+    
+    <lastmod>2022-06-28</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2016/12/03/Java/jol/JOL_16_IHC_BL_Conflict/</loc>
+    
+    <lastmod>2022-06-28</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2016/12/03/Java/jol/JOL_18_ArrayAlignment/</loc>
+    
+    <lastmod>2022-06-28</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2016/12/03/Java/jol/JOL_17_ArrayLength/</loc>
+    
+    <lastmod>2022-06-28</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2016/12/03/Java/jol/JOL_28_Difference/</loc>
+    
+    <lastmod>2022-06-28</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2016/12/03/Java/jol/JOL_15_IdentityHashCode/</loc>
+    
+    <lastmod>2022-06-28</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2016/12/02/Java/jol/JOL_14_FatLocking/</loc>
+    
+    <lastmod>2022-06-28</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2016/12/02/Java/jol/JOL_13_ThinLocking/</loc>
+    
+    <lastmod>2022-06-28</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2016/12/02/Java/jol/JOL_12_BiasedLocking/</loc>
+    
+    <lastmod>2022-06-28</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2016/11/29/Java/jol/JOL_11_Class%20Word/</loc>
+    
+    <lastmod>2022-06-28</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2016/11/29/Java/jol/JOL_08_Class/</loc>
+    
+    <lastmod>2022-06-28</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2016/11/29/Java/jol/JOL_07_Exception/</loc>
+    
+    <lastmod>2022-06-28</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2016/11/29/Java/jol/JOL_04_Inheritance/</loc>
+    
+    <lastmod>2022-06-28</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2016/11/29/Java/jol/JOL_03_Packing/</loc>
+    
+    <lastmod>2022-06-28</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2016/11/29/Java/jol/JOL_02_Alignment/</loc>
+    
+    <lastmod>2022-06-28</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2016/11/29/Java/jol/JOL_01_Basic/</loc>
+    
+    <lastmod>2022-06-28</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2014/09/03/Java/jvm/JVM%20%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D/</loc>
+    
+    <lastmod>2022-06-27</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://wangmingco.github.io/2016/09/23/Java/javase/%E5%B9%B6%E5%8F%91%20wait%20sleep/</loc>
     
     <lastmod>2022-06-27</lastmod>
@@ -492,13 +674,6 @@
   </url>
   
   <url>
-    <loc>https://wangmingco.github.io/2014/09/03/Java/jvm/JVM%20%E5%86%85%E5%AD%98%E5%88%86%E9%85%8D/</loc>
-    
-    <lastmod>2022-06-27</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://wangmingco.github.io/2014/09/06/Java/jvm/JVM%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA/</loc>
     
     <lastmod>2022-06-27</lastmod>
@@ -719,13 +894,6 @@
     <loc>https://wangmingco.github.io/2017/02/17/%E5%89%8D%E7%AB%AF/JavaScript%20%E8%B7%B3%E8%BD%AC/</loc>
     
     <lastmod>2022-06-27</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://wangmingco.github.io/2022/06/20/%E6%95%B0%E6%8D%AE%E5%BA%93/sql/</loc>
-    
-    <lastmod>2022-06-20</lastmod>
     
   </url>
   
@@ -1222,7 +1390,7 @@
 
   <url>
     <loc>https://wangmingco.github.io/</loc>
-    <lastmod>2022-06-27</lastmod>
+    <lastmod>2022-06-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -1230,112 +1398,119 @@
   
   <url>
     <loc>https://wangmingco.github.io/tags/asm/</loc>
-    <lastmod>2022-06-27</lastmod>
+    <lastmod>2022-06-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/tags/Netty/</loc>
-    <lastmod>2022-06-27</lastmod>
+    <lastmod>2022-06-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/tags/vertx2/</loc>
-    <lastmod>2022-06-27</lastmod>
+    <lastmod>2022-06-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/tags/vertx3/</loc>
-    <lastmod>2022-06-27</lastmod>
+    <lastmod>2022-06-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/tags/Memcached/</loc>
-    <lastmod>2022-06-27</lastmod>
+    <lastmod>2022-06-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/tags/MongoDB/</loc>
-    <lastmod>2022-06-27</lastmod>
+    <lastmod>2022-06-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/tags/Redis/</loc>
-    <lastmod>2022-06-27</lastmod>
+    <lastmod>2022-06-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/tags/JavaScript/</loc>
-    <lastmod>2022-06-27</lastmod>
+    <lastmod>2022-06-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/tags/PEG-js/</loc>
-    <lastmod>2022-06-27</lastmod>
+    <lastmod>2022-06-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/tags/mysql/</loc>
-    <lastmod>2022-06-27</lastmod>
+    <lastmod>2022-06-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/tags/React/</loc>
-    <lastmod>2022-06-27</lastmod>
+    <lastmod>2022-06-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/tags/Javasist/</loc>
-    <lastmod>2022-06-27</lastmod>
+    <lastmod>2022-06-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/tags/jvm/</loc>
-    <lastmod>2022-06-27</lastmod>
+    <lastmod>2022-06-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/tags/jmh/</loc>
-    <lastmod>2022-06-27</lastmod>
+    <lastmod>2022-06-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/tags/Java-%E4%B8%89%E6%96%B9%E5%BA%93/</loc>
-    <lastmod>2022-06-27</lastmod>
+    <lastmod>2022-06-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/tags/JavaSE/</loc>
-    <lastmod>2022-06-27</lastmod>
+    <lastmod>2022-06-28</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/tags/jol/</loc>
+    <lastmod>2022-06-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
@@ -1344,98 +1519,98 @@
   
   <url>
     <loc>https://wangmingco.github.io/categories/Nginx/</loc>
-    <lastmod>2022-06-27</lastmod>
+    <lastmod>2022-06-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/categories/Java/</loc>
-    <lastmod>2022-06-27</lastmod>
+    <lastmod>2022-06-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/categories/NoSql/</loc>
-    <lastmod>2022-06-27</lastmod>
+    <lastmod>2022-06-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/categories/%E5%89%8D%E7%AB%AF/</loc>
-    <lastmod>2022-06-27</lastmod>
+    <lastmod>2022-06-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/categories/ZooKeeper/</loc>
-    <lastmod>2022-06-27</lastmod>
+    <lastmod>2022-06-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/categories/%E7%AE%97%E6%B3%95/</loc>
-    <lastmod>2022-06-27</lastmod>
+    <lastmod>2022-06-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/</loc>
-    <lastmod>2022-06-27</lastmod>
+    <lastmod>2022-06-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/categories/awk/</loc>
-    <lastmod>2022-06-27</lastmod>
+    <lastmod>2022-06-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/categories/Groovy/</loc>
-    <lastmod>2022-06-27</lastmod>
+    <lastmod>2022-06-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/categories/PHP/</loc>
-    <lastmod>2022-06-27</lastmod>
+    <lastmod>2022-06-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/categories/haskell/</loc>
-    <lastmod>2022-06-27</lastmod>
+    <lastmod>2022-06-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/categories/PYTHON2/</loc>
-    <lastmod>2022-06-27</lastmod>
+    <lastmod>2022-06-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/categories/Shell/</loc>
-    <lastmod>2022-06-27</lastmod>
+    <lastmod>2022-06-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/categories/%E6%9D%82%E6%96%87/</loc>
-    <lastmod>2022-06-27</lastmod>
+    <lastmod>2022-06-28</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
