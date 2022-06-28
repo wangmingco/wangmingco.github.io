@@ -1,7 +1,7 @@
 ---
 category: Java
 tag: jol
-date: 2016-12-03
+date: 2016-12-03 18:00:00
 title: JOL 15 IdentityHashCode
 ---
 

@@ -1,7 +1,7 @@
 ---
 category: Java
 tag: jol
-date: 2016-11-29
+date: 2016-11-29 09:05:00
 title: JOL 01 Basic
 ---
 

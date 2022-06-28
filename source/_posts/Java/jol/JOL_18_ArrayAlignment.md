@@ -1,7 +1,7 @@
 ---
 category: Java
 tag: jol
-date: 2016-12-03
+date: 2016-12-03 19:30:00
 title: JOL 18 ArrayAlignment
 ---
 

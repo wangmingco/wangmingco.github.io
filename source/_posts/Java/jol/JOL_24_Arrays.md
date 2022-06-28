@@ -1,7 +1,7 @@
 ---
 category: Java
 tag: jol
-date: 2016-12-05
+date: 2016-12-05 22:50:00
 title: JOL 24 Arrays
 ---
 

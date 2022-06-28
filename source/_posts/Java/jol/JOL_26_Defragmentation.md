@@ -1,7 +1,7 @@
 ---
 category: Java
 tag: jol
-date: 2016-12-03
+date: 2016-12-06  09:00:00
 title: JOL 26 Defragmentation
 ---
 

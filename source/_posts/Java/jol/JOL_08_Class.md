@@ -1,7 +1,7 @@
 ---
 category: Java
 tag: jol
-date: 2016-11-29
+date: 2016-11-29 10:55:00
 title: JOL 08 Class
 ---
 

@@ -1,7 +1,7 @@
 ---
 category: Java
 tag: jol
-date: 2016-12-02
+date: 2016-12-02 14:00:00
 title: JOL 12 BiasedLocking
 ---
 

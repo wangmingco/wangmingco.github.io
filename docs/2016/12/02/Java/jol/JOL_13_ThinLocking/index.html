@@ -29,8 +29,8 @@
 <meta property="og:site_name" content="向南">
 <meta property="og:description" content="本篇文章基于V0.16 JOLSample_13_ThinLocking 这篇文章我们继续了解mark word。 这篇以thin lock为例。当锁被请求到以后，mark word的数据变为一个引用，该引用指向了一个栈上分配的object header。当我们释放锁之后那个栈上分配的header就会被丢弃，mark word 将恢复为默认值。 下面的例子依赖于偏向锁定但是不能在第一次请求锁的时">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2016-12-01T16:00:00.000Z">
-<meta property="article:modified_time" content="2022-06-28T07:42:34.162Z">
+<meta property="article:published_time" content="2016-12-02T07:00:00.000Z">
+<meta property="article:modified_time" content="2022-06-28T10:19:20.335Z">
 <meta property="article:author" content="向南">
 <meta property="article:tag" content="jol">
 <meta name="twitter:card" content="summary">
@@ -370,7 +370,7 @@
         <span class="article-date">
     <i class="icon icon-calendar-check"></i>
 	<a href="/2016/12/02/Java/jol/JOL_13_ThinLocking/" class="article-date">
-	  <time datetime="2016-12-01T16:00:00.000Z" itemprop="datePublished">2016-12-02</time>
+	  <time datetime="2016-12-02T07:00:00.000Z" itemprop="datePublished">2016-12-02</time>
 	</a>
 </span>
         
@@ -461,7 +461,7 @@
   <ul class="pager pull-left">
     
     <li class="prev">
-      <a href="/2016/12/03/Java/jol/JOL_28_Difference/" title="JOL 28 Difference"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+      <a href="/2016/12/02/Java/jol/JOL_14_FatLocking/" title="JOL 14 FatLocking"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
     </li>
     
     

@@ -1,7 +1,7 @@
 ---
 category: Java
 tag: jol
-date: 2016-12-04
+date: 2016-12-04 21:50:00
 title: JOL 23 Roots
 ---
 
