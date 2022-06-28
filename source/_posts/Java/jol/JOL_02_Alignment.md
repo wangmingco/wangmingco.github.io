@@ -5,6 +5,8 @@ date: 2016-11-29
 title: JOL 02 Alignment
 ---
 
+本篇文章基于[V0.16 JOLSample_02_Alignment](https://github.com/openjdk/jol/blob/0.16/jol-samples/src/main/java/org/openjdk/jol/samples/JOLSample_02_Alignment.java)
+
 由于底层操作系统出于保持性能和正确性经常要求要进行对齐访问，因此通常会采用对象的大小对对象属性进行对齐。
 在下面的例子中，我们看到long类型的确实是使用8个字节进行对齐的，因此在对象头之后增加了4个字节的补缺进行对齐
 
@@ -29,7 +31,7 @@ public class JOLSample_02_Alignment {
 ```
 
 运行结果
-```
+```js
 # Running 64-bit HotSpot VM.
 # Using compressed oop with 3-bit shift.
 # Using compressed klass with 3-bit shift.

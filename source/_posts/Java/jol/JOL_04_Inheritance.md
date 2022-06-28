@@ -5,6 +5,8 @@ date: 2016-11-29
 title: JOL 04 Inheritance
 ---
 
+本篇文章基于[V0.16 JOLSample_04_Inheritance](https://github.com/openjdk/jol/blob/0.16/jol-samples/src/main/java/org/openjdk/jol/samples/JOLSample_04_Inheritance.java)
+
 这个例子展示了在继承结构中，字段是如何布局的。
 
 JVM会保证在继承结构中将可访问的字段布局在相同的偏移量上，而不管字段是被如何访问的。
@@ -40,7 +42,7 @@ public class JOLSample_04_Inheritance {
 ```
 
 运行结果
-```
+```js
 # Running 64-bit HotSpot VM.
 # Using compressed oop with 3-bit shift.
 # Using compressed klass with 3-bit shift.

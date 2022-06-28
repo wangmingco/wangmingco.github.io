@@ -5,6 +5,8 @@ date: 2016-11-29
 title: JOL 03 Packing
 ---
 
+本篇文章基于[V0.16 JOLSample_03_Packing](https://github.com/openjdk/jol/blob/0.16/jol-samples/src/main/java/org/openjdk/jol/samples/JOLSample_03_Packing.java)
+
 VM 会将字段组合在一起，以便最小化的内存占用。
 在下面的例子中，我们看到对象属性的对齐方式是 按照大小的  8->4->2->1 的顺序来对齐的。我们先在前面使用属性教大的，然后在后面使用属性较小的来填充属性较大的留下的空缺。
 
@@ -36,7 +38,7 @@ public class JOLSample_03_Packing {
 ```
 
 
-```
+```js
 # Running 64-bit HotSpot VM.
 # Using compressed oop with 3-bit shift.
 # Using compressed klass with 3-bit shift.

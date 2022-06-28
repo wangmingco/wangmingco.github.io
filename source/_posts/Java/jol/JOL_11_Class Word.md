@@ -5,8 +5,9 @@ date: 2016-11-29
 title: JOL 11 Class Word
 ---
 
-这个例子让我们再深入了解一下对象头。
+本篇文章基于[V0.16 JOLSample_11_ClassWord](https://github.com/openjdk/jol/blob/0.16/jol-samples/src/main/java/org/openjdk/jol/samples/JOLSample_11_ClassWord.java)
 
+这个例子让我们再深入了解一下对象头。
 
 ```java
 public class JOLSample_11_ClassWord {
@@ -29,7 +30,7 @@ public class JOLSample_11_ClassWord {
 ```
 
 运行结果
-```
+```js
 # Running 64-bit HotSpot VM.
 # Using compressed oop with 3-bit shift.
 # Using compressed klass with 3-bit shift.

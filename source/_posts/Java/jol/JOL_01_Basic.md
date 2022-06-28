@@ -5,6 +5,8 @@ date: 2016-11-29
 title: JOL 01 Basic
 ---
 
+本篇文章基于[V0.16 JOLSample_01_Basic](https://github.com/openjdk/jol/blob/0.16/jol-samples/src/main/java/org/openjdk/jol/samples/JOLSample_01_Basic.java)
+
 这个例子演示 了最基本的对象字段布局：
 * 对象头消耗多少内存
 * 对象属性是如何布局的
@@ -30,7 +32,7 @@ public class JOLSample_01_Basic {
 ```
 
 运行结果
-```
+```js
 # Running 64-bit HotSpot VM.
 # Using compressed oop with 3-bit shift.
 # Using compressed klass with 3-bit shift.
