@@ -9,10 +9,11 @@ title: JOL 23 Roots
 
 本例演示了VM如何遍历根集.
 
- During the GC, object reachability graph should be traversed starting from somewhere. The root set is the set of intrinsically reachable objects. Static fields are the part of root set, local variables are the part of root set as well.
-     
- In this example, we build the "ring" of objects, and reference only the single link from that ring from the local variable.
- This will have the effect of having the different parts of ring in the root set, which will, in the end, change the ring layout in memory.
+在GC过程中，需要从某个地方开始遍历对象可达图。根集是本质上可达的对象集。静态字段或者本地变量都是根集的一部分。
+
+然后我们构建一个对象环，让这个环上的对象相互引用，最后把第一个对象引用到本地变量上，其他的都断开连接。
+
+这将具有使环的不同部分位于根集合中的效果，这最终将改变内存中的环布局
 
 ```java
 public class JOLSample_23_Roots {
@@ -224,3 +225,7 @@ org.openjdk.jol.samples.JOLSample_23_Roots$L4@47089e5fd object externals:
 
 Addresses are stable after 1 tries.
 ```
+
+我将代码画了个流程图出来演示一下
+
+![](https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/jol/25_Roots/jol.png)
