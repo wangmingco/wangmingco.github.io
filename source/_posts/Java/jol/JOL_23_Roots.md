@@ -228,4 +228,4 @@ Addresses are stable after 1 tries.
 
 我将代码画了个流程图出来演示一下
 
-![](https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/jol/25_Roots/jol.png)
+![](https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/jol/23_Roots/jol.png)
