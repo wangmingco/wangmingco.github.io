@@ -22,15 +22,15 @@
   
   
   <title>nginx web服务器 | 向南</title>
-  <meta name="description" content="官方文档学习 在Nginx中每个用来处理HTTP请求的virtual server都被称为location. location可以参与请求处理的整个过程. location可以代理一个请求或者直接返回一个文件. 不但如此, 在location中我们还可以修改URI访问路径, 这样我们就可以将该请求指向其他的location或者其他的virtual server.  Setting Up Virtu">
+  <meta name="description" content="官方文档[](https:&#x2F;&#x2F;www.nginx.com&#x2F;resources&#x2F;admin-guide&#x2F;nginx-web-server&#x2F;)学习  在Nginx中每个用来处理HTTP请求的virtual server都被称为location. location可以参与请求处理的整个过程. location可以代理一个请求或者直接返回一个文件. 不但如此, 在location中我们还可以修改URI访问">
 <meta property="og:type" content="article">
 <meta property="og:title" content="nginx web服务器">
 <meta property="og:url" content="https://wangmingco.github.io/2016/04/23/nginx/nginx%20web%E6%9C%8D%E5%8A%A1%E5%99%A8/index.html">
 <meta property="og:site_name" content="向南">
-<meta property="og:description" content="官方文档学习 在Nginx中每个用来处理HTTP请求的virtual server都被称为location. location可以参与请求处理的整个过程. location可以代理一个请求或者直接返回一个文件. 不但如此, 在location中我们还可以修改URI访问路径, 这样我们就可以将该请求指向其他的location或者其他的virtual server.  Setting Up Virtu">
+<meta property="og:description" content="官方文档[](https:&#x2F;&#x2F;www.nginx.com&#x2F;resources&#x2F;admin-guide&#x2F;nginx-web-server&#x2F;)学习  在Nginx中每个用来处理HTTP请求的virtual server都被称为location. location可以参与请求处理的整个过程. location可以代理一个请求或者直接返回一个文件. 不但如此, 在location中我们还可以修改URI访问">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2016-04-22T16:00:00.000Z">
-<meta property="article:modified_time" content="2021-11-18T03:12:28.718Z">
+<meta property="article:modified_time" content="2022-06-29T05:46:58.117Z">
 <meta property="article:author" content="向南">
 <meta name="twitter:card" content="summary">
   <!-- Canonical links -->
@@ -388,13 +388,14 @@
     </div>
     <div class="article-entry marked-body" itemprop="articleBody">
       
-        <p>官方文档<a target="_blank" rel="noopener" href="https://www.nginx.com/resources/admin-guide/nginx-web-server/"></a>学习</p>
+        <script src="/assets/asciinema-player.js"></script><link rel="stylesheet" type="text/css" href="/assets/asciinema-player.css" />官方文档[](https://www.nginx.com/resources/admin-guide/nginx-web-server/)学习
+
 <p>在Nginx中每个用来处理HTTP请求的virtual server都被称为<code>location</code>. <code>location</code>可以参与请求处理的整个过程. <code>location</code>可以代理一个请求或者直接返回一个文件. 不但如此, 在<code>location</code>中我们还可以修改URI访问路径, 这样我们就可以将该请求指向其他的<code>location</code>或者其他的virtual server. </p>
 <h2 id="Setting-Up-Virtual-Servers"><a href="#Setting-Up-Virtual-Servers" class="headerlink" title="Setting Up Virtual Servers"></a>Setting Up Virtual Servers</h2><p>Nginx插件配置必须最少包含一个<code>server</code>指令(用于定义虚拟服务器-virtual server). 当Nginx插件处理一个请求时, 它首先会选择处理该请求的虚拟服务器. 一个虚拟服务器定义在<code>http</code>上下文里, 例如:</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">http &#123;</span><br><span class="line">    server &#123;</span><br><span class="line">        # Server configuration</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>在<code>http</code>上下文里可以定义多个<code>server</code>指令, 这样一来就可以实现多个虚拟服务器了.</p>
 <p>在<code>server</code>指令里通常包含一个<code>listen</code>指令, 通过<code>listen</code>指令来指定监听请求的IP地址和端口号(或者Unix domain socket and path). IPv4 和 IPv6 地址都可进行配置</p>
-<p>下面的例子展示了在IP地址<code>127.0.0.1</code>和端口<code>8080</code>上进行网络事件监听</p>
+<p>下面的例子演示了在IP地址<code>127.0.0.1</code>和端口<code>8080</code>上进行网络事件监听</p>
 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    listen 127.0.0.1:<span class="number">8080</span>;</span><br><span class="line">    # The rest of server configuration</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <p>如果端口忽略不写的话, Nginx插件会使用标准端口. 还有如果IP地址忽略不填的话, Nginx插件会在所有的IP地址上进行网络事件监听. 如果没有配置<code>listen</code>指令的话, 在超级用户权限下, 标准端口是<code>80/tcp</code>, 默认端口<code>8000/tcp</code>.</p>
 <p>如果有多个<code>server</code>指令里配置的IP地址和端口匹配到请求, 那么Nginx插件会根据请求的<code>Host header</code>字段与<code>server_name</code>指令进行匹配. 我们可以将<code>server_name</code>指令配置成一个全名称的地址, 或者使用通配符, 正则表达式. 如果想要使用通配符的话, 可以在地址的开头或者结尾使用<code>*</code>.</p>
@@ -462,7 +463,7 @@
 </ul>
 <p>在<code>server</code>或者<code>location</code>指令中可以包含多个<code>rewrite</code>指令. Nginx插件会根据<code>rewrite</code>指令出现的顺序依次执行.</p>
 <p>After NGINX processes a set of rewriting instructions, it selects a location context according to the new URI. If the selected location contains rewrite directives, they are executed in turn. If the URI matches any of those, a search for the new location starts after all defined rewrite directives are processed.</p>
-<p>下面的例子展示里<code>rewrite</code>和<code>return</code>指令混合使用的方式</p>
+<p>下面的例子演示里<code>rewrite</code>和<code>return</code>指令混合使用的方式</p>
 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">    ...</span><br><span class="line">    rewrite ^(/download/.*)/media/(.*)\..*$ $1/mp3/$2.mp3 last;</span><br><span class="line">    rewrite ^(/download/.*)/audio/(.*)\..*$ $1/mp3/$2.ra  last;</span><br><span class="line">    return  403;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>上面的例子区分了俩组URI. <code>/download/some/media/file</code>的URI会被替换成<code>/download/some/mp3/file.mp3</code>. 由于这个<code>rewrite</code>指令后面跟里一个<code>last</code>标记, 因此下面的<code>rewrite</code>和<code>return</code>指令就不会再执行到了. 但是如果URI例如<code>/download/some/audio/file</code>并不符合第一个,那么Nginx插件会继续匹配到第二个, 当然第二个符合, 于是URI被替换成<code>/download/some/mp3/file.ra</code>. 如果前俩个都不符合的话, 那么就会返回<code>403</code>错误码.</p>

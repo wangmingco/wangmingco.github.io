@@ -22,15 +22,15 @@
   
   
   <title>JOL 20 Allocation | 向南</title>
-  <meta name="description" content="本篇文章基于V0.16 JOLSample_20_Allocation &#x2F;*  * The example of allocation addresses.  *  * This example shows the addresses of newly allocated objects  * grow linearly in HotSpot. This is because the alloc">
+  <meta name="description" content="本篇文章基于V0.16 JOLSample_20_Allocation 本例用来演示如何获取对象的分配地址。 下面的代码在Hotspot中对象的分配地址是呈现线性增长的。这是因为parallel collectors收集器的对象分配就是线性的。在后面我们可以看到新分配的内存地址又会回到以前的地址上，这些地址往往是某些GC的起始地址。 像Parallel 这类GC，它们会调账分配率。而像G1这类G">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JOL 20 Allocation">
 <meta property="og:url" content="https://wangmingco.github.io/2016/12/04/Java/jol/JOL_20_Allocation/index.html">
 <meta property="og:site_name" content="向南">
-<meta property="og:description" content="本篇文章基于V0.16 JOLSample_20_Allocation &#x2F;*  * The example of allocation addresses.  *  * This example shows the addresses of newly allocated objects  * grow linearly in HotSpot. This is because the alloc">
+<meta property="og:description" content="本篇文章基于V0.16 JOLSample_20_Allocation 本例用来演示如何获取对象的分配地址。 下面的代码在Hotspot中对象的分配地址是呈现线性增长的。这是因为parallel collectors收集器的对象分配就是线性的。在后面我们可以看到新分配的内存地址又会回到以前的地址上，这些地址往往是某些GC的起始地址。 像Parallel 这类GC，它们会调账分配率。而像G1这类G">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2016-12-04T12:30:00.000Z">
-<meta property="article:modified_time" content="2022-06-28T10:20:28.555Z">
+<meta property="article:modified_time" content="2022-06-29T05:33:11.783Z">
 <meta property="article:author" content="向南">
 <meta property="article:tag" content="jol">
 <meta name="twitter:card" content="summary">
@@ -396,21 +396,10 @@
       
         <script src="/assets/asciinema-player.js"></script><link rel="stylesheet" type="text/css" href="/assets/asciinema-player.css" />
 <p>本篇文章基于<a target="_blank" rel="noopener" href="https://github.com/openjdk/jol/blob/0.16/jol-samples/src/main/java/org/openjdk/jol/samples/JOLSample_20_Allocation.java">V0.16 JOLSample_20_Allocation</a></p>
-<pre><code>/*
- * The example of allocation addresses.
- *
- * This example shows the addresses of newly allocated objects
- * grow linearly in HotSpot. This is because the allocation in
- * parallel collectors is linear. We can also see it rewinds back
- * to the same offsets -- that&#39;s the start of some GC generation.
- *
- * For Parallel-like GCs, while GC adjusts for the allocation rate.
- * For G1-like GCs, the allocation address changes by region size,
- * as collector switches to another region for allocation.
- *
- * Run with test with smaller heap (about 1 GB) for best results.
- */
-</code></pre>
+<p>本例用来演示如何获取对象的分配地址。</p>
+<p>下面的代码在Hotspot中对象的分配地址是呈现线性增长的。这是因为<code>parallel collectors</code>收集器的对象分配就是线性的。在后面我们可以看到新分配的内存地址又会回到以前的地址上，这些地址往往是某些GC的起始地址。</p>
+<p>像<code>Parallel</code> 这类GC，它们会调账分配率。而像<code>G1</code>这类GC, 对象分配地址会根据<code>region</code> 大小进行调账，因为GC可能会跳转到其他的<code>region</code>区域。</p>
+<p>运行下面的例子最好是使用一块小的内存(1GB)   </p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JOLSample_20_Allocation</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        out.println(VM.current().details());</span><br><span class="line"></span><br><span class="line">        PrintWriter pw = <span class="keyword">new</span> PrintWriter(out, <span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">long</span> last = VM.current().addressOf(<span class="keyword">new</span> Object());</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> l = <span class="number">0</span>; l &lt; <span class="number">1000</span> * <span class="number">1000</span> * <span class="number">1000</span>; l++) &#123;</span><br><span class="line">            <span class="keyword">long</span> current = VM.current().addressOf(<span class="keyword">new</span> Object());</span><br><span class="line"></span><br><span class="line">            <span class="keyword">long</span> distance = Math.abs(current - last);</span><br><span class="line">            <span class="keyword">if</span> (distance &gt; <span class="number">4096</span>) &#123;</span><br><span class="line">                pw.printf(<span class="string">&quot;Jumping from %x to %x (distance = %d bytes, %dK, %dM)%n&quot;</span>,</span><br><span class="line">                        last,</span><br><span class="line">                        current,</span><br><span class="line">                        distance,</span><br><span class="line">                        distance / <span class="number">1024</span>,</span><br><span class="line">                        distance / <span class="number">1024</span> / <span class="number">1024</span>);</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            last = current;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        pw.close();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
 <p>运行结果</p>

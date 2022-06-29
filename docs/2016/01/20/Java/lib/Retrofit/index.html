@@ -30,7 +30,7 @@
 <meta property="og:description" content="首先添加Maven依赖 12345&lt;dependency&gt;	&lt;groupId&gt;com.squareup.retrofit2&lt;&#x2F;groupId&gt;	&lt;artifactId&gt;retrofit&lt;&#x2F;artifactId&gt;	&lt;version&gt;2.0.2&lt;&#x2F;version&gt;&lt;&#x2F;dependency&gt;  注意我们使用的">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2016-01-19T16:00:00.000Z">
-<meta property="article:modified_time" content="2022-06-27T06:17:44.274Z">
+<meta property="article:modified_time" content="2022-06-29T05:46:58.116Z">
 <meta property="article:author" content="向南">
 <meta property="article:tag" content="Java 三方库">
 <meta name="twitter:card" content="summary">
@@ -404,7 +404,7 @@
 <p>然后<code>Retrofit</code>会自动完成其实现类</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Retrofit retrofit = <span class="keyword">new</span> Retrofit.Builder()</span><br><span class="line">    .baseUrl(<span class="string">&quot;https://api.github.com&quot;</span>)</span><br><span class="line">    .build();</span><br><span class="line"></span><br><span class="line">GitHubService service = retrofit.create(GitHubService.class);</span><br></pre></td></tr></table></figure>
 <p>在上面的示例中我们完成了一个<code>Get</code>请求, 然后使用<code>@Path</code>进行参数替换</p>
-<h2 id="Post请求"><a href="#Post请求" class="headerlink" title="Post请求"></a>Post请求</h2><p>上面我们展示的是一个<code>Get</code>请求, 下面我们再看一个<code>Post</code>请求的示例</p>
+<h2 id="Post请求"><a href="#Post请求" class="headerlink" title="Post请求"></a>Post请求</h2><p>上面我们演示的是一个<code>Get</code>请求, 下面我们再看一个<code>Post</code>请求的示例</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@POST(&quot;users/new&quot;)</span></span><br><span class="line"><span class="function">Call&lt;User&gt; <span class="title">createUser</span><span class="params">(<span class="meta">@Body</span> User user)</span></span>;</span><br></pre></td></tr></table></figure>
 <p><code>@Body</code>注解会将<code>User</code>对象转换为请求体</p>
 <h2 id="form-encoded"><a href="#form-encoded" class="headerlink" title="form-encoded"></a>form-encoded</h2><p>我们我们想要将格式转换为<code>form-encoded</code>形式, 参考如下示例</p>

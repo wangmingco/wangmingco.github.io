@@ -30,7 +30,7 @@
 <meta property="og:description" content="&gt; 本文是对Groovy部分官方文档进行了翻译  在Groovy文本字面量被称为String,这是以字符链的形式出现的. Groovy允许你实例化java.lang.String,像  GStrings (groovy.lang.GString)那样, (GString还被称为插值字符串) 单引号字符单引号字符串是通过单引号括起来的一列字符 1&amp;#x27;a single quoted strin">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2014-04-15T16:00:00.000Z">
-<meta property="article:modified_time" content="2022-05-17T01:50:39.739Z">
+<meta property="article:modified_time" content="2022-06-29T05:46:58.047Z">
 <meta property="article:author" content="向南">
 <meta name="twitter:card" content="summary">
   <!-- Canonical links -->
@@ -423,7 +423,7 @@
 <figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">&quot;a double quoted string&quot;</span></span><br></pre></td></tr></table></figure>
 <p>当双引号字符串内没有插值(<code>$&#123;&#125;</code>)的时候, 那它就等同于<code>java.lang.String</code>, 当有插值的时候那么双引号字符串就是<code>groovy.lang.GString</code>的实例</p>
 <h4 id="String-插值"><a href="#String-插值" class="headerlink" title="String 插值"></a>String 插值</h4><p>任何表达式都可以嵌入到除了单引号和三引号的所有字符串常量中. 当对字符串求值的时候, 插值会使用他的值来替换掉字符串里的占位符. 占位符表达式通过<code>$&#123;&#125;</code> 或者 <code>$</code>来实现. 占位符里的表达式值会被转换成其字符串表示形式, 转换是通过调用表达式<code>toString()</code>方法,通过传递一个String参数.</p>
-<p>下面的例子展示的是字符串里的占位符定位本地变量</p>
+<p>下面的例子演示的是字符串里的占位符定位本地变量</p>
 <figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> name = <span class="string">&#x27;Guillaume&#x27;</span> <span class="comment">// a plain string</span></span><br><span class="line"><span class="keyword">def</span> greeting = <span class="string">&quot;Hello $&#123;name&#125;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">assert</span> greeting.toString() == <span class="string">&#x27;Hello Guillaume&#x27;</span></span><br></pre></td></tr></table></figure>
 
 <p>但是并非所有的表达式都是合法的, 像下面我们列举的这个算术表达式</p>

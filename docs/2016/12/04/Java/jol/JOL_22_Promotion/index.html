@@ -22,15 +22,15 @@
   
   
   <title>JOL 22 Promotion | 向南</title>
-  <meta name="description" content="本篇文章基于V0.16 JOLSample_22_Promotion &#x2F;*  * The example of object promotion.  *  * Once the object survives the garbage collections, it is getting  * promoted to another generation. In this example, we">
+  <meta name="description" content="本篇文章基于V0.16 JOLSample_22_Promotion 本例用来演示对象提升。 一旦对象在GC过程中幸存下来，它就会被提升到另一代。在本例中，通过不停地GC，我们可以跟踪到对象的不停地址。 VM需要把每个对象的年龄(也就是对象通过GC存活下来的次数)记录在mark word上。下面通过例子我们仔细看一下每个对象GC后它的mark word值变化。 12345678910111213">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JOL 22 Promotion">
 <meta property="og:url" content="https://wangmingco.github.io/2016/12/04/Java/jol/JOL_22_Promotion/index.html">
 <meta property="og:site_name" content="向南">
-<meta property="og:description" content="本篇文章基于V0.16 JOLSample_22_Promotion &#x2F;*  * The example of object promotion.  *  * Once the object survives the garbage collections, it is getting  * promoted to another generation. In this example, we">
+<meta property="og:description" content="本篇文章基于V0.16 JOLSample_22_Promotion 本例用来演示对象提升。 一旦对象在GC过程中幸存下来，它就会被提升到另一代。在本例中，通过不停地GC，我们可以跟踪到对象的不停地址。 VM需要把每个对象的年龄(也就是对象通过GC存活下来的次数)记录在mark word上。下面通过例子我们仔细看一下每个对象GC后它的mark word值变化。 12345678910111213">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2016-12-04T13:30:00.000Z">
-<meta property="article:modified_time" content="2022-06-28T10:23:45.834Z">
+<meta property="article:modified_time" content="2022-06-29T05:40:33.548Z">
 <meta property="article:author" content="向南">
 <meta property="article:tag" content="jol">
 <meta name="twitter:card" content="summary">
@@ -396,21 +396,9 @@
       
         <script src="/assets/asciinema-player.js"></script><link rel="stylesheet" type="text/css" href="/assets/asciinema-player.css" />
 <p>本篇文章基于<a target="_blank" rel="noopener" href="https://github.com/openjdk/jol/blob/0.16/jol-samples/src/main/java/org/openjdk/jol/samples/JOLSample_22_Promotion.java">V0.16 JOLSample_22_Promotion</a></p>
-<pre><code>/*
- * The example of object promotion.
- *
- * Once the object survives the garbage collections, it is getting
- * promoted to another generation. In this example, we can track
- * the addresses of the objects, as it changes over time.
- *
- * VM also needs to record the &quot;age&quot; (that is, the number of GC
- * cycles the object had survived) of the object somewhere, and
- * it is stored in mark word as well. See how particular mark word
- * bits change with each promotion.
- *
- * Run with test with smaller heap (about 1 GB) for best results.
- */
-</code></pre>
+<p>本例用来演示对象提升。</p>
+<p>一旦对象在GC过程中幸存下来，它就会被提升到另一代。在本例中，通过不停地GC，我们可以跟踪到对象的不停地址。</p>
+<p>VM需要把每个对象的年龄(也就是对象通过GC存活下来的次数)记录在<code>mark word</code>上。下面通过例子我们仔细看一下每个对象GC后它的<code>mark word</code>值变化。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JOLSample_22_Promotion</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> <span class="keyword">volatile</span> Object sink;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        out.println(VM.current().details());</span><br><span class="line"></span><br><span class="line">        PrintWriter pw = <span class="keyword">new</span> PrintWriter(System.out, <span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line">        Object o = <span class="keyword">new</span> Object();</span><br><span class="line"></span><br><span class="line">        ClassLayout layout = ClassLayout.parseInstance(o);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">long</span> lastAddr = VM.current().addressOf(o);</span><br><span class="line">        pw.printf(<span class="string">&quot;*** Fresh object is at %x%n&quot;</span>, lastAddr);</span><br><span class="line">        out.println(layout.toPrintable());</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> moves = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100000</span>; i++) &#123;</span><br><span class="line">            <span class="keyword">long</span> cur = VM.current().addressOf(o);</span><br><span class="line">            <span class="keyword">if</span> (cur != lastAddr) &#123;</span><br><span class="line">                moves++;</span><br><span class="line">                pw.printf(<span class="string">&quot;*** Move %2d, object is at %x%n&quot;</span>, moves, cur);</span><br><span class="line">                out.println(layout.toPrintable());</span><br><span class="line">                lastAddr = cur;</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// make garbage</span></span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">int</span> c = <span class="number">0</span>; c &lt; <span class="number">10000</span>; c++) &#123;</span><br><span class="line">                sink = <span class="keyword">new</span> Object();</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">long</span> finalAddr = VM.current().addressOf(o);</span><br><span class="line">        pw.printf(<span class="string">&quot;*** Final object is at %x%n&quot;</span>, finalAddr);</span><br><span class="line">        out.println(layout.toPrintable());</span><br><span class="line"></span><br><span class="line">        pw.close();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>运行结果</p>

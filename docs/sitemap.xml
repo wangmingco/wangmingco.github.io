@@ -2,6 +2,251 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://wangmingco.github.io/2016/12/07/Java/jol/JOL_28_Difference/</loc>
+    
+    <lastmod>2022-06-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2016/12/04/Java/jol/JOL_19_AL_LL/</loc>
+    
+    <lastmod>2022-06-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2016/12/06/Java/jol/JOL_27_Colocation/</loc>
+    
+    <lastmod>2022-06-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2016/12/06/Java/jol/JOL_26_Defragmentation/</loc>
+    
+    <lastmod>2022-06-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2016/12/04/Java/jol/JOL_23_Roots/</loc>
+    
+    <lastmod>2022-06-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2016/12/06/Java/jol/JOL_25_Compaction/</loc>
+    
+    <lastmod>2022-06-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2016/12/05/Java/jol/JOL_24_Arrays/</loc>
+    
+    <lastmod>2022-06-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2016/04/23/nginx/nginx%20web%E6%9C%8D%E5%8A%A1%E5%99%A8/</loc>
+    
+    <lastmod>2022-06-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2016/03/05/nginx/nginx%E9%85%8D%E7%BD%AE/</loc>
+    
+    <lastmod>2022-06-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2015/03/08/nosql/MongoDB%20Replica/</loc>
+    
+    <lastmod>2022-06-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2015/03/08/nosql/MongoDB%E5%AE%A2%E6%88%B7%E7%AB%AF/</loc>
+    
+    <lastmod>2022-06-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2019/05/03/Java/javassist/Javasist%203%20Class%20loader/</loc>
+    
+    <lastmod>2022-06-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2015/04/08/Java/lib/dropwizard/</loc>
+    
+    <lastmod>2022-06-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2015/07/02/Java/vertx/vertx2_manual/</loc>
+    
+    <lastmod>2022-06-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2015/07/08/Java/vertx/vertx2_java_api_manual/</loc>
+    
+    <lastmod>2022-06-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2016/11/29/Java/jol/JOL_08_Class/</loc>
+    
+    <lastmod>2022-06-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2013/09/13/Java/lib/Guava%20CachesExplained/</loc>
+    
+    <lastmod>2022-06-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2016/01/20/Java/lib/Retrofit/</loc>
+    
+    <lastmod>2022-06-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2016/05/12/Java/lib/log4j2/</loc>
+    
+    <lastmod>2022-06-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2016/11/29/Java/jol/JOL_07_Exception/</loc>
+    
+    <lastmod>2022-06-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2016/12/02/Java/jol/JOL_14_FatLocking/</loc>
+    
+    <lastmod>2022-06-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2016/12/03/Java/jol/JOL_15_IdentityHashCode/</loc>
+    
+    <lastmod>2022-06-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2016/12/03/Java/jol/JOL_16_IHC_BL_Conflict/</loc>
+    
+    <lastmod>2022-06-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2016/12/03/Java/jol/JOL_18_ArrayAlignment/</loc>
+    
+    <lastmod>2022-06-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2016/12/03/Java/jol/JOL_17_ArrayLength/</loc>
+    
+    <lastmod>2022-06-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2016/02/02/Java/javase/Java%20volatile/</loc>
+    
+    <lastmod>2022-06-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2016/11/29/Java/jol/JOL_04_Inheritance/</loc>
+    
+    <lastmod>2022-06-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2016/12/20/Java/jmh/JMH%20%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</loc>
+    
+    <lastmod>2022-06-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2014/04/09/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/groovy/Groovy%20IO/</loc>
+    
+    <lastmod>2022-06-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2014/04/17/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/groovy/Groovy%20ANT/</loc>
+    
+    <lastmod>2022-06-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2014/04/16/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/groovy/Groovy%20%E5%AD%97%E7%AC%A6%E4%B8%B2/</loc>
+    
+    <lastmod>2022-06-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2014/04/11/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/groovy/Groovy%20%E9%9B%86%E5%90%88/</loc>
+    
+    <lastmod>2022-06-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2016/12/04/Java/jol/JOL_22_Promotion/</loc>
+    
+    <lastmod>2022-06-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2016/12/04/Java/jol/JOL_21_Layouts/</loc>
+    
+    <lastmod>2022-06-29</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2016/12/04/Java/jol/JOL_20_Allocation/</loc>
+    
+    <lastmod>2022-06-29</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://wangmingco.github.io/2022/04/12/%E5%89%8D%E7%AB%AF/REACT%20%E8%AF%AD%E6%B3%95/</loc>
     
     <lastmod>2022-06-29</lastmod>
@@ -86,13 +331,6 @@
   </url>
   
   <url>
-    <loc>https://wangmingco.github.io/2016/12/06/Java/jol/JOL_25_Compaction/</loc>
-    
-    <lastmod>2022-06-29</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://wangmingco.github.io/2017/04/18/Java/javase/java8%20%E5%87%BD%E6%95%B0%E6%8E%A5%E5%8F%A3/</loc>
     
     <lastmod>2022-06-29</lastmod>
@@ -128,104 +366,6 @@
   </url>
   
   <url>
-    <loc>https://wangmingco.github.io/2016/12/04/Java/jol/JOL_22_Promotion/</loc>
-    
-    <lastmod>2022-06-28</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://wangmingco.github.io/2016/12/07/Java/jol/JOL_28_Difference/</loc>
-    
-    <lastmod>2022-06-28</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://wangmingco.github.io/2016/12/06/Java/jol/JOL_27_Colocation/</loc>
-    
-    <lastmod>2022-06-28</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://wangmingco.github.io/2016/12/06/Java/jol/JOL_26_Defragmentation/</loc>
-    
-    <lastmod>2022-06-28</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://wangmingco.github.io/2016/12/05/Java/jol/JOL_24_Arrays/</loc>
-    
-    <lastmod>2022-06-28</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://wangmingco.github.io/2016/12/04/Java/jol/JOL_23_Roots/</loc>
-    
-    <lastmod>2022-06-28</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://wangmingco.github.io/2016/12/04/Java/jol/JOL_21_Layouts/</loc>
-    
-    <lastmod>2022-06-28</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://wangmingco.github.io/2016/12/04/Java/jol/JOL_20_Allocation/</loc>
-    
-    <lastmod>2022-06-28</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://wangmingco.github.io/2016/12/04/Java/jol/JOL_19_AL_LL/</loc>
-    
-    <lastmod>2022-06-28</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://wangmingco.github.io/2016/12/03/Java/jol/JOL_18_ArrayAlignment/</loc>
-    
-    <lastmod>2022-06-28</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://wangmingco.github.io/2016/12/03/Java/jol/JOL_17_ArrayLength/</loc>
-    
-    <lastmod>2022-06-28</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://wangmingco.github.io/2016/12/03/Java/jol/JOL_16_IHC_BL_Conflict/</loc>
-    
-    <lastmod>2022-06-28</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://wangmingco.github.io/2016/12/03/Java/jol/JOL_15_IdentityHashCode/</loc>
-    
-    <lastmod>2022-06-28</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://wangmingco.github.io/2016/12/02/Java/jol/JOL_14_FatLocking/</loc>
-    
-    <lastmod>2022-06-28</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://wangmingco.github.io/2016/12/02/Java/jol/JOL_13_ThinLocking/</loc>
     
     <lastmod>2022-06-28</lastmod>
@@ -241,27 +381,6 @@
   
   <url>
     <loc>https://wangmingco.github.io/2016/11/29/Java/jol/JOL_11_Class%20Word/</loc>
-    
-    <lastmod>2022-06-28</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://wangmingco.github.io/2016/11/29/Java/jol/JOL_08_Class/</loc>
-    
-    <lastmod>2022-06-28</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://wangmingco.github.io/2016/11/29/Java/jol/JOL_07_Exception/</loc>
-    
-    <lastmod>2022-06-28</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://wangmingco.github.io/2016/11/29/Java/jol/JOL_04_Inheritance/</loc>
     
     <lastmod>2022-06-28</lastmod>
     
@@ -360,13 +479,6 @@
   
   <url>
     <loc>https://wangmingco.github.io/2016/09/26/Java/javase/Java%20String/</loc>
-    
-    <lastmod>2022-06-27</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://wangmingco.github.io/2016/02/02/Java/javase/Java%20volatile/</loc>
     
     <lastmod>2022-06-27</lastmod>
     
@@ -506,13 +618,6 @@
   </url>
   
   <url>
-    <loc>https://wangmingco.github.io/2015/04/08/Java/lib/dropwizard/</loc>
-    
-    <lastmod>2022-06-27</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://wangmingco.github.io/2016/12/20/Java/jmh/JMH%20%E5%9C%A8%E5%9F%BA%E5%87%86%E6%B5%8B%E8%AF%95%E6%97%B6%E4%B8%8D%E8%A6%81%E8%87%AA%E5%B7%B1%E5%BE%AA%E7%8E%AF%E6%B5%8B%E8%AF%95/</loc>
     
     <lastmod>2022-06-27</lastmod>
@@ -548,20 +653,6 @@
   </url>
   
   <url>
-    <loc>https://wangmingco.github.io/2016/12/20/Java/jmh/JMH%20%E7%8E%AF%E5%A2%83%E6%90%AD%E5%BB%BA/</loc>
-    
-    <lastmod>2022-06-27</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://wangmingco.github.io/2015/07/02/Java/vertx/vertx2_manual/</loc>
-    
-    <lastmod>2022-06-27</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://wangmingco.github.io/2015/08/15/Java/vertx/vertx3_metrics_and_monitoring/</loc>
     
     <lastmod>2022-06-27</lastmod>
@@ -584,13 +675,6 @@
   
   <url>
     <loc>https://wangmingco.github.io/2015/08/05/Java/vertx/vertx3_core/</loc>
-    
-    <lastmod>2022-06-27</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://wangmingco.github.io/2015/07/08/Java/vertx/vertx2_java_api_manual/</loc>
     
     <lastmod>2022-06-27</lastmod>
     
@@ -653,13 +737,6 @@
   </url>
   
   <url>
-    <loc>https://wangmingco.github.io/2016/01/20/Java/lib/Retrofit/</loc>
-    
-    <lastmod>2022-06-27</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://wangmingco.github.io/2016/06/14/Java/lib/ReflectASM%20%E6%80%A7%E8%83%BD%E6%B5%8B%E8%AF%95/</loc>
     
     <lastmod>2022-06-27</lastmod>
@@ -702,13 +779,6 @@
   </url>
   
   <url>
-    <loc>https://wangmingco.github.io/2016/05/12/Java/lib/log4j2/</loc>
-    
-    <lastmod>2022-06-27</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://wangmingco.github.io/2016/05/09/Java/lib/JMeter/</loc>
     
     <lastmod>2022-06-27</lastmod>
@@ -745,13 +815,6 @@
   
   <url>
     <loc>https://wangmingco.github.io/2015/12/08/Java/lib/guice/</loc>
-    
-    <lastmod>2022-06-27</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://wangmingco.github.io/2013/09/13/Java/lib/Guava%20CachesExplained/</loc>
     
     <lastmod>2022-06-27</lastmod>
     
@@ -843,13 +906,6 @@
   
   <url>
     <loc>https://wangmingco.github.io/2019/05/04/Java/javassist/Javasist%204%20Introspection%20and%20customization/</loc>
-    
-    <lastmod>2022-06-27</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://wangmingco.github.io/2019/05/03/Java/javassist/Javasist%203%20Class%20loader/</loc>
     
     <lastmod>2022-06-27</lastmod>
     
@@ -1080,13 +1136,6 @@
   </url>
   
   <url>
-    <loc>https://wangmingco.github.io/2014/04/16/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/groovy/Groovy%20%E5%AD%97%E7%AC%A6%E4%B8%B2/</loc>
-    
-    <lastmod>2022-05-17</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://wangmingco.github.io/2014/04/15/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/groovy/Groovy%20%E6%95%B0%E5%AD%97/</loc>
     
     <lastmod>2022-05-17</lastmod>
@@ -1094,28 +1143,7 @@
   </url>
   
   <url>
-    <loc>https://wangmingco.github.io/2014/04/11/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/groovy/Groovy%20%E9%9B%86%E5%90%88/</loc>
-    
-    <lastmod>2022-05-17</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://wangmingco.github.io/2014/04/09/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/groovy/Groovy%20IO/</loc>
-    
-    <lastmod>2022-05-17</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://wangmingco.github.io/2014/04/18/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/groovy/Groovy%20JSON/</loc>
-    
-    <lastmod>2022-05-17</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://wangmingco.github.io/2014/04/17/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/groovy/Groovy%20ANT/</loc>
     
     <lastmod>2022-05-17</lastmod>
     
@@ -1409,35 +1437,7 @@
   </url>
   
   <url>
-    <loc>https://wangmingco.github.io/2015/03/08/nosql/MongoDB%E5%AE%A2%E6%88%B7%E7%AB%AF/</loc>
-    
-    <lastmod>2021-11-18</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://wangmingco.github.io/2016/03/05/nginx/nginx%E9%85%8D%E7%BD%AE/</loc>
-    
-    <lastmod>2021-11-18</lastmod>
-    
-  </url>
-  
-  <url>
     <loc>https://wangmingco.github.io/2015/11/18/nosql/Memcache/</loc>
-    
-    <lastmod>2021-11-18</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://wangmingco.github.io/2015/03/08/nosql/MongoDB%20Replica/</loc>
-    
-    <lastmod>2021-11-18</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://wangmingco.github.io/2016/04/23/nginx/nginx%20web%E6%9C%8D%E5%8A%A1%E5%99%A8/</loc>
     
     <lastmod>2021-11-18</lastmod>
     

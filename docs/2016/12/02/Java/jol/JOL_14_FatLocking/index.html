@@ -22,15 +22,15 @@
   
   
   <title>JOL 14 FatLocking | 向南</title>
-  <meta name="description" content="本篇文章基于V0.16 JOLSample_14_FatLocking 这个例子展示了fat locking技术。 如果VM检测到了线程间的数据竞争，那么它需要将access arbitrage委托给底层系统。那么此时对象就会和底层的锁关联起来，即现在成了膨胀锁了(“inflating” the lock)。 在这个例子中，我们需要模拟一下竞争，因此我们引入了一个额外的线程。通过运行代码你可以看">
+  <meta name="description" content="本篇文章基于V0.16 JOLSample_14_FatLocking 这个例子演示了fat locking技术。 如果VM检测到了线程间的数据竞争，那么它需要将access arbitrage委托给底层系统。那么此时对象就会和底层的锁关联起来，即现在成了膨胀锁了(“inflating” the lock)。 在这个例子中，我们需要模拟一下竞争，因此我们引入了一个额外的线程。通过运行代码你可以看">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JOL 14 FatLocking">
 <meta property="og:url" content="https://wangmingco.github.io/2016/12/02/Java/jol/JOL_14_FatLocking/index.html">
 <meta property="og:site_name" content="向南">
-<meta property="og:description" content="本篇文章基于V0.16 JOLSample_14_FatLocking 这个例子展示了fat locking技术。 如果VM检测到了线程间的数据竞争，那么它需要将access arbitrage委托给底层系统。那么此时对象就会和底层的锁关联起来，即现在成了膨胀锁了(“inflating” the lock)。 在这个例子中，我们需要模拟一下竞争，因此我们引入了一个额外的线程。通过运行代码你可以看">
+<meta property="og:description" content="本篇文章基于V0.16 JOLSample_14_FatLocking 这个例子演示了fat locking技术。 如果VM检测到了线程间的数据竞争，那么它需要将access arbitrage委托给底层系统。那么此时对象就会和底层的锁关联起来，即现在成了膨胀锁了(“inflating” the lock)。 在这个例子中，我们需要模拟一下竞争，因此我们引入了一个额外的线程。通过运行代码你可以看">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2016-12-02T08:00:00.000Z">
-<meta property="article:modified_time" content="2022-06-28T10:19:27.413Z">
+<meta property="article:modified_time" content="2022-06-29T05:46:58.116Z">
 <meta property="article:author" content="向南">
 <meta property="article:tag" content="jol">
 <meta name="twitter:card" content="summary">
@@ -396,7 +396,7 @@
       
         <script src="/assets/asciinema-player.js"></script><link rel="stylesheet" type="text/css" href="/assets/asciinema-player.css" />
 <p>本篇文章基于<a target="_blank" rel="noopener" href="https://github.com/openjdk/jol/blob/0.16/jol-samples/src/main/java/org/openjdk/jol/samples/JOLSample_14_FatLocking.java">V0.16 JOLSample_14_FatLocking</a></p>
-<p>这个例子展示了fat locking技术。</p>
+<p>这个例子演示了fat locking技术。</p>
 <p>如果VM检测到了线程间的数据竞争，那么它需要将access arbitrage委托给底层系统。那么此时对象就会和底层的锁关联起来，即现在成了膨胀锁了(“inflating” the lock)。</p>
 <p>在这个例子中，我们需要模拟一下竞争，因此我们引入了一个额外的线程。通过运行代码你可以看到开始时，对象的<code>mark word</code>是默认值，当辅助线程获取到锁后，对象的<code>mark word</code>指向了一个偏向锁，而当主线程获取到锁之后，它就膨胀成了一把重量级的锁，哪怕之后锁被释放了，它还是膨胀状态。</p>
 <p>在最后阶段调用了一下<code>System.gc()</code>, gc之后锁就被释放掉了。在JDK15之前，在一些安全点(<code>safepoints</code>)会触发锁的清理操作，因此任何GC动作都可能会清理锁。但是JDK15以后，一旦未使用的监视器数量变大之后， 监视器就会以异步的方式进行释放。</p>

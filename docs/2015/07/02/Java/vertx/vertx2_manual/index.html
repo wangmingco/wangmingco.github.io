@@ -30,7 +30,7 @@
 <meta property="og:description" content="Concepts in Vert.xverticle Vert.x 执行的代码单元称为 verticle. verticle可以由JavaScript, Ruby, Java, Groovy or Python等语言编写(Scala和Clojure支持还在开发中) 许多verticle可以在同一个Vert.x实例中并发执行 应用程序可以由部署同一网络在多个不同的节点上的verticle组成, 然">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2015-07-02T04:10:00.000Z">
-<meta property="article:modified_time" content="2022-06-27T06:18:24.474Z">
+<meta property="article:modified_time" content="2022-06-29T05:46:58.117Z">
 <meta property="article:author" content="向南">
 <meta property="article:tag" content="vertx2">
 <meta name="twitter:card" content="summary">
@@ -582,7 +582,7 @@
 <h3 id="HA-groups"><a href="#HA-groups" class="headerlink" title="HA groups"></a>HA groups</h3><p>当你与<code>HA</code>运行一个<code>Vert.x</code>实例时，你也可以选择指定一个<code>HA group</code>。 <code>HA group</code>是在逻辑上将集群中一组节点进行分组。只有同一个<code>HA group</code>组内的节点才能相互<code>failover</code>,也就是说<code>failover</code>是不同横跨<code>HA group</code>的. 如果你不显式指定<code>HA group</code>，那么就会将其分配进默认的<code>__DEFAULT__</code>组里.</p>
 <p>当运行<code>module</code>时，通过<code>-hgroup</code>选项指定<code>HA group</code></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vertx runmod com.acme~my-mod~2.1 -ha -hagroup somegroup</span><br></pre></td></tr></table></figure>
-<p>下面展示了一些示例：</p>
+<p>下面演示了一些示例：</p>
 <p>In console 1:</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">vertx runmod com.mycompany~my-mod1~1.0 -ha -hagroup g1</span><br></pre></td></tr></table></figure>
 <p>In console 2:</p>

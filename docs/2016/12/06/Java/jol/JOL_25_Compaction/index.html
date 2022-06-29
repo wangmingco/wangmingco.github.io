@@ -22,12 +22,12 @@
   
   
   <title>JOL 25 Compaction | 向南</title>
-  <meta name="description" content="本篇文章基于V0.16 JOLSample_25_Compaction 这个例子是用于展示VM是如何紧凑对象的。  *  * You can see the freshly allocated and populated list has quite  * the sparse layout. It happens because many temporary objects are  * al">
+  <meta name="description" content="本篇文章基于V0.16 JOLSample_25_Compaction 这个例子是用于演示VM是如何紧凑对象的。您可以看到，新分配的对象之间与和列表之间都具有相当稀疏的布局。这是因为在填充列表的时候还产生了许多临时的对象。但是随后GC会把list排列到1个或者几个块当中，试列表中的元素紧凑起来。 运行这个例子最好使用参数 1-Xmx1g -XX:+UseParallelGC -XX:Parall">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JOL 25 Compaction">
 <meta property="og:url" content="https://wangmingco.github.io/2016/12/06/Java/jol/JOL_25_Compaction/index.html">
 <meta property="og:site_name" content="向南">
-<meta property="og:description" content="本篇文章基于V0.16 JOLSample_25_Compaction 这个例子是用于展示VM是如何紧凑对象的。  *  * You can see the freshly allocated and populated list has quite  * the sparse layout. It happens because many temporary objects are  * al">
+<meta property="og:description" content="本篇文章基于V0.16 JOLSample_25_Compaction 这个例子是用于演示VM是如何紧凑对象的。您可以看到，新分配的对象之间与和列表之间都具有相当稀疏的布局。这是因为在填充列表的时候还产生了许多临时的对象。但是随后GC会把list排列到1个或者几个块当中，试列表中的元素紧凑起来。 运行这个例子最好使用参数 1-Xmx1g -XX:+UseParallelGC -XX:Parall">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/jol/25_Compaction/list-1.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/jol/25_Compaction/list-2.png">
@@ -40,7 +40,7 @@
 <meta property="og:image" content="https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/jol/25_Compaction/list-9.png">
 <meta property="og:image" content="https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/jol/25_Compaction/list-10.png">
 <meta property="article:published_time" content="2016-12-06T00:00:00.000Z">
-<meta property="article:modified_time" content="2022-06-29T01:52:22.140Z">
+<meta property="article:modified_time" content="2022-06-29T06:15:25.645Z">
 <meta property="article:author" content="向南">
 <meta property="article:tag" content="jol">
 <meta name="twitter:card" content="summary">
@@ -407,20 +407,15 @@
       
         <script src="/assets/asciinema-player.js"></script><link rel="stylesheet" type="text/css" href="/assets/asciinema-player.css" />
 <p>本篇文章基于<a target="_blank" rel="noopener" href="https://github.com/openjdk/jol/blob/0.16/jol-samples/src/main/java/org/openjdk/jol/samples/JOLSample_25_Compaction.java">V0.16 JOLSample_25_Compaction</a></p>
-<p>这个例子是用于展示VM是如何紧凑对象的。</p>
-<pre><code> *
- * You can see the freshly allocated and populated list has quite
- * the sparse layout. It happens because many temporary objects are
- * allocated while populating the list. The subsequent GCs compact
- * the list into the one or few dense blocks.
- *
- * Run this test with -Xmx1g -XX:+UseParallelGC -XX:ParallelGCThreads=1
- * for best results.
- */
-</code></pre>
+<p>这个例子是用于演示VM是如何紧凑对象的。您可以看到，新分配的对象之间与和列表之间都具有相当稀疏的布局。这是因为在填充列表的时候还产生了许多临时的对象。但是随后GC会把list排列到1个或者几个块当中，试列表中的元素紧凑起来。</p>
+<p>运行这个例子最好使用参数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-Xmx1g -XX:+UseParallelGC -XX:ParallelGCThreads=1</span><br></pre></td></tr></table></figure>
+
+<p>测试代码</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JOLSample_25_Compaction</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">volatile</span> Object sink;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        out.println(VM.current().details());</span><br><span class="line"></span><br><span class="line">        <span class="comment">// allocate some objects to beef up generations</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> c = <span class="number">0</span>; c &lt; <span class="number">1000000</span>; c++) &#123;</span><br><span class="line">            sink = <span class="keyword">new</span> Object();</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        System.gc();</span><br><span class="line"></span><br><span class="line">        List&lt;String&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> c = <span class="number">0</span>; c &lt; <span class="number">1000</span>; c++) &#123;</span><br><span class="line">            list.add(<span class="string">&quot;Key&quot;</span> + c);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> c = <span class="number">1</span>; c &lt;= <span class="number">10</span>; c++) &#123;</span><br><span class="line">            GraphLayout.parseInstance(list).toImage(<span class="string">&quot;list-&quot;</span> + c + <span class="string">&quot;.png&quot;</span>);</span><br><span class="line">            System.gc();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>运行结果<br><img src="https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/jol/25_Compaction/list-1.png"><br><img src="https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/jol/25_Compaction/list-2.png"><br><img src="https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/jol/25_Compaction/list-3.png"><br><img src="https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/jol/25_Compaction/list-4.png"><br><img src="https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/jol/25_Compaction/list-5.png"><br><img src="https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/jol/25_Compaction/list-6.png"><br><img src="https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/jol/25_Compaction/list-7.png"><br><img src="https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/jol/25_Compaction/list-8.png"><br><img src="https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/jol/25_Compaction/list-9.png"><br><img src="https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/jol/25_Compaction/list-10.png"></p>
+<p>我们看到第一次之后就把对象都移动到了一起，再往后GC就不再发生变化了</p>
 
       
     </div>
