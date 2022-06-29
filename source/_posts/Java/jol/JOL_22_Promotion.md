@@ -2,7 +2,7 @@
 category: Java
 tag: jol
 date: 2016-12-04 21:30:00
-title: JOL  
+title: JOL 22 Promotion
 ---
 
 本篇文章基于[V0.16 JOLSample_22_Promotion](https://github.com/openjdk/jol/blob/0.16/jol-samples/src/main/java/org/openjdk/jol/samples/JOLSample_22_Promotion.java)

@@ -1,7 +1,7 @@
 ---
 category: Java
 tag: jol
-date: 2016-12-06
+date: 2016-12-06 08:00:00
 title: JOL 25 Compaction
 ---
 
