@@ -1,7 +1,7 @@
 ---
 category: 数据库
 date: 2022-06-20
-title: SQL
+title: SQL 手册
 ---
 ![](https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/sql/sql_cheat_sheet0.jpeg)
 
