@@ -353,7 +353,7 @@ vertx -ha
 ```
 vertx runmod com.acme~my-mod~2.1 -ha -hagroup somegroup
 ```
-下面展示了一些示例：
+下面演示了一些示例：
 
 In console 1:
 ```

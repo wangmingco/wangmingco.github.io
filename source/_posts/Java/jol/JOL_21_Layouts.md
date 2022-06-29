@@ -7,13 +7,9 @@ title: JOL 21 Layouts
 
 本篇文章基于[V0.16 JOLSample_21_Layouts](https://github.com/openjdk/jol/blob/0.16/jol-samples/src/main/java/org/openjdk/jol/samples/JOLSample_21_Layouts.java)
 
- /*
-     * This is the example of more verbose reachability graph.
-     *
-     * In this example, we see that under collisions, HashMap
-     * degrades to the linked list. With JDK 8, we can also see
-     * it further "degrades" to the tree.
-     */
+本例也是用来演示可达性图分析。
+
+在本例中，我们看到在冲突下，HashMap降级为链表。在JDK 8中，我们还可以看到它进一步“退化”到树上。
 
 
 ```java

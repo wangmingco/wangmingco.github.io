@@ -7,21 +7,11 @@ title: JOL 22 Promotion
 
 本篇文章基于[V0.16 JOLSample_22_Promotion](https://github.com/openjdk/jol/blob/0.16/jol-samples/src/main/java/org/openjdk/jol/samples/JOLSample_22_Promotion.java)
 
+本例用来演示对象提升。
 
-    /*
-     * The example of object promotion.
-     *
-     * Once the object survives the garbage collections, it is getting
-     * promoted to another generation. In this example, we can track
-     * the addresses of the objects, as it changes over time.
-     *
-     * VM also needs to record the "age" (that is, the number of GC
-     * cycles the object had survived) of the object somewhere, and
-     * it is stored in mark word as well. See how particular mark word
-     * bits change with each promotion.
-     *
-     * Run with test with smaller heap (about 1 GB) for best results.
-     */
+一旦对象在GC过程中幸存下来，它就会被提升到另一代。在本例中，通过不停地GC，我们可以跟踪到对象的不停地址。
+
+VM需要把每个对象的年龄(也就是对象通过GC存活下来的次数)记录在`mark word`上。下面通过例子我们仔细看一下每个对象GC后它的`mark word`值变化。
 
 ```java
 public class JOLSample_22_Promotion {

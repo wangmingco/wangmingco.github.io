@@ -359,7 +359,7 @@ It even allows client side JavaScript running in a browser to communicate on the
 
 ### Registering and Unregistering Handlers
 
-下例展示了如何在`test.address`上注册一个消息`handler`。
+下例演示了如何在`test.address`上注册一个消息`handler`。
 ```java
 EventBus eb = vertx.eventBus();
 

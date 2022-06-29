@@ -7,7 +7,7 @@ title: JOL 15 IdentityHashCode
 
 本篇文章基于[V0.16 JOLSample_15_IdentityHashCode](https://github.com/openjdk/jol/blob/0.16/jol-samples/src/main/java/org/openjdk/jol/samples/JOLSample_15_IdentityHashCode.java)
 
-本例用来展示 `identity hash code`。
+本例用来演示 `identity hash code`。
 
 `identity hash code` 一旦被计算，就始终保持不变。HotSpot 同样将 `identity hash code`存储在了`mark word`. 
 

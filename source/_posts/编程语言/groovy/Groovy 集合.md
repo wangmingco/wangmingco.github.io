@@ -20,7 +20,7 @@ assert numbers.size() == 3      (3)
 
 1. 我们定义了一个Number类型的List,然后将这个list分配给一个变量
 2. 判断list是 Java’s `java.util.List` interface 的实例
-3. list的大小可以通过size()来进行查询, 例子中也给我们展示了这个list确实包含3个元素
+3. list的大小可以通过size()来进行查询, 例子中也给我们演示了这个list确实包含3个元素
 
 在上面的list中,我们使用的是同类元素的list, 但其实Groovy list中的数据类型还可以不一样：
 ```groovy

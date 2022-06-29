@@ -23,7 +23,7 @@ def ant = new AntBuilder()
 ant.zip(destfile: 'sources.zip', basedir: 'src')
 ```
 
-在下面的例子中, 我们将展示在Groovy中使用传统的Ant 模式通过`AntBuilder`拷贝一组文件.
+在下面的例子中, 我们将演示在Groovy中使用传统的Ant 模式通过`AntBuilder`拷贝一组文件.
 ```groovy
 // lets just call one task
 ant.echo("hello")

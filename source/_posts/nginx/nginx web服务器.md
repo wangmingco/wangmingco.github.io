@@ -21,7 +21,7 @@ http {
 
 在`server`指令里通常包含一个`listen`指令, 通过`listen`指令来指定监听请求的IP地址和端口号(或者Unix domain socket and path). IPv4 和 IPv6 地址都可进行配置
 
-下面的例子展示了在IP地址`127.0.0.1`和端口`8080`上进行网络事件监听
+下面的例子演示了在IP地址`127.0.0.1`和端口`8080`上进行网络事件监听
 ```json
 server {
     listen 127.0.0.1:8080;
@@ -158,7 +158,7 @@ After NGINX processes a set of rewriting instructions, it selects a location con
 
 
 
-下面的例子展示里`rewrite`和`return`指令混合使用的方式
+下面的例子演示里`rewrite`和`return`指令混合使用的方式
 ```json
 server {
     ...

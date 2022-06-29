@@ -7,7 +7,7 @@ title: JOL 14 FatLocking
 
 本篇文章基于[V0.16 JOLSample_14_FatLocking](https://github.com/openjdk/jol/blob/0.16/jol-samples/src/main/java/org/openjdk/jol/samples/JOLSample_14_FatLocking.java)
 
-这个例子展示了fat locking技术。
+这个例子演示了fat locking技术。
 
 如果VM检测到了线程间的数据竞争，那么它需要将access arbitrage委托给底层系统。那么此时对象就会和底层的锁关联起来，即现在成了膨胀锁了("inflating" the lock)。
 

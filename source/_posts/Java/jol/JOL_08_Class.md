@@ -7,7 +7,7 @@ title: JOL 08 Class
 
 本篇文章基于[V0.16 JOLSample_08_Class](https://github.com/openjdk/jol/blob/0.16/jol-samples/src/main/java/org/openjdk/jol/samples/JOLSample_08_Class.java)
 
-这个例子展示了JVM向class注入数据的例子，但是并不像 Exception 一样，它内部有一个backtrace这样的字段。在下面的Class中我们会看到什么字段都没有
+这个例子演示了JVM向class注入数据的例子，但是并不像 Exception 一样，它内部有一个backtrace这样的字段。在下面的Class中我们会看到什么字段都没有
 
 ```java
 public class JOLSample_08_Class {

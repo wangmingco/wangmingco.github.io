@@ -7,21 +7,22 @@ title: JOL 28 Difference
 
 本篇文章基于[V0.16 JOLSample_28_Difference](https://github.com/openjdk/jol/blob/0.16/jol-samples/src/main/java/org/openjdk/jol/samples/JOLSample_28_Difference.java)
 
-  /*
-     * This is the example how would one use the GraphLayout differences to
-     * figure out the object graph changes.
-     *
-     * Here, we have the ConcurrentHashMap, and three measurements:
-     *   1) The initial CHM that has no backing storage;
-     *   2) After adding the first KV pair, when both KV pair is allocated,
-     *      and the backing storage is allocated;
-     *   3) After adding the second KV pair.
-     *
-     * An API for subtracting the GraphLayouts helps to show the difference
-     * between the snapshots. Note that differences are based on object
-     * addresses, so if GC moves under our feet, the difference is unreliable.
-     * It is a good idea to keep the allocations at minimum between the snapshots.
-     */
+本来用来演示如何使用`GraphLayout`差异来计算对象图之间的变更。
+
+我们还是使用`ConcurrentHashMap`, 然后设定三个测量步骤
+
+1. `ConcurrentHashMap` 对象初始测量为空
+
+This is the example how would one use the GraphLayout differences to figure out the object graph changes.
+Here, we have the ConcurrentHashMap, and three measurements:
+  1) The initial CHM that has no backing storage;
+  2) After adding the first KV pair, when both KV pair is allocated, and the backing storage is allocated;
+  3) After adding the second KV pair.
+
+An API for subtracting the GraphLayouts helps to show the difference between the snapshots. 
+Note that differences are based on object addresses, so if GC moves under our feet, the difference is unreliable.
+It is a good idea to keep the allocations at minimum between the snapshots.
+
 
 ```java
 public class JOLSample_28_Difference {

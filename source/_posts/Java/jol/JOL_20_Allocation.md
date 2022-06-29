@@ -7,22 +7,13 @@ title: JOL 20 Allocation
 
 本篇文章基于[V0.16 JOLSample_20_Allocation](https://github.com/openjdk/jol/blob/0.16/jol-samples/src/main/java/org/openjdk/jol/samples/JOLSample_20_Allocation.java)
 
+本例用来演示如何获取对象的分配地址。
 
-    /*
-     * The example of allocation addresses.
-     *
-     * This example shows the addresses of newly allocated objects
-     * grow linearly in HotSpot. This is because the allocation in
-     * parallel collectors is linear. We can also see it rewinds back
-     * to the same offsets -- that's the start of some GC generation.
-     *
-     * For Parallel-like GCs, while GC adjusts for the allocation rate.
-     * For G1-like GCs, the allocation address changes by region size,
-     * as collector switches to another region for allocation.
-     *
-     * Run with test with smaller heap (about 1 GB) for best results.
-     */
+下面的代码在Hotspot中对象的分配地址是呈现线性增长的。这是因为`parallel collectors`收集器的对象分配就是线性的。在后面我们可以看到新分配的内存地址又会回到以前的地址上，这些地址往往是某些GC的起始地址。
 
+像`Parallel` 这类GC，它们会调账分配率。而像`G1`这类GC, 对象分配地址会根据`region` 大小进行调账，因为GC可能会跳转到其他的`region`区域。
+    
+运行下面的例子最好是使用一块小的内存(1GB)   
 
 ```java
 public class JOLSample_20_Allocation {

@@ -7,7 +7,7 @@ title: JOL 07 Exception
 
 本篇文章基于[V0.16 JOLSample_07_Exceptions](https://github.com/openjdk/jol/blob/0.16/jol-samples/src/main/java/org/openjdk/jol/samples/JOLSample_07_Exceptions.java)
 
-这个例子展示了VM中特殊处理的一些字段
+这个例子演示了VM中特殊处理的一些字段
 
 ```java
 public class JOLSample_07_Exceptions {
@@ -45,4 +45,4 @@ Instance size: 32 bytes
 Space losses: 4 bytes internal + 0 bytes external = 4 bytes total
 ```
 
-我们从源码中看到 `Throwable` 有个字段是 `transient Object backtrace`, 但是这个字段在上面的布局中并没有显示出来，这是因为这个字段关联的是jvm的一些内部信息，这些信息不是为了提供给用户看的, 因此就没展示出来
+我们从源码中看到 `Throwable` 有个字段是 `transient Object backtrace`, 但是这个字段在上面的布局中并没有显示出来，这是因为这个字段关联的是jvm的一些内部信息，这些信息不是为了提供给用户看的, 因此就没演示出来

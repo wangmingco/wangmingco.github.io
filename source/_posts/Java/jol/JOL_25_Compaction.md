@@ -7,19 +7,14 @@ title: JOL 25 Compaction
 
 本篇文章基于[V0.16 JOLSample_25_Compaction](https://github.com/openjdk/jol/blob/0.16/jol-samples/src/main/java/org/openjdk/jol/samples/JOLSample_25_Compaction.java)
 
-这个例子是用于展示VM是如何紧凑对象的。
+这个例子是用于演示VM是如何紧凑对象的。您可以看到，新分配的对象之间与和列表之间都具有相当稀疏的布局。这是因为在填充列表的时候还产生了许多临时的对象。但是随后GC会把list排列到1个或者几个块当中，试列表中的元素紧凑起来。
 
-     *
-     * You can see the freshly allocated and populated list has quite
-     * the sparse layout. It happens because many temporary objects are
-     * allocated while populating the list. The subsequent GCs compact
-     * the list into the one or few dense blocks.
-     *
-     * Run this test with -Xmx1g -XX:+UseParallelGC -XX:ParallelGCThreads=1
-     * for best results.
-     */
+运行这个例子最好使用参数
+```
+-Xmx1g -XX:+UseParallelGC -XX:ParallelGCThreads=1
+```
 
-
+测试代码
 ```java
 public class JOLSample_25_Compaction {
 
@@ -59,3 +54,5 @@ public class JOLSample_25_Compaction {
 ![](https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/jol/25_Compaction/list-8.png)
 ![](https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/jol/25_Compaction/list-9.png)
 ![](https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/jol/25_Compaction/list-10.png)
+
+我们看到第一次之后就把对象都移动到了一起，再往后GC就不再发生变化了

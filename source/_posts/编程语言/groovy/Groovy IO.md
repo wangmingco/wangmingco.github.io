@@ -63,7 +63,7 @@ new File(baseDir,'haiku.txt').withInputStream { stream ->
 
 ### 写文件
 
-有时候,你需要的也许只是写文件,下面展示了,如何在Groovy中写文件
+有时候,你需要的也许只是写文件,下面演示了,如何在Groovy中写文件
 ```groovy
 new File(baseDir,'haiku.txt').withWriter('utf-8') { writer ->
     writer.writeLine 'Into the ancient pond'

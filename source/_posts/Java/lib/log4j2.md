@@ -101,7 +101,7 @@ public class Bar {
 
 我们在配置里使用了一个`monitorInterval`属性, 这个属性是用来监控日志文件的, 每隔多少秒刷新一次.
 
-下面我们展示一个只有`com.foo.Bar`才会trace全部日志, 而其他的日志则只会输出ERROR级别的.
+下面我们演示一个只有`com.foo.Bar`才会trace全部日志, 而其他的日志则只会输出ERROR级别的.
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN">

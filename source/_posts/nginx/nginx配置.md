@@ -29,7 +29,7 @@ http {
   include    /etc/nginx/proxy.conf;
   # 为nginx引用cgi配置
   include    /etc/nginx/fastcgi.conf;
-  # 指定当HTTP请求没有任何请求路径时展示的界面.
+  # 指定当HTTP请求没有任何请求路径时演示的界面.
   index    index.html index.htm index.php;
 
   #

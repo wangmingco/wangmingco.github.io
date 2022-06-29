@@ -97,7 +97,7 @@ Escape sequence	Character
 
 任何表达式都可以嵌入到除了单引号和三引号的所有字符串常量中. 当对字符串求值的时候, 插值会使用他的值来替换掉字符串里的占位符. 占位符表达式通过`${}` 或者 `$`来实现. 占位符里的表达式值会被转换成其字符串表示形式, 转换是通过调用表达式`toString()`方法,通过传递一个String参数.
 
-下面的例子展示的是字符串里的占位符定位本地变量
+下面的例子演示的是字符串里的占位符定位本地变量
 ```groovy
 def name = 'Guillaume' // a plain string
 def greeting = "Hello ${name}"

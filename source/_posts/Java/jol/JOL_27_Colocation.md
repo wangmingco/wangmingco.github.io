@@ -7,21 +7,14 @@ title: JOL 27 Colocation
 
 本篇文章基于[V0.16 JOLSample_27_Colocation](https://github.com/openjdk/jol/blob/0.16/jol-samples/src/main/java/org/openjdk/jol/samples/JOLSample_27_Colocation.java)
 
- /*
-     * This is the example how VM colocates the objects allocated
-     * by different threads.
-     *
-     * In this example, the ConcurrentHashMap is being populated
-     * by several threads. We can see that after a few GCs it is
-     * densely packed, regardless of the fact it was allocated by
-     * multiple threads.
-     *
-     * This example generates PNG images in your current directory.
-     *
-     * Run this test with -Xmx1g -XX:+UseParallelGC -XX:ParallelGCThreads=1
-     * for best results.
-     */
+这篇例子用来演示VM如何管理不同线程分配的对象。
 
+在例子中，`ConcurrentHashMap` 被多个线程填充。我们可以看到经过几次GC之后，虽然它存储的对象是来自多个线程，但是它仍然被填充地非常密集。
+
+运行这个例子最好使用参数
+```
+-Xmx1g -XX:+UseParallelGC -XX:ParallelGCThreads=1
+```
 
 ```java
 public class JOLSample_27_Colocation {
@@ -84,14 +77,42 @@ public class JOLSample_27_Colocation {
 
 ```
 
-运行结果
+1. 先分配了100万个临时小对象，然后GC, 接着继续往ConcurrentHashMap添加100个小对象，然后输出
+
 ![](https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/jol/27_Colocation/chm-1-new.png)
+
+2. 再输出一次
+
 ![](https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/jol/27_Colocation/chm-2-gc.png)
+
+3. GC一次，再输出一次
+
 ![](https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/jol/27_Colocation/chm-3-gc.png)
+
+4. GC一次，再输出一次
+
 ![](https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/jol/27_Colocation/chm-4-gc.png)
+
+5. GC一次，再输出一次
+
 ![](https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/jol/27_Colocation/chm-5-gc.png)
+
+6. 继续往ConcurrentHashMap添加100个小对象，然后输出
+
 ![](https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/jol/27_Colocation/chm-6-more-gc.png)
+
+7. GC一次，再输出一次
+
 ![](https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/jol/27_Colocation/chm-7-more-gc.png)
+
+8. GC一次，再输出一次
+
 ![](https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/jol/27_Colocation/chm-8-more-gc.png)
+
+9. GC一次，再输出一次
+
 ![](https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/jol/27_Colocation/chm-9-more-gc.png)
+
+10. GC一次，再输出一次
+
 ![](https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/jol/27_Colocation/chm-10-more-gc.png)

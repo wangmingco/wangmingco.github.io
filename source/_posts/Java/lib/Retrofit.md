@@ -33,7 +33,7 @@ GitHubService service = retrofit.create(GitHubService.class);
 在上面的示例中我们完成了一个`Get`请求, 然后使用`@Path`进行参数替换
 
 ## Post请求
-上面我们展示的是一个`Get`请求, 下面我们再看一个`Post`请求的示例
+上面我们演示的是一个`Get`请求, 下面我们再看一个`Post`请求的示例
 ```java
 @POST("users/new")
 Call<User> createUser(@Body User user);

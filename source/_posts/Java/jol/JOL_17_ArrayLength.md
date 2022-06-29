@@ -7,7 +7,7 @@ title: JOL 17 ArrayLength
 
 本篇文章基于[V0.16 JOLSample_17_ArrayLength](https://github.com/openjdk/jol/blob/0.16/jol-samples/src/main/java/org/openjdk/jol/samples/JOLSample_17_ArrayLength.java)
 
-这个例子用于展示对象头上的数组长度。数组长度并不是数组类型的一部分，因此虚拟机需要在对象头上有一个额外的位置存储数组长度。
+这个例子用于演示对象头上的数组长度。数组长度并不是数组类型的一部分，因此虚拟机需要在对象头上有一个额外的位置存储数组长度。
 
 ```java
 public class JOLSample_17_ArrayLength {

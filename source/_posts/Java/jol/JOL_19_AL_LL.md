@@ -7,15 +7,14 @@ title: JOL 19 AL_LL
 
 本篇文章基于[V0.16 ](https://github.com/openjdk/jol/blob/0.16/jol-samples/src/main/java/org/openjdk/jol/samples/.java)
 
-这个例子用于展示遍历可达性图。
-The example of traversing the reachability graphs.
+这个例子用于演示遍历可达性图。
 
-In addition to introspecting the object internals, we can also see the object externals, that is, the objects referenced from the object in question. There are multiple ways to illustrate this, the summary table seems to work well.
+我们除了可以观察对象内部，还可以观察到对象外部，比如，对象引用了哪些其他对象。
+有很多种方式可以说明这一点，但是我们通过报表来演示一下。
 
-In this example, you can clearly see the difference between the shadow heap (i.e. space taken by the reachable objects) for ArrayList and LinkedList.
+在本例中，你可以清楚地看到ArrayList和LinkedList的`shadow heap`(即可达对象所占用的heap空间)之间的区别。
 
- When several roots are handed over to JOL, it tracks the objects reachable from either root, and also avoids double-counting.
-
+当Jol可以管理多个root时，它会分析每一个对象之间的可达性，从而避免重复计算。
 
 ```java
 public class JOLSample_19_AL_LL {

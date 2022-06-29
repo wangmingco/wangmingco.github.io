@@ -7,7 +7,7 @@ title: JOL 16 Identity Hash Code 和 Biased Locking 冲突
 
 本篇文章基于[V0.16 JOLSample_16_IHC_BL_Conflict](https://github.com/openjdk/jol/blob/0.16/jol-samples/src/main/java/org/openjdk/jol/samples/JOLSample_16_IHC_BL_Conflict.java)
 
-这个例子用于展示当偏向锁遇到hash code时发生的冲突。实验证明hash code拥有更高的优先级.
+这个例子用于演示当偏向锁遇到hash code时发生的冲突。实验证明hash code拥有更高的优先级.
 
 第一次释放锁之后，`mark word`并没有发生变化还是处于偏向锁状态。当我们计算了hash code之后，hash code值会覆盖之前的偏向锁的值。当第二次进入锁之后，`mark word`被重新赋值了偏向锁引用，但是离开锁之后，`mark word` 并没有保留偏向锁引用，而是重新被赋值了hash code。因此我们可以看出，在`mark word`中hash code比偏向锁拥有更高的优先级。
 

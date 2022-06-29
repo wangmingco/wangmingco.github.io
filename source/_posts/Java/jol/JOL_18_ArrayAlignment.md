@@ -7,11 +7,11 @@ title: JOL 18 ArrayAlignment
 
 本篇文章基于[V0.16 JOLSample_18_ArrayAlignment](https://github.com/openjdk/jol/blob/0.16/jol-samples/src/main/java/org/openjdk/jol/samples/JOLSample_18_ArrayAlignment.java)
 
-这个例子用于展示数组对齐。通过运行结果可以看到，不同大小的小数组，由于对齐的原因，它们占用的空间也许是一样的。
+这个例子用于演示数组对齐。通过运行结果可以看到，不同大小的小数组，由于对齐的原因，它们占用的空间也许是一样的。
 
-数组的内部对齐需要在特定的VM模型上展示，例如，在32位的模型上展示 `long[]` 数组。在那种模型上，`long[]` 数组第0个元素应该按8对齐。
+数组的内部对齐需要在特定的VM模型上演示，例如，在32位的模型上演示 `long[]` 数组。在那种模型上，`long[]` 数组第0个元素应该按8对齐。
 
-或者64位模式关闭指针压缩的情况下，展示`byte[]`数组。参考[bug-JDK-8139457](https://bugs.openjdk.java.net/browse/JDK-8139457)
+或者64位模式关闭指针压缩的情况下，演示`byte[]`数组。参考[bug-JDK-8139457](https://bugs.openjdk.java.net/browse/JDK-8139457)
 
 ```java
 public class JOLSample_18_ArrayAlignment {

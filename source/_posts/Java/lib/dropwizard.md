@@ -250,11 +250,11 @@ reporter.start();
 
 Metrics被包装成`JMX MBeans`,可以在`VisualVM's MBeans browser`查看`Metrics`.
 
-注意：在VisualVM中，你双击任一metric属性,VisualVM将会将这些属性数据通过图形化的方式展示给你.
+注意：在VisualVM中，你双击任一metric属性,VisualVM将会将这些属性数据通过图形化的方式演示给你.
 
 ## Reporting Via HTTP
 
-Metrics仍然可以通过servlet(AdminServlet)展示给你, 提供JSON形式的数据. 它可以报告`health checks`,打印`thread dump`,或者提供一个负载均衡的简单响应. (它还提供了其他的`servlets–MetricsServlet`,例如`HealthCheckServlet, ThreadDumpServlet`或者`PingServlet`.)
+Metrics仍然可以通过servlet(AdminServlet)演示给你, 提供JSON形式的数据. 它可以报告`health checks`,打印`thread dump`,或者提供一个负载均衡的简单响应. (它还提供了其他的`servlets–MetricsServlet`,例如`HealthCheckServlet, ThreadDumpServlet`或者`PingServlet`.)
 
 如果想要使用servlet你必须在pom文件中依赖`metrics-servlets`.
 ```xml

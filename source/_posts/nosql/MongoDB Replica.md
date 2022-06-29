@@ -74,7 +74,7 @@ mongod --config $HOME/.mongodb/config
 
 ### Connect a mongo shell to a replica set member.
 
-下例展示了如何连接到在`localhost:27017`上运行的`mongod`:
+下例演示了如何连接到在`localhost:27017`上运行的`mongod`:
 ```shell
 mongo
 ```

@@ -22,7 +22,7 @@ The CtClass provides a convenience method toClass(), which requests the context 
 
 The following program shows how to use toClass():
 
-下面的程序展示了如何使用toClass().
+下面的程序演示了如何使用toClass().
 ```java
 public class Hello {
     public void say() {

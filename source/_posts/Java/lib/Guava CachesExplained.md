@@ -37,7 +37,7 @@ LoadingCache<Key, Graph> graphs = CacheBuilder.newBuilder()
 ## 总体
 你应该先问自己第一个问题：你是否有特定的明确的通过某些keys的作参数生成Value的方法？如果你的回答是肯定的话，那么`CacheLoader`是适合你的。如果你不需要通过某些key来生成value或者你想要重载默认的方法或者想要使用`get-if-absent-compute`方式,你可以参考[From A Callable]()。一般我们可以通过`Cache.put`直接将元素插入cache中，但是我们应该首先考虑它的自动缓存加载，因为它会考虑到所有缓存内容的一致性。
 
-> From A CacheLoader : LoadingCache通过一个附着的CacheLoader来创建。创建一个CacheLoader也是非常简单的，只要实现一个V load(K key) throws exception的方法就可以了.下面的例子展示出如何创建一个LoadingCache
+> From A CacheLoader : LoadingCache通过一个附着的CacheLoader来创建。创建一个CacheLoader也是非常简单的，只要实现一个V load(K key) throws exception的方法就可以了.下面的例子演示出如何创建一个LoadingCache
 ```java
 LoadingCache<Key, Graph> graphs = CacheBuilder.newBuilder()  
        .maximumSize(1000)  
@@ -55,7 +55,7 @@ try {
   throw new OtherException(e.getCause());  
 }  
 ```
-上面的例子也展示除了我们可以通过`get(K)`的方式对`LoadingCache`进行查询获取值。我们如果可以从cache中查找到该key，那么将会直接返回该key对应的value，否则会通过cache的`CacheLoader`自动加载一个新的键值对，然后返回该值。因为`CacheLoader`可能会抛出异常，所以get(K)可能会抛出`Execution`。如果在`CacheLoader`中定义了一个非异常检查的`load`方法，那么在查询取值时可以使用`getUnchecked(Key)`;但是如果你声明了throws，则一定不要调用`getUnchecked(Key)`. 下面是一个例子：
+上面的例子也演示除了我们可以通过`get(K)`的方式对`LoadingCache`进行查询获取值。我们如果可以从cache中查找到该key，那么将会直接返回该key对应的value，否则会通过cache的`CacheLoader`自动加载一个新的键值对，然后返回该值。因为`CacheLoader`可能会抛出异常，所以get(K)可能会抛出`Execution`。如果在`CacheLoader`中定义了一个非异常检查的`load`方法，那么在查询取值时可以使用`getUnchecked(Key)`;但是如果你声明了throws，则一定不要调用`getUnchecked(Key)`. 下面是一个例子：
 ```java
 LoadingCache<Key, Graph> graphs = CacheBuilder.newBuilder()  
        .expireAfterAccess(10, TimeUnit.MINUTES)  
@@ -105,7 +105,7 @@ Inserted Directly : Values也可以通过cache.put(key,value)直接将值插入c
 如果你的cache不允许扩容,即不允许超过设定的最大值，那么使用CacheBuilder.maxmuSize(long)即可。在这种条件下，cache会自己释放掉那些最近没有或者不经常使用的entries内存。注意：cache并不是在超过限定时才会删除掉那些entries，而是在即将达到这个限定值时，那么你就要小心考虑这种情况了，因为很明显即使没有达到这个限定值，cache仍然会进行删除操作。
 
 还有一种情况：cache里不同的entries可能会有不同的weight。例如：如果你的cache values有着截然不同的内存占用----你可以使用CacheBuilder.weigher(Weigher)设定weigh和使用CacheBuilder.maximumWeight(long)设定一个最大值。
-下面代码展示了对weight的使用
+下面代码演示了对weight的使用
 ```java
 LoadingCache<Key, Graph> graphs = CacheBuilder.newBuilder()  
        .maximumWeight(100000)  

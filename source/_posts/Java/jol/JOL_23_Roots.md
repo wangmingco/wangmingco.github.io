@@ -7,22 +7,12 @@ title: JOL 23 Roots
 
 本篇文章基于[V0.16 JOLSample_23_Roots](https://github.com/openjdk/jol/blob/0.16/jol-samples/src/main/java/org/openjdk/jol/samples/JOLSample_23_Roots.java)
 
-/*
-     * The example how VM traverses the root sets.
-     *
-     * During the GC, object reachability graph should be traversed
-     * starting from somewhere. The root set is the set of intrinsically
-     * reachable objects. Static fields are the part of root set, local
-     * variables are the part of root set as well.
-     *
-     * In this example, we build the "ring" of objects, and reference
-     * only the single link from that ring from the local variable.
-     * This will have the effect of having the different parts of ring
-     * in the root set, which will, in the end, change the ring layout
-     * in memory.
-     *
-     * Run with test with smaller heap (about 1 GB) for best results.
-     */
+本例演示了VM如何遍历根集.
+
+ During the GC, object reachability graph should be traversed starting from somewhere. The root set is the set of intrinsically reachable objects. Static fields are the part of root set, local variables are the part of root set as well.
+     
+ In this example, we build the "ring" of objects, and reference only the single link from that ring from the local variable.
+ This will have the effect of having the different parts of ring in the root set, which will, in the end, change the ring layout in memory.
 
 ```java
 public class JOLSample_23_Roots {

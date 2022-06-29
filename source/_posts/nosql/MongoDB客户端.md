@@ -12,7 +12,7 @@ title: MongoDB客户端
 
 为了能够连接上MongoDB,最低的要求也是你要知道连接的database的名称. 这个数据库可以不存在,如果不存在的话,MongoDB会自动创建这个数据库
 
-另外,你可以指定连接的服务器的地址和端口,下面的例子展示了三种连接本地`mydb`数据库的方式
+另外,你可以指定连接的服务器的地址和端口,下面的例子演示了三种连接本地`mydb`数据库的方式
 ```java
 import com.mongodb.BasicDBObject;
 import com.mongodb.BulkWriteOperation;
@@ -177,7 +177,7 @@ try {
 
 ### Getting A Single Document with A Query
 
-我们可以向`find()`方法传递一个查询参数, 通过该参数找到集合中符合需求的文档子集. 下例中展示了我们想要找到i是7的所有文档.
+我们可以向`find()`方法传递一个查询参数, 通过该参数找到集合中符合需求的文档子集. 下例中演示了我们想要找到i是7的所有文档.
 ```java
 BasicDBObject query = new BasicDBObject("i", 71);
 
@@ -268,7 +268,7 @@ Under the covers MongoDB is moving away from the combination of a write operatio
 1. Ordered bulk operations. 按顺序执行全部的操作,当遇到第一个写失败的时候,退出
 2. Unordered bulk operations. 并行执行全部操作, 同时收集全部错误.该操作不保证按照顺序执行
 
-下面展示了上面所说的俩个示例
+下面演示了上面所说的俩个示例
 ```java
 // 1. Ordered bulk operation
 BulkWriteOperation builder = coll.initializeOrderedBulkOperation();
@@ -349,7 +349,7 @@ mongoClient.dropDatabase("databaseToBeDropped");
 1. 如果向一个不存在的collection中尝试插入一个文档,那么该collection会被创建出来
 2. 或者直接调用`createCollection`命令
 
-下面的例子展示了创建1M大小的collection
+下面的例子演示了创建1M大小的collection
 ```java
 db = mongoClient.getDB("mydb");
 db.createCollection("testCollection", new BasicDBObject("capped", true)
@@ -386,7 +386,7 @@ System.out.println(db.getCollectionNames());
 
 ### Getting a List of Indexes on a Collection
 
-下例展示了如何获得一个collection中索引的列表
+下例演示了如何获得一个collection中索引的列表
 ```java
 List<DBObject> list = coll.getIndexInfo();
 
