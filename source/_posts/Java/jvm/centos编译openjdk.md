@@ -58,7 +58,7 @@ make images
 
 整个安装编译环境以及编译过程如下:
 
-[@asciinema](/videos/centos7_compile_openjdk11.cast)
+[@asciinema](https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/videos/centos7_compile_openjdk11.cast)
 
 升级GCC11(下面的方式只针对当前session有效)
 ```
