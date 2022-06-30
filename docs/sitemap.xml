@@ -2,6 +2,146 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   
   <url>
+    <loc>https://wangmingco.github.io/2020/11/05/Java/lib/HttpClient%20%E5%A4%9A%E7%BA%BF%E7%A8%8B%E8%AF%B7%E6%B1%82/</loc>
+    
+    <lastmod>2022-06-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2018/08/22/Java/%E7%BD%91%E7%BB%9C/Java%20SOCKET%E5%8F%82%E6%95%B0/</loc>
+    
+    <lastmod>2022-06-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2018/03/15/Java/%E7%BD%91%E7%BB%9C/Java%20servlet/</loc>
+    
+    <lastmod>2022-06-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2017/04/19/Java/%E7%BD%91%E7%BB%9C/Java%20URL%E7%94%A8%E6%B3%95/</loc>
+    
+    <lastmod>2022-06-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2017/04/18/Java/%E7%BD%91%E7%BB%9C/Java%20%E7%BD%91%E7%BB%9C%E4%BB%A3%E7%90%86/</loc>
+    
+    <lastmod>2022-06-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2017/04/18/Java/%E7%BD%91%E7%BB%9C/Java%20%E7%BD%91%E7%BB%9C%E6%8E%A5%E5%8F%A3/</loc>
+    
+    <lastmod>2022-06-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2016/11/25/Java/%E7%BD%91%E7%BB%9C/Java%20localhost/</loc>
+    
+    <lastmod>2022-06-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2018/08/23/Java/%E7%BD%91%E7%BB%9C/Java%20%E7%BD%91%E7%BB%9C%E5%BC%82%E5%B8%B8/</loc>
+    
+    <lastmod>2022-06-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2018/08/01/Java/lib/Druid%20%E8%BF%9E%E6%8E%A5%E7%AE%A1%E7%90%86/</loc>
+    
+    <lastmod>2022-06-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2017/05/02/Java/mybatis/mybatis%20%E7%AC%A6%E5%8F%B7%E8%A7%A3%E6%9E%90/</loc>
+    
+    <lastmod>2022-06-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2022/06/30/Java/mybatis/mybatis%20mapper%E5%8A%A0%E8%BD%BD/</loc>
+    
+    <lastmod>2022-06-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2018/08/09/Java/mybatis/mybatis%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E9%80%82%E9%85%8D%E5%99%A8/</loc>
+    
+    <lastmod>2022-06-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2018/09/13/Java/mybatis/mybatis%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E6%A8%A1%E6%9D%BF%E6%96%B9%E6%B3%95/</loc>
+    
+    <lastmod>2022-06-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2018/09/12/Java/mybatis/mybatis%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E5%B7%A5%E5%8E%82%E6%96%B9%E6%B3%95/</loc>
+    
+    <lastmod>2022-06-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2018/08/06/Java/mybatis/mybatis%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E8%A3%85%E9%A5%B0/</loc>
+    
+    <lastmod>2022-06-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2018/09/11/Java/mybatis/mybatis%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E8%B4%A3%E4%BB%BB%E9%93%BE/</loc>
+    
+    <lastmod>2022-06-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2018/09/01/Java/mybatis/mybatis%E8%AE%BE%E8%AE%A1%E6%A8%A1%E5%BC%8F%E4%B9%8B%E5%BB%BA%E9%80%A0%E8%80%85/</loc>
+    
+    <lastmod>2022-06-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2017/12/10/Java/mybatis/mybatis%E7%94%A8%E6%B3%95%E7%AC%94%E8%AE%B0/</loc>
+    
+    <lastmod>2022-06-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2015/12/09/Java/mybatis/mybatis-guice/</loc>
+    
+    <lastmod>2022-06-30</lastmod>
+    
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/2016/02/10/Java/mybatis/Mybatis%20SqlSession/</loc>
+    
+    <lastmod>2022-06-30</lastmod>
+    
+  </url>
+  
+  <url>
     <loc>https://wangmingco.github.io/2016/12/04/Java/jol/JOL_23_Roots/</loc>
     
     <lastmod>2022-06-29</lastmod>
@@ -255,13 +395,6 @@
   
   <url>
     <loc>https://wangmingco.github.io/2022/06/20/%E6%95%B0%E6%8D%AE%E5%BA%93/sql/</loc>
-    
-    <lastmod>2022-06-29</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://wangmingco.github.io/2016/02/10/Java/lib/Mybatis%20SqlSession/</loc>
     
     <lastmod>2022-06-29</lastmod>
     
@@ -752,13 +885,6 @@
   
   <url>
     <loc>https://wangmingco.github.io/2016/05/11/Java/lib/Oracle%20Solaris%20Studio/</loc>
-    
-    <lastmod>2022-06-27</lastmod>
-    
-  </url>
-  
-  <url>
-    <loc>https://wangmingco.github.io/2015/12/09/Java/lib/mybatis-guice/</loc>
     
     <lastmod>2022-06-27</lastmod>
     
@@ -1467,7 +1593,7 @@
 
   <url>
     <loc>https://wangmingco.github.io/</loc>
-    <lastmod>2022-06-29</lastmod>
+    <lastmod>2022-06-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
@@ -1475,126 +1601,140 @@
   
   <url>
     <loc>https://wangmingco.github.io/tags/asm/</loc>
-    <lastmod>2022-06-29</lastmod>
+    <lastmod>2022-06-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/tags/Netty/</loc>
-    <lastmod>2022-06-29</lastmod>
+    <lastmod>2022-06-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/tags/vertx2/</loc>
-    <lastmod>2022-06-29</lastmod>
+    <lastmod>2022-06-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/tags/vertx3/</loc>
-    <lastmod>2022-06-29</lastmod>
+    <lastmod>2022-06-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/tags/Memcached/</loc>
-    <lastmod>2022-06-29</lastmod>
+    <lastmod>2022-06-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/tags/MongoDB/</loc>
-    <lastmod>2022-06-29</lastmod>
+    <lastmod>2022-06-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/tags/Redis/</loc>
-    <lastmod>2022-06-29</lastmod>
+    <lastmod>2022-06-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/tags/JavaScript/</loc>
-    <lastmod>2022-06-29</lastmod>
+    <lastmod>2022-06-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/tags/PEG-js/</loc>
-    <lastmod>2022-06-29</lastmod>
+    <lastmod>2022-06-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/tags/mysql/</loc>
-    <lastmod>2022-06-29</lastmod>
+    <lastmod>2022-06-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/tags/React/</loc>
-    <lastmod>2022-06-29</lastmod>
+    <lastmod>2022-06-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/tags/Javasist/</loc>
-    <lastmod>2022-06-29</lastmod>
+    <lastmod>2022-06-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/tags/jvm/</loc>
-    <lastmod>2022-06-29</lastmod>
+    <lastmod>2022-06-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/tags/jmh/</loc>
-    <lastmod>2022-06-29</lastmod>
+    <lastmod>2022-06-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/tags/Java-%E4%B8%89%E6%96%B9%E5%BA%93/</loc>
-    <lastmod>2022-06-29</lastmod>
+    <lastmod>2022-06-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/tags/JavaSE/</loc>
-    <lastmod>2022-06-29</lastmod>
+    <lastmod>2022-06-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/tags/jol/</loc>
-    <lastmod>2022-06-29</lastmod>
+    <lastmod>2022-06-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/tags/maven/</loc>
-    <lastmod>2022-06-29</lastmod>
+    <lastmod>2022-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/tags/mybatis/</loc>
+    <lastmod>2022-06-30</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>https://wangmingco.github.io/tags/Java-%E7%BD%91%E7%BB%9C/</loc>
+    <lastmod>2022-06-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
@@ -1603,98 +1743,98 @@
   
   <url>
     <loc>https://wangmingco.github.io/categories/Nginx/</loc>
-    <lastmod>2022-06-29</lastmod>
+    <lastmod>2022-06-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/categories/Java/</loc>
-    <lastmod>2022-06-29</lastmod>
+    <lastmod>2022-06-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/categories/NoSql/</loc>
-    <lastmod>2022-06-29</lastmod>
+    <lastmod>2022-06-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/categories/%E5%89%8D%E7%AB%AF/</loc>
-    <lastmod>2022-06-29</lastmod>
+    <lastmod>2022-06-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/categories/ZooKeeper/</loc>
-    <lastmod>2022-06-29</lastmod>
+    <lastmod>2022-06-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/categories/%E7%AE%97%E6%B3%95/</loc>
-    <lastmod>2022-06-29</lastmod>
+    <lastmod>2022-06-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/</loc>
-    <lastmod>2022-06-29</lastmod>
+    <lastmod>2022-06-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/categories/awk/</loc>
-    <lastmod>2022-06-29</lastmod>
+    <lastmod>2022-06-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/categories/Groovy/</loc>
-    <lastmod>2022-06-29</lastmod>
+    <lastmod>2022-06-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/categories/PHP/</loc>
-    <lastmod>2022-06-29</lastmod>
+    <lastmod>2022-06-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/categories/haskell/</loc>
-    <lastmod>2022-06-29</lastmod>
+    <lastmod>2022-06-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/categories/PYTHON2/</loc>
-    <lastmod>2022-06-29</lastmod>
+    <lastmod>2022-06-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/categories/Shell/</loc>
-    <lastmod>2022-06-29</lastmod>
+    <lastmod>2022-06-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
   
   <url>
     <loc>https://wangmingco.github.io/categories/%E6%9D%82%E6%96%87/</loc>
-    <lastmod>2022-06-29</lastmod>
+    <lastmod>2022-06-30</lastmod>
     <changefreq>daily</changefreq>
     <priority>0.6</priority>
   </url>
