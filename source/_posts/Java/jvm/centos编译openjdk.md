@@ -74,6 +74,6 @@ scl enable devtoolset-11 bash
 * Remote-SSH 远程支持 [Visual Studio Code Remote - SSH]()
 
 
-{% dplayer 'url=/videos/centos7_debug_openjdk11.mp4' "api=https://api.prprpr.me/dplayer/" "theme=#FADFA3" "autoplay=false" %} 
+{% dplayer 'url=https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/videos/centos7_debug_openjdk11.mp4' "api=https://api.prprpr.me/dplayer/" "theme=#FADFA3" "autoplay=false" %} 
 
 在vscode里可以很方便的修改源码，然后重新编译，debug，yyds

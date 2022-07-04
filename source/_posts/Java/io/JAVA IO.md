@@ -2,7 +2,7 @@
 category: Java
 tag: Java IO
 date: 2017-04-20
-title: Java 输入输出IO
+title: Java 输入输出IO API
 ---
 
 ## 读文件
