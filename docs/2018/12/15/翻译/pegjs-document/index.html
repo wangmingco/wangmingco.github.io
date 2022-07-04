@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+   <!-- google 爬取标记 -->
+   <meta name="google-site-verification" content="aH2bcbMuMlpfF61i9p--iBH54wvMywGXfWg8U6RpxFA" />
+   <!-- bing 爬取标记 -->
+   <meta name="msvalidate.01" content="CBAB9A13FF212142D6C250D9C0D31F28" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>PEG.js 文档 [译] | 王明的技术博客</title>
+  <meta name="description" content="PEG.js 文档 [译]  PEG.js 是JavaScript里一个简单的parser生成器, 它能够非常快的生成parser, 而且如果在生成过程中遇到了问题, 也会给出非常明确的错误报告. 你可以很轻松地用它处理复杂的数据结构或者计算机语言, 也可以构建出transformers, interpreters, compilers 等其他工具. 特性PEG.js具有如下特性  简单而富有">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PEG.js 文档 [译]">
+<meta property="og:url" content="https://wangmingco.github.io/2018/12/15/%E7%BF%BB%E8%AF%91/pegjs-document/index.html">
+<meta property="og:site_name" content="王明的技术博客">
+<meta property="og:description" content="PEG.js 文档 [译]  PEG.js 是JavaScript里一个简单的parser生成器, 它能够非常快的生成parser, 而且如果在生成过程中遇到了问题, 也会给出非常明确的错误报告. 你可以很轻松地用它处理复杂的数据结构或者计算机语言, 也可以构建出transformers, interpreters, compilers 等其他工具. 特性PEG.js具有如下特性  简单而富有">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-12-15T02:21:00.000Z">
+<meta property="article:modified_time" content="2022-07-04T02:06:32.435Z">
+<meta property="article:author" content="王明">
+<meta property="article:tag" content="PEG.js">
+<meta name="twitter:card" content="summary">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://wangmingco.github.io/2018/12/15/%E7%BF%BB%E8%AF%91/pegjs-document/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="王明的技术博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/wangmingco" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">王明</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Coder</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Beijing, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">项目</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books">
+            
+            <i class="icon icon-book-fill"></i>
+            
+            <span class="menu-title">书单</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">友链</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/wangmingco" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="https://gitee.com/wangmingco" target="_blank" title="Gitee" data-toggle=tooltip data-placement=top><i class="icon icon-gitee"></i></a></li>
+        
+        <li><a href="https://weibo.com/wangmingco" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://www.zhihu.com/people/wangmingco" target="_blank" title="Zhihu" data-toggle=tooltip data-placement=top><i class="icon icon-zhihu"></i></a></li>
+        
+        <li><a href="https://www.douban.com/people/xxxyy/" target="_blank" title="Douban" data-toggle=tooltip data-placement=top><i class="icon icon-douban"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Groovy/">Groovy</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">140</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Nginx/">Nginx</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/NoSql/">NoSql</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/PHP/">PHP</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/PYTHON2/">PYTHON2</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Shell/">Shell</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ZooKeeper/">ZooKeeper</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/awk/">awk</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/haskell/">haskell</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E6%BA%90/">开源</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><span class="category-list-count">11</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9D%82%E6%96%87/">杂文</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><span class="category-list-count">11</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BF%BB%E8%AF%91/">翻译</a><span class="category-list-count">15</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java-IO/" rel="tag">Java IO</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java-%E4%B8%89%E6%96%B9%E5%BA%93/" rel="tag">Java 三方库</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java-%E7%BD%91%E7%BB%9C/" rel="tag">Java 网络</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaSE/" rel="tag">JavaSE</a><span class="tag-list-count">32</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/" rel="tag">JavaScript</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Javasist/" rel="tag">Javasist</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Memcached/" rel="tag">Memcached</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MongoDB/" rel="tag">MongoDB</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Netty/" rel="tag">Netty</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PEG-js/" rel="tag">PEG.js</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React/" rel="tag">React</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Redis/" rel="tag">Redis</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/asm/" rel="tag">asm</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmh/" rel="tag">jmh</a><span class="tag-list-count">14</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jol/" rel="tag">jol</a><span class="tag-list-count">24</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm/" rel="tag">jvm</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven/" rel="tag">maven</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mybatis/" rel="tag">mybatis</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vertx2/" rel="tag">vertx2</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vertx3/" rel="tag">vertx3</a><span class="tag-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/Java-IO/" style="font-size: 13.33px;">Java IO</a> <a href="/tags/Java-%E4%B8%89%E6%96%B9%E5%BA%93/" style="font-size: 13.83px;">Java 三方库</a> <a href="/tags/Java-%E7%BD%91%E7%BB%9C/" style="font-size: 13.5px;">Java 网络</a> <a href="/tags/JavaSE/" style="font-size: 14px;">JavaSE</a> <a href="/tags/JavaScript/" style="font-size: 13.42px;">JavaScript</a> <a href="/tags/Javasist/" style="font-size: 13.25px;">Javasist</a> <a href="/tags/Memcached/" style="font-size: 13px;">Memcached</a> <a href="/tags/MongoDB/" style="font-size: 13.17px;">MongoDB</a> <a href="/tags/Netty/" style="font-size: 13.5px;">Netty</a> <a href="/tags/PEG-js/" style="font-size: 13px;">PEG.js</a> <a href="/tags/React/" style="font-size: 13px;">React</a> <a href="/tags/Redis/" style="font-size: 13.17px;">Redis</a> <a href="/tags/asm/" style="font-size: 13.25px;">asm</a> <a href="/tags/jmh/" style="font-size: 13.67px;">jmh</a> <a href="/tags/jol/" style="font-size: 13.92px;">jol</a> <a href="/tags/jvm/" style="font-size: 13.75px;">jvm</a> <a href="/tags/maven/" style="font-size: 13px;">maven</a> <a href="/tags/mybatis/" style="font-size: 13.58px;">mybatis</a> <a href="/tags/mysql/" style="font-size: 13.42px;">mysql</a> <a href="/tags/vertx2/" style="font-size: 13.08px;">vertx2</a> <a href="/tags/vertx3/" style="font-size: 13.25px;">vertx3</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/06/">六月 2022</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">四月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">一月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">六月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">二月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">十一月 2018</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">四月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">十二月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">十一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">九月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">六月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">37</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">八月 2015</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">七月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">九月 2014</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">四月 2014</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/09/">九月 2013</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2022/06/30/Java/mybatis/mybatis%20mapper%E5%8A%A0%E8%BD%BD/" class="title">(no title)</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-06-30T01:31:47.097Z" itemprop="datePublished">2022-06-30</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/06/20/%E6%95%B0%E6%8D%AE%E5%BA%93/sql/" class="title">SQL 手册</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-06-19T16:00:00.000Z" itemprop="datePublished">2022-06-20</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E6%9D%82%E6%96%87/">杂文</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/06/01/%E6%9D%82%E6%96%87/duizhang/" class="title">对账</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-05-31T16:00:00.000Z" itemprop="datePublished">2022-06-01</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/04/12/%E5%89%8D%E7%AB%AF/REACT%20%E8%AF%AD%E6%B3%95/" class="title">React 学习</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-04-12T02:21:00.000Z" itemprop="datePublished">2022-04-12</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Java/">Java</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/01/10/Java/jvm/centos%E7%BC%96%E8%AF%91openjdk/" class="title">Centos7 编译调试 OpenJDK11</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-01-09T16:00:00.000Z" itemprop="datePublished">2022-01-10</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-翻译/pegjs-document" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      PEG.js 文档 [译]
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2018/12/15/%E7%BF%BB%E8%AF%91/pegjs-document/" class="article-date">
+	  <time datetime="2018-12-15T02:21:00.000Z" itemprop="datePublished">2018-12-15</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/%E7%BF%BB%E8%AF%91/">翻译</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/PEG-js/" rel="tag">PEG.js</a>
+  </span>
+
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2018/12/15/%E7%BF%BB%E8%AF%91/pegjs-document/#comments" class="article-comment-link">评论</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <script src="/assets/asciinema-player.js"></script><link rel="stylesheet" type="text/css" href="/assets/asciinema-player.css" />
+<blockquote>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/123294460">PEG.js 文档 [译]</a></p>
+</blockquote>
+<p><a target="_blank" rel="noopener" href="https://pegjs.org/documentation">PEG.js</a> 是JavaScript里一个简单的parser生成器, 它能够非常快的生成parser, 而且如果在生成过程中遇到了问题, 也会给出非常明确的错误报告. 你可以很轻松地用它处理复杂的数据结构或者计算机语言, 也可以构建出transformers, interpreters, compilers 等其他工具.</p>
+<h2 id="特性"><a href="#特性" class="headerlink" title="特性"></a>特性</h2><p>PEG.js具有如下特性</p>
+<ul>
+<li>简单而富有表现力的语法</li>
+<li>集成了词法和语法分析.</li>
+<li>生成的解析器具有出色的错误报告功能</li>
+<li>基于parsing expression grammar, 生成的parser 比传统的 LL(k) 和 LR(k) parser更加强大.</li>
+<li>适用于浏览器, 命令行或者JavaScript API 等多种环境.</li>
+</ul>
+<h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><h3 id="Node-js"><a href="#Node-js" class="headerlink" title="Node.js"></a>Node.js</h3><p>在命令行中使用<code>pegjs</code>命令编译, 需要使用全局模式安装<code>PEG.js</code>:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install -g pegjs</span><br></pre></td></tr></table></figure>
+<p>如果要使用pegjs提供的 JavaScript API, 则需要在当前工作目录安装 <code>PEG.js</code>:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install pegjs</span><br></pre></td></tr></table></figure>
+<p>如果既要使用<code>pegjs</code>命令又要使用JavaScript API, 那么你需要将上面俩种方式都安装一遍.</p>
+<h3 id="Browser"><a href="#Browser" class="headerlink" title="Browser"></a>Browser</h3><p>在浏览器中使用, 可以直接下载库文件<a target="_blank" rel="noopener" href="https://pegjs.org/#download">PEG.js</a>或者通过<code>Bower</code>安装<code>PEG.js</code>:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ bower install pegjs</span><br></pre></td></tr></table></figure>
+
+<h2 id="生成-Parser"><a href="#生成-Parser" class="headerlink" title="生成 Parser"></a>生成 Parser</h2><p><code>PEG.js</code>将解析表达式文法解析后, 生成parser. 解析表达式文法描述描述了 将何种输入进行解析然后输出何种输出.(通过执行输入字符的匹配部分的语义操作). 通过一个简单api就可以可以生成一个parser JS对象.</p>
+<h3 id="命令行生成"><a href="#命令行生成" class="headerlink" title="命令行生成"></a>命令行生成</h3><p>想要将grammar文件生成parser, 直接使用<code>pegjs</code>进行编译即可:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pegjs arithmetics.pegjs</span><br></pre></td></tr></table></figure>
+<p>上面的命令会将生成的parser的源码输出到与grammar文件同名的js结尾的文件中. 当然也可以输出到指定文件中:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ pegjs -o arithmetics-parser.js arithmetics.pegjs</span><br></pre></td></tr></table></figure>
+
+<p>但是如果你将输入输出文件都忽略了, 那么系统将会采用标准输入输出.<br>在默认设置下, 生成的parser代码是以Node.js module format 进行组织代码的, 但也可以通过指定<code>--format</code>选项选择其他方式.</p>
+<blockquote>
+<p>下面的选项介绍中也有对该选项的介绍, 详情请参考<a target="_blank" rel="noopener" href="https://75team.com/post/%E8%AF%91%E7%A5%9E%E9%A9%AC%E6%98%AFamd-commonjs-umd.html">[译]神马是AMD, CommonJS, UMD?</a></p>
+</blockquote>
+<p>你可以通过如下几个命令来修改生成的parser的默认行为.</p>
+<ul>
+<li><code>--allowed-start-rules</code>: 指定parser开始从哪个rule开始解析. (默认是文法中的第一个rule)</li>
+<li><code>--cache</code>: 开启parser的缓存功能. parser会将parse出来的结果缓存起来, 避免极端情况下解析时间成指数级增加, 但坏处是parser可能会变慢.</li>
+<li><code>--dependency</code>: 让parser依赖一个指定的依赖.(该参数可以多次使用)</li>
+<li><code>--export-var</code>: </li>
+<li><code>--extra-options</code>: 传递给<code>peg.generate</code>的额外参数(JSON 形式).</li>
+<li><code>--extra-options-file</code>: 传递给<code>peg.generate</code>的额外参数文件(JSON 形式).</li>
+<li><code>--format</code>: 生成的parser格式, 可选值有<code>amd</code>, <code>commonjs</code>, <code>globals</code>, <code>umd</code>(默认是<code>commonjs</code>)</li>
+<li><code>--optimize</code>: 为生成的parser在parsing时的优化方式, 可以选择解析速度(<code>speed</code>)或者parse结果代码大小(<code>size</code>). (默认是<code>speed</code>)</li>
+<li><code>--plugin</code>: 为PEG.js配置插件(可以配置多个, 即多次配置)</li>
+<li><code>--trace</code>: 开启parser的trace功能.</li>
+</ul>
+<h3 id="API生成"><a href="#API生成" class="headerlink" title="API生成"></a>API生成</h3><p>在node.js中, 直接<code>require(&quot;pegjs&quot;)</code> 就可以使用peg.js的parser生成器了.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> peg = <span class="built_in">require</span>(<span class="string">&quot;pegjs&quot;</span>);</span><br></pre></td></tr></table></figure>
+<p>在浏览器中, 需要在<code>&lt;script&gt;</code>标签引入<code>PEG.js</code>库. 如果 PEG.js 检测到一个 AMD loader, 它会把自己定义成一个 module, 否则我们只能通过<code>peg</code>这个全局对象使用pegjs的api了.<br>生成一个parser非常简单, 把解析器文法参数传递进<code>peg.generate</code>方法就可以了:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> parser = peg.generate(<span class="string">&quot;start = (&#x27;a&#x27; / &#x27;b&#x27;)+&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>根据参数的不同, 这个方法可能会返回一个新生成的parser对象或者是一个包含parser源码的字符串. 如果文法参数不合法, 则会抛出一个异常(异常中会包含这个错误的详细信息). </p>
+<p>可以通过向<code>peg.generate</code>方法传递第二个参数(该参数是一个对象)改变生成的parser的默认行为. 支持的参数如下:</p>
+<ul>
+<li><code>allowedStartRules</code>: 指定parser开始的rule. (默认是文法中第一个rule.)</li>
+<li><code>cache</code>: 如果设置为<code>true</code>, parser会将parse的结果缓存起来, 可以避免在极端情况下过长的解析时间, 但同时它带来的副作用是会使得parser变慢(默认false).</li>
+<li><code>dependencies</code>: 设置parser的依赖, 其值是一个对象, 其key为访问依赖的变量, 而value为需要加载的依赖module id.只有当<code>format</code>参数被设置为<code>&quot;amd&quot;</code>, <code>&quot;commonjs&quot;</code>, <code>&quot;umd&quot;</code> 该参数才生效. (默认为<code>&#123;&#125;</code>)</li>
+<li><code>exportVar</code>: Name of a global variable into which the parser object is assigned to when no module loader is detected; valid only when format is set to “globals” or “umd” (default: null).</li>
+<li><code>format</code>: 生成的parser格式, 可选值为(<code>&quot;amd&quot;</code>, <code>&quot;bare&quot;</code>, <code>&quot;commonjs&quot;</code>, <code>&quot;globals&quot;</code>, or <code>&quot;umd&quot;</code>). 只有<code>output</code>设置为<code>source</code>, 该参数才生效</li>
+<li><code>optimize</code>: 为生成的parser选择一个优化方案, 可选值为<code>&quot;speed&quot;</code>或者<code>&quot;size&quot;</code>. (默认<code>&quot;speed&quot;</code>)</li>
+<li><code>output</code>: 设置<code>generate()</code>方法返回格式. 如果值为<code>&quot;parser&quot;</code>, 则返回生成的parser对象. 如果设置为<code>&quot;source&quot;</code>, 则返回parser source字符串</li>
+<li><code>plugins</code>: 要使用的插件</li>
+<li><code>trace</code>: 追踪parser的执行过程(默认是false).</li>
+</ul>
+<h2 id="使用-Parser"><a href="#使用-Parser" class="headerlink" title="使用 Parser"></a>使用 Parser</h2><p>使用生成的parser也非常简单, 只需要调用parser对象的<code>parse</code>方法, 然后将一个字符串参数传递进该方法就可以了. 然后该方法会返回一个parse结果(已经在定义parser的文法中描述了返回何种类型的值), 或者如果字符串不合法的话抛出一个异常. 异常会输出详细的错误信息.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">parser.parse(<span class="string">&quot;abba&quot;</span>); <span class="comment">// returns [&quot;a&quot;, &quot;b&quot;, &quot;b&quot;, &quot;a&quot;]</span></span><br><span class="line"></span><br><span class="line">parser.parse(<span class="string">&quot;abcd&quot;</span>); <span class="comment">// throws an exception </span></span><br></pre></td></tr></table></figure>
+
+<p>同样的, <code>parse</code>方法也支持选项参数. 支持的参数如下:</p>
+<ul>
+<li>startRule: Name of the rule to start parsing from. 开始从哪个rule执行.</li>
+<li>tracer: Tracer to use. 开启tracer.</li>
+</ul>
+<p>Parsers 也可以自定义参数, 以支持定制化的需求.</p>
+<h2 id="语法和语义"><a href="#语法和语义" class="headerlink" title="语法和语义"></a>语法和语义</h2><p>peg.js的语法和JavaScript非常像, 但是有俩点不同, pegjs不是line-oriented, 而且peg.js会忽略tokens之间的空白符. 同样地可以在peg.js中使用<code>//...</code>和<code>/* ... */</code>进行注释.<br>下面是个peg.js文法示例, 该示例生成的parser会识别出算数表达式 <code>2*(3+4)</code>, 然后将该值计算出来.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">start</span><br><span class="line">  = additive</span><br><span class="line"></span><br><span class="line">additive</span><br><span class="line">  = left:multiplicative <span class="string">&quot;+&quot;</span> right:additive &#123; <span class="keyword">return</span> left + right; &#125;</span><br><span class="line">  / multiplicative</span><br><span class="line"></span><br><span class="line">multiplicative</span><br><span class="line">  = left:primary <span class="string">&quot;*&quot;</span> right:multiplicative &#123; <span class="keyword">return</span> left * right; &#125;</span><br><span class="line">  / primary</span><br><span class="line"></span><br><span class="line">primary</span><br><span class="line">  = integer</span><br><span class="line">  / <span class="string">&quot;(&quot;</span> additive:additive <span class="string">&quot;)&quot;</span> &#123; <span class="keyword">return</span> additive; &#125;</span><br><span class="line"></span><br><span class="line">integer <span class="string">&quot;integer&quot;</span></span><br><span class="line">  = digits:[<span class="number">0</span>-<span class="number">9</span>]+ &#123; <span class="keyword">return</span> <span class="built_in">parseInt</span>(digits.join(<span class="string">&quot;&quot;</span>), <span class="number">10</span>); &#125;</span><br></pre></td></tr></table></figure>
+<p>总体来说, 文法是由rule组成的(例如上面的例子中有5个rule). 每个rule都有一个名字(例如上例中<code>integer</code>) 和 一个解析表达式(例如上例中:<code>digits:[0-9]+ &#123; return parseInt(digits.join(&quot;&quot;), 10); &#125;</code>). 表达式部分首先是一个匹配输入字符串的匹配规则, 然后可能后面还会有一个匹配成功之后要执行的JavaScript代码. rule也可以设置一个更加易于理解的别名, 例如上例中的integer就有一个别名, 该别名主要用于发生解析异常时, 输出日志便于解决问题. 解析动作从第一个rule开始, 我们通常以<code>start</code>命名这个rule.</p>
+<p>rule名称必须符合JavaScript的标识符规则. rule名称后跟一个<code>=</code>符号, 然后<code>=</code>后面是一个解析表达式. 如果rule名称要跟一个别名的话, 该别名必须在rule名称与<code>=</code>之间. rule之间需要由空白行进行分割, rule后也可以跟一个分号<code>;</code></p>
+<p>第一个规则之前可以设置一个初始化器, 初始化器由花括号(“{“和”}”)和花括号内的JavaScript代码组成. 初始化器会在parser开始解析之前被执行. 初始器里定义的变量和方法可以被后续的rule访问到. 初始器可以通过访问<code>options</code>参数访问到传递给parser的参数. 初始化器必须由大括号括起来, 缺一不可. 下面我们看一个简单的使用了初始化代码的示例:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="function"><span class="keyword">function</span> <span class="title">makeInteger</span>(<span class="params">o</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">parseInt</span>(o.join(<span class="string">&quot;&quot;</span>), <span class="number">10</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">start</span><br><span class="line">  = additive</span><br><span class="line"></span><br><span class="line">additive</span><br><span class="line">  = left:multiplicative <span class="string">&quot;+&quot;</span> right:additive &#123; <span class="keyword">return</span> left + right; &#125;</span><br><span class="line">  / multiplicative</span><br><span class="line"></span><br><span class="line">multiplicative</span><br><span class="line">  = left:primary <span class="string">&quot;*&quot;</span> right:multiplicative &#123; <span class="keyword">return</span> left * right; &#125;</span><br><span class="line">  / primary</span><br><span class="line"></span><br><span class="line">primary</span><br><span class="line">  = integer</span><br><span class="line">  / <span class="string">&quot;(&quot;</span> additive:additive <span class="string">&quot;)&quot;</span> &#123; <span class="keyword">return</span> additive; &#125;</span><br><span class="line"></span><br><span class="line">integer <span class="string">&quot;integer&quot;</span></span><br><span class="line">  = digits:[<span class="number">0</span>-<span class="number">9</span>]+ &#123; <span class="keyword">return</span> makeInteger(digits); &#125;</span><br></pre></td></tr></table></figure>
+<p>peg.js会将输入的字符串与rule中定义的解析表文法进行匹配. 但是存在着很多不同类型的表达式, 例如匹配字符或者字符类型, 或者匹配可选部分, 或者匹配重复情况等等. 表达式可能还包含其他rule的引用.</p>
+<p>当parser将输入字符串与表达式成功的时候, parser会生成一个JavaScript对象的匹配结果. 例如</p>
+<ul>
+<li>表达式匹配到了一个字符串字面量的话, 它会返回一个包含该字符串的JavaScript字符串对象.</li>
+<li>当表达式匹配到重复的子表达式的时候, 会将所有匹配结果放到一个JavaScript数组对象里返回.</li>
+</ul>
+<p>如果rule A在表达式B被引用了, 那么这个rule A的匹配结果也会传递表达式B, 接着会层层传递, 一直传递到start rule里. 当parser全部解析完成成功之后, 会直接将start rule的匹配结果返回出去.</p>
+<p>解析表达式中比较特殊的是parser action,一段包含在大括号内的JavaScript代码，这段代码可以处理表达式中引用的其他rule的匹配结果，然后自己再返回一个JavaScript对象作为当前表达式的处理结果。这个对象就是当前表达式的匹配结果，换句话说，parser action就是一个匹配结果转换器。</p>
+<p>在我们的运算示例中，有许许多多的parser action. 看一下表达式中的这个action <code>digits:[0-9]+ &#123; return parseInt(digits.join(&quot;&quot;), 10); &#125;</code>. 它拿到了<code>[0-9]+</code>的匹配结果<code>digits</code>(<code>digits</code> 是一个包含数字的字符串数组)。它将这些数字字符转换成一个数字，然后转换成一个js数字对象。</p>
+<h3 id="解析表达式类型"><a href="#解析表达式类型" class="headerlink" title="解析表达式类型"></a>解析表达式类型</h3><p>解析表达式可以分为很多种类, 而且有一些还包含子表达式, 包含子表达式的就形成了一种递归结构.</p>
+<h5 id="quot-literal-quot-39-literal-39"><a href="#quot-literal-quot-39-literal-39" class="headerlink" title="&quot;literal&quot; &#39;literal&#39;"></a><code>&quot;literal&quot;</code> <code>&#39;literal&#39;</code></h5><p>严格匹配字面量字符串, 然后直接返回该字符串字面量. 在pegjs里字符串语法和JavaScript里相同. 在常量最后加一个<code>i</code>表示不区分大小写.</p>
+<blockquote>
+<p>输入的字符串必须与该字符串一模一样(可以加<code>i</code>忽略大小写)</p>
+</blockquote>
+<h5 id=""><a href="#" class="headerlink" title="."></a><code>.</code></h5><p>严格匹配任意单个字符, 然后将它作为一个字符串返回.</p>
+<h5 id="characters"><a href="#characters" class="headerlink" title="[characters]"></a><code>[characters]</code></h5><p>单个字符匹配, 将匹配成功的单个字符作为字符串返回. The characters in the list can be escaped in exactly the same way as in JavaScript string. 匹配模式中的字符列表也可以指定一个范围(例如<code>[a-z]</code>表示要匹配全部小写字符). 如果匹配规则中有<code>^</code>表示匹配规则相反. (例如<code>[^a-z]</code> 表示匹配除了小写字符之外的全部字符). 如果匹配规则后面跟有<code>i</code>的话, 表示忽略大小写.</p>
+<blockquote>
+<p><code>[characters]</code> 通常会和<code>*</code>, <code>+</code> 组合到一起使用, 匹配字符串. 与<code>&#39;literal&#39;</code> 不同的是, 只要单个字符符合<code>[characters]</code> 中任意一个字符即可.</p>
+</blockquote>
+<h5 id="rule"><a href="#rule" class="headerlink" title="rule"></a><code>rule</code></h5><p>在表达式中引用其他rule, 然后与引用的rule进行匹配, 然后返回引用rule的匹配结果.</p>
+<h5 id="expression"><a href="#expression" class="headerlink" title="( expression )"></a><code>( expression )</code></h5><p>匹配一个子表达式, 并返回它的匹配结果.</p>
+<blockquote>
+<p>匹配不成功则会抛出异常</p>
+</blockquote>
+<h5 id="expression-1"><a href="#expression-1" class="headerlink" title="expression *"></a><code>expression *</code></h5><p>将表达式匹配0次或多次, 然后将匹配结果通过一个数组返回. 这种匹配形式会尽可能多地尝试匹配. 与正则表达式不同的是, 它们不会进行回溯.</p>
+<blockquote>
+<p>匹配不成功则会抛出异常</p>
+</blockquote>
+<h5 id="expression-2"><a href="#expression-2" class="headerlink" title="expression +"></a><code>expression +</code></h5><p>将表达式匹配1次或多次, 然后将匹配结果通过一个数组返回. 这种匹配形式会尽可能多地尝试匹配. 与正则表达式不同的是, 它们不会进行回溯.</p>
+<blockquote>
+<p>匹配不成功则会抛出异常</p>
+</blockquote>
+<h5 id="expression-3"><a href="#expression-3" class="headerlink" title="expression ?"></a><code>expression ?</code></h5><p>尝试去匹配表达式. 如果匹配成功, 则返回匹配结果, 否则返回null. 与正则表达式不同的是, 它们不会进行回溯.</p>
+<blockquote>
+<p>匹配不成功则会抛出异常</p>
+</blockquote>
+<h5 id="amp-expression"><a href="#amp-expression" class="headerlink" title="&amp; expression"></a><code>&amp; expression</code></h5><p>尝试去匹配表达式. 如果匹配成功, 则返回<code>undefined</code>而且不会消耗输入字符串, 否则认为匹配失败.</p>
+<blockquote>
+<p>匹配不成功则会抛出异常</p>
+</blockquote>
+<h5 id="expression-4"><a href="#expression-4" class="headerlink" title="! expression"></a><code>! expression</code></h5><p>尝试去匹配表达式. 如果匹配不成功, 则返回<code>undefined</code>而且不会消耗输入字符串, 否则认为匹配失败.</p>
+<blockquote>
+<p>匹配不成功则会抛出异常</p>
+</blockquote>
+<h5 id="amp-predicate"><a href="#amp-predicate" class="headerlink" title="&amp; { predicate }"></a><code>&amp; &#123; predicate &#125;</code></h5><p>The predicate is a piece of JavaScript code that is executed as if it was inside a function. It gets the match results of labeled expressions in preceding expression as its arguments. It should return some JavaScript value using the return statement. If the returned value evaluates to true in boolean context, just return undefined and do not consume any input; otherwise consider the match failed.</p>
+<p>The code inside the predicate can access all variables and functions defined in the initializer at the beginning of the grammar.</p>
+<p>The code inside the predicate can also access location information using the location function. It returns an object like this:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">start</span>: &#123; <span class="attr">offset</span>: <span class="number">23</span>, <span class="attr">line</span>: <span class="number">5</span>, <span class="attr">column</span>: <span class="number">6</span> &#125;,</span><br><span class="line">  <span class="attr">end</span>:   &#123; <span class="attr">offset</span>: <span class="number">23</span>, <span class="attr">line</span>: <span class="number">5</span>, <span class="attr">column</span>: <span class="number">6</span> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>The start and end properties both refer to the current parse position. The offset property contains an offset as a zero-based index and line and column properties contain a line and a column as one-based indices.</p>
+<p>The code inside the predicate can also access options passed to the parser using the options variable.</p>
+<p>Note that curly braces in the predicate code must be balanced.</p>
+<h5 id="predicate"><a href="#predicate" class="headerlink" title="! { predicate }"></a><code>! &#123; predicate &#125;</code></h5><p>The predicate is a piece of JavaScript code that is executed as if it was inside a function. It gets the match results of labeled expressions in preceding expression as its arguments. It should return some JavaScript value using the return statement. If the returned value evaluates to false in boolean context, just return undefined and do not consume any input; otherwise consider the match failed.</p>
+<p>The code inside the predicate can access all variables and functions defined in the initializer at the beginning of the grammar.</p>
+<p>The code inside the predicate can also access location information using the location function. It returns an object like this:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">start</span>: &#123; <span class="attr">offset</span>: <span class="number">23</span>, <span class="attr">line</span>: <span class="number">5</span>, <span class="attr">column</span>: <span class="number">6</span> &#125;,</span><br><span class="line">  <span class="attr">end</span>:   &#123; <span class="attr">offset</span>: <span class="number">23</span>, <span class="attr">line</span>: <span class="number">5</span>, <span class="attr">column</span>: <span class="number">6</span> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>The start and end properties both refer to the current parse position. The offset property contains an offset as a zero-based index and line and column properties contain a line and a column as one-based indices.</p>
+<p>The code inside the predicate can also access options passed to the parser using the options variable.</p>
+<p>Note that curly braces in the predicate code must be balanced.</p>
+<h5 id="expression-5"><a href="#expression-5" class="headerlink" title="$ expression"></a><code>$ expression</code></h5><p>尝试匹配该表达式. 如果匹配成功, 不会返回匹配结果, 而是返回匹配成功的字符串.</p>
+<blockquote>
+<p>匹配不成功则会抛出异常</p>
+</blockquote>
+<h5 id="label-expression"><a href="#label-expression" class="headerlink" title="label : expression"></a><code>label : expression</code></h5><p>匹配表达式, 然后将匹配结果存储在<code>label</code>里. <code>label</code>必须是一个JavaScript标识符. </p>
+<h5 id="expression1-expression2-expressionn"><a href="#expression1-expression2-expressionn" class="headerlink" title="expression1 expression2 ... expressionn"></a><code>expression1 expression2 ... expressionn</code></h5><p>匹配一个表达式列表, 将全部的匹配结果放到一个数组中返回.</p>
+<h5 id="expression-action"><a href="#expression-action" class="headerlink" title="expression { action }"></a><code>expression &#123; action &#125;</code></h5><p>如果匹配表达式成功, 则运行action, 否则认为匹配失败.</p>
+<blockquote>
+<p>匹配失败返回异常.</p>
+</blockquote>
+<p><code>action</code>是一段JavaScript代码, 可以把它当做一个方法来运行. labeled表达式的匹配结果会被当做action的参数, 传递给action. action应该通过<code>return</code>返回一个JavaScript结果, 该结果会被当做前面表达式的匹配结果.</p>
+<p>在action代码块中, 遇到非预期情况, 想要中断parse可以调用<code>expected</code>方法, 该方法会抛出一个异常. <code>expected</code>方法接受俩个参数, 第一个参数是<code>description</code>, 表明当前位置期望输入以及可选的<code>location</code>信息(默认值是what location would return). <code>description</code>会被当做exception中的message的一部分.</p>
+<p>在action代码中也可以调用<code>error</code>方法, 该方法也会抛出一个异常. <code>error</code>方法接受俩个参数, 第一个参数是error message, 第二个参数是可选的location信息(默认值是 what location would return). message会在抛出异常中使用.<br>action中的代码块可以访问初始器中定义的方法和变量. action代码块的左右大括号必须都在.<br>action 代码块中可以通过<code>text</code>方法访问匹配成功的字符.<br>action代码块中还可以通过访问<code>location</code>方法得到location信息, 该方法会返回下面这种对象.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">start</span>: &#123; <span class="attr">offset</span>: <span class="number">23</span>, <span class="attr">line</span>: <span class="number">5</span>, <span class="attr">column</span>: <span class="number">6</span> &#125;,</span><br><span class="line">  <span class="attr">end</span>:   &#123; <span class="attr">offset</span>: <span class="number">25</span>, <span class="attr">line</span>: <span class="number">5</span>, <span class="attr">column</span>: <span class="number">8</span> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>start</code>属性指向了表达式开始位置, <code>end</code>属性指向表达式的结束位置. <code>offset</code>是一个基于0 的offset索引位置, <code>line</code>和 <code>column</code> 属性是基于1的索引位置.</p>
+<p>action 代码块中可以通过<code>options</code>变量访问传递给parser的options.</p>
+<h5 id="expression1-expression2-expressionn-1"><a href="#expression1-expression2-expressionn-1" class="headerlink" title="expression1 / expression2 / ... / expressionn"></a><code>expression1 / expression2 / ... / expressionn</code></h5><p>按照顺序从左往右一次匹配, 返回第一个匹配成功的结果. 如果都匹配不成功, 则认为匹配失败.</p>
+<blockquote>
+<p>匹配失败返回异常.</p>
+</blockquote>
+<h2 id="Compatibility"><a href="#Compatibility" class="headerlink" title="Compatibility"></a>Compatibility</h2><p>arser generator 和 generated parsers 在以下环境都可以正常运行.</p>
+<ul>
+<li>Node.js 0.10.0+</li>
+<li>Internet Explorer 8+</li>
+<li>Edge</li>
+<li>Firefox</li>
+<li>Chrome</li>
+<li>Safari</li>
+<li>Opera</li>
+</ul>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://wangmingco.github.io/2018/12/15/%E7%BF%BB%E8%AF%91/pegjs-document/" title="PEG.js 文档 [译]" target="_blank" rel="external">https://wangmingco.github.io/2018/12/15/翻译/pegjs-document/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/wangmingco" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/wangmingco" target="_blank"><span class="text-dark">王明</span><small class="ml-1x">Coder</small></a></h3>
+        <div>一个纯粹的技术开发者。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2019/01/01/Java/jvm/JVM%20%E9%80%80%E5%87%BA%E6%97%B6%E6%9C%BA/" title="JVM 退出时机"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2018/11/18/%E7%AE%97%E6%B3%95/distributed-id/" title="高并发无锁无IO等待分布式ID生成方案"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>感谢您的支持，我会继续努力的!</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/images/donate/alipayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开支付宝扫一扫，即可进行扫码打赏哦</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/images/donate/wechatpayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开微信扫一扫，即可进行扫码打赏哦</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> 支付宝</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> 微信支付</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/wangmingco" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="https://gitee.com/wangmingco" target="_blank" title="Gitee" data-toggle=tooltip data-placement=top><i class="icon icon-gitee"></i></a></li>
+        
+        <li><a href="https://weibo.com/wangmingco" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://www.zhihu.com/people/wangmingco" target="_blank" title="Zhihu" data-toggle=tooltip data-placement=top><i class="icon icon-zhihu"></i></a></li>
+        
+        <li><a href="https://www.douban.com/people/xxxyy/" target="_blank" title="Douban" data-toggle=tooltip data-placement=top><i class="icon icon-douban"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>

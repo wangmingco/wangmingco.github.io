@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+   <!-- google 爬取标记 -->
+   <meta name="google-site-verification" content="aH2bcbMuMlpfF61i9p--iBH54wvMywGXfWg8U6RpxFA" />
+   <!-- bing 爬取标记 -->
+   <meta name="msvalidate.01" content="CBAB9A13FF212142D6C250D9C0D31F28" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>Vertx 3 Data Access | 王明的技术博客</title>
+  <meta name="description" content="JDBC client这个客户端允许你在Vertx应用中使用异步API与JDBC数据库相交互. JDBCClient接口定义了异步方式的JDBC API Creating a the client下面的几种方式介绍了如何创建一个客户端： Using default shared data source在大多数情景中,你可能需要在不同的客户端实例(client instances)中共享同一个d">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vertx 3 Data Access">
+<meta property="og:url" content="https://wangmingco.github.io/2015/08/27/%E7%BF%BB%E8%AF%91/vertx/vertx3_data_access/index.html">
+<meta property="og:site_name" content="王明的技术博客">
+<meta property="og:description" content="JDBC client这个客户端允许你在Vertx应用中使用异步API与JDBC数据库相交互. JDBCClient接口定义了异步方式的JDBC API Creating a the client下面的几种方式介绍了如何创建一个客户端： Using default shared data source在大多数情景中,你可能需要在不同的客户端实例(client instances)中共享同一个d">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2015-08-27T13:10:00.000Z">
+<meta property="article:modified_time" content="2022-07-04T02:07:20.249Z">
+<meta property="article:author" content="王明">
+<meta property="article:tag" content="vertx3">
+<meta name="twitter:card" content="summary">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://wangmingco.github.io/2015/08/27/%E7%BF%BB%E8%AF%91/vertx/vertx3_data_access/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="王明的技术博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/wangmingco" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">王明</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Coder</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Beijing, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">项目</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books">
+            
+            <i class="icon icon-book-fill"></i>
+            
+            <span class="menu-title">书单</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">友链</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/wangmingco" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="https://gitee.com/wangmingco" target="_blank" title="Gitee" data-toggle=tooltip data-placement=top><i class="icon icon-gitee"></i></a></li>
+        
+        <li><a href="https://weibo.com/wangmingco" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://www.zhihu.com/people/wangmingco" target="_blank" title="Zhihu" data-toggle=tooltip data-placement=top><i class="icon icon-zhihu"></i></a></li>
+        
+        <li><a href="https://www.douban.com/people/xxxyy/" target="_blank" title="Douban" data-toggle=tooltip data-placement=top><i class="icon icon-douban"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Groovy/">Groovy</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">140</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Nginx/">Nginx</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/NoSql/">NoSql</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/PHP/">PHP</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/PYTHON2/">PYTHON2</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Shell/">Shell</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ZooKeeper/">ZooKeeper</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/awk/">awk</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/haskell/">haskell</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E6%BA%90/">开源</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><span class="category-list-count">11</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9D%82%E6%96%87/">杂文</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><span class="category-list-count">11</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BF%BB%E8%AF%91/">翻译</a><span class="category-list-count">15</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java-IO/" rel="tag">Java IO</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java-%E4%B8%89%E6%96%B9%E5%BA%93/" rel="tag">Java 三方库</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java-%E7%BD%91%E7%BB%9C/" rel="tag">Java 网络</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaSE/" rel="tag">JavaSE</a><span class="tag-list-count">32</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/" rel="tag">JavaScript</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Javasist/" rel="tag">Javasist</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Memcached/" rel="tag">Memcached</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MongoDB/" rel="tag">MongoDB</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Netty/" rel="tag">Netty</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PEG-js/" rel="tag">PEG.js</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React/" rel="tag">React</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Redis/" rel="tag">Redis</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/asm/" rel="tag">asm</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmh/" rel="tag">jmh</a><span class="tag-list-count">14</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jol/" rel="tag">jol</a><span class="tag-list-count">24</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm/" rel="tag">jvm</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven/" rel="tag">maven</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mybatis/" rel="tag">mybatis</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vertx2/" rel="tag">vertx2</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vertx3/" rel="tag">vertx3</a><span class="tag-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/Java-IO/" style="font-size: 13.33px;">Java IO</a> <a href="/tags/Java-%E4%B8%89%E6%96%B9%E5%BA%93/" style="font-size: 13.83px;">Java 三方库</a> <a href="/tags/Java-%E7%BD%91%E7%BB%9C/" style="font-size: 13.5px;">Java 网络</a> <a href="/tags/JavaSE/" style="font-size: 14px;">JavaSE</a> <a href="/tags/JavaScript/" style="font-size: 13.42px;">JavaScript</a> <a href="/tags/Javasist/" style="font-size: 13.25px;">Javasist</a> <a href="/tags/Memcached/" style="font-size: 13px;">Memcached</a> <a href="/tags/MongoDB/" style="font-size: 13.17px;">MongoDB</a> <a href="/tags/Netty/" style="font-size: 13.5px;">Netty</a> <a href="/tags/PEG-js/" style="font-size: 13px;">PEG.js</a> <a href="/tags/React/" style="font-size: 13px;">React</a> <a href="/tags/Redis/" style="font-size: 13.17px;">Redis</a> <a href="/tags/asm/" style="font-size: 13.25px;">asm</a> <a href="/tags/jmh/" style="font-size: 13.67px;">jmh</a> <a href="/tags/jol/" style="font-size: 13.92px;">jol</a> <a href="/tags/jvm/" style="font-size: 13.75px;">jvm</a> <a href="/tags/maven/" style="font-size: 13px;">maven</a> <a href="/tags/mybatis/" style="font-size: 13.58px;">mybatis</a> <a href="/tags/mysql/" style="font-size: 13.42px;">mysql</a> <a href="/tags/vertx2/" style="font-size: 13.08px;">vertx2</a> <a href="/tags/vertx3/" style="font-size: 13.25px;">vertx3</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/06/">六月 2022</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">四月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">一月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">六月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">二月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">十一月 2018</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">四月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">十二月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">十一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">九月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">六月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">37</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">八月 2015</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">七月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">九月 2014</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">四月 2014</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/09/">九月 2013</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2022/06/30/Java/mybatis/mybatis%20mapper%E5%8A%A0%E8%BD%BD/" class="title">(no title)</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-06-30T01:31:47.097Z" itemprop="datePublished">2022-06-30</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/06/20/%E6%95%B0%E6%8D%AE%E5%BA%93/sql/" class="title">SQL 手册</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-06-19T16:00:00.000Z" itemprop="datePublished">2022-06-20</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E6%9D%82%E6%96%87/">杂文</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/06/01/%E6%9D%82%E6%96%87/duizhang/" class="title">对账</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-05-31T16:00:00.000Z" itemprop="datePublished">2022-06-01</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/04/12/%E5%89%8D%E7%AB%AF/REACT%20%E8%AF%AD%E6%B3%95/" class="title">React 学习</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-04-12T02:21:00.000Z" itemprop="datePublished">2022-04-12</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Java/">Java</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/01/10/Java/jvm/centos%E7%BC%96%E8%AF%91openjdk/" class="title">Centos7 编译调试 OpenJDK11</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-01-09T16:00:00.000Z" itemprop="datePublished">2022-01-10</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-翻译/vertx/vertx3_data_access" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Vertx 3 Data Access
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2015/08/27/%E7%BF%BB%E8%AF%91/vertx/vertx3_data_access/" class="article-date">
+	  <time datetime="2015-08-27T13:10:00.000Z" itemprop="datePublished">2015-08-27</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/%E7%BF%BB%E8%AF%91/">翻译</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/vertx3/" rel="tag">vertx3</a>
+  </span>
+
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2015/08/27/%E7%BF%BB%E8%AF%91/vertx/vertx3_data_access/#comments" class="article-comment-link">评论</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <script src="/assets/asciinema-player.js"></script><link rel="stylesheet" type="text/css" href="/assets/asciinema-player.css" />
+
+<h1 id="JDBC-client"><a href="#JDBC-client" class="headerlink" title="JDBC client"></a>JDBC client</h1><p>这个客户端允许你在Vertx应用中使用异步API与JDBC数据库相交互.</p>
+<p><code>JDBCClient</code>接口定义了异步方式的JDBC API</p>
+<h2 id="Creating-a-the-client"><a href="#Creating-a-the-client" class="headerlink" title="Creating a the client"></a>Creating a the client</h2><p>下面的几种方式介绍了如何创建一个客户端：</p>
+<h3 id="Using-default-shared-data-source"><a href="#Using-default-shared-data-source" class="headerlink" title="Using default shared data source"></a>Using default shared data source</h3><p>在大多数情景中,你可能需要在不同的客户端实例(client instances)中共享同一个<code>data source</code>.</p>
+<p>例如,你想要通过部署多个<code>verticle</code>实例来拓展应用的规模,然而每个<code>verticle</code>都共享相同的<code>datasource</code>,这样你就避免了多个<code>datasource pool</code>了。</p>
+<p>如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">JDBCClient client = JDBCClient.createShared(vertx, config);</span><br></pre></td></tr></table></figure>
+<p>当第一次调用<code>JDBCClient.createShared</code>的时候,确实会根据传进的配置创建出<code>data source</code>. 但是当接下来再次调用这个方法的时候,也会创建一个新的客户端,但是它却没有创建新的<code>data source</code>,因此第二次传进的配置也没有生效.</p>
+<h4 id="Specifying-a-data-source-name"><a href="#Specifying-a-data-source-name" class="headerlink" title="Specifying a data source name"></a>Specifying a data source name</h4><p>在创建<code>JDBCClient</code>实例的时候也可以指定<code>data source</code>的名字</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">JDBCClient client = JDBCClient.createShared(vertx, config, <span class="string">&quot;MyDataSource&quot;</span>);</span><br></pre></td></tr></table></figure>
+<p>如果使用相同的<code>Vertx</code>实例和相同的<code>data source</code>名字创建出不同的客户端,那这些客户端会使用相同的<code>data source</code>.</p>
+<p>使用这种创建方式你可以在不同的客户端上使用不同的<code>datasource</code>, 例如和不同的数据库进行交互.</p>
+<h4 id="Creating-a-client-with-a-non-shared-data-source"><a href="#Creating-a-client-with-a-non-shared-data-source" class="headerlink" title="Creating a client with a non shared data source"></a>Creating a client with a non shared data source</h4><p>虽然在大部分情况下不同的客户端实例需要共享相同的<code>data source</code>,但是有时候也可能客户端需要一个非共享的<code>data source</code>, 你可以使用<code>JDBCClient.createNonShared</code>方法.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">JDBCClient client = JDBCClient.createNonShared(vertx, config);</span><br></pre></td></tr></table></figure>
+<p>这种方式和调用<code>JDBCClient.createShared</code>时传递一个唯一的<code>data source</code>名字达到相同的效果.</p>
+<h4 id="Specifying-a-data-source"><a href="#Specifying-a-data-source" class="headerlink" title="Specifying a data source"></a>Specifying a data source</h4><p>如果你想使用一个已经存在的<code>data source</code>, 那么你也可以直接使用那个<code>data source</code>创建一个客户端.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">JDBCClient client = JDBCClient.create(vertx, dataSource);</span><br></pre></td></tr></table></figure>
+
+<h2 id="Closing-the-client"><a href="#Closing-the-client" class="headerlink" title="Closing the client"></a>Closing the client</h2><p>你可以在整个<code>verticle</code>生命周期之内都持有客户端的引用,但是一旦你使用完该客户端你就应该主动关闭它.</p>
+<p>由于<code>data source</code>内部持有一个引用计数器,每当客户端关闭一次,<code>data source</code>内部的技术器就会减1,当计数器为0的时候,<code>data source</code>就会关闭自己.</p>
+<h2 id="Getting-a-connection"><a href="#Getting-a-connection" class="headerlink" title="Getting a connection"></a>Getting a connection</h2><p>当你成功创建出客户端之后,你可以使用<code>getConnection</code>方法来获得一个连接.</p>
+<p>当连接池中有了可用连接之后,<code>handler</code>会获得一个可用连接</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">client.getConnection(res -&gt; &#123;</span><br><span class="line">  <span class="keyword">if</span> (res.succeeded()) &#123;</span><br><span class="line"></span><br><span class="line">    SQLConnection connection = res.result();</span><br><span class="line"></span><br><span class="line">    connection.query(<span class="string">&quot;SELECT * FROM some_table&quot;</span>, res2 -&gt; &#123;</span><br><span class="line">      <span class="keyword">if</span> (res2.succeeded()) &#123;</span><br><span class="line"></span><br><span class="line">        ResultSet rs = res2.result();</span><br><span class="line">        <span class="comment">// Do something with results</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// Failed to get connection - deal with it</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>获得的连接是一个<code>SQLConnection</code>实例, <code>SQLConnection</code>接口更多的是被<code>Vert.x sql service</code>使用.</p>
+<h2 id="Configuration"><a href="#Configuration" class="headerlink" title="Configuration"></a>Configuration</h2><p>当我们创建客户端时,向其传递了一个配置,该配置包含下面属性：</p>
+<ul>
+<li><code>provider_class</code> : 用于管理数据库连接的类名. 默认的类名是<code>io.vertx.ext.jdbc.spi.impl.C3P0DataSourceProvider</code>, 但是如果你想要使用其他连接池,那么你可以使用你自己的实现覆盖该属性.</li>
+</ul>
+<h6 id="因为我们使用了C3P0的连接池-因此我们还可以使用下列属性"><a href="#因为我们使用了C3P0的连接池-因此我们还可以使用下列属性" class="headerlink" title="因为我们使用了C3P0的连接池,因此我们还可以使用下列属性"></a>因为我们使用了<code>C3P0</code>的连接池,因此我们还可以使用下列属性</h6><ul>
+<li><code>url</code> : 数据库的JDBC连接URL地址</li>
+<li><code>driver_class</code> : JDBC<code>dirver</code>名称</li>
+<li><code>user</code> : 数据库名称</li>
+<li><code>password</code> : 数据库密码</li>
+<li><code>max_pool_size</code> : 连接池最大数量(默认是15)</li>
+<li><code>initial_pool_size</code> : 连接池初始大小(默认是3)</li>
+<li><code>min_pool_size</code> : 连接池最小值</li>
+<li><code>max_statements</code> : 缓存<code>prepared statements</code>的最大值(默认是0)</li>
+<li><code>max_statements_per_connection</code> : 每个连接缓存<code>prepared statements</code>的最大值(默认是0)</li>
+<li><code>max_idle_time</code> : 该值表示一个闲置连接多少秒后会被关闭(默认是0, 从不关闭).</li>
+</ul>
+<p>如果你还想要配置其他<code>C3P0</code>的配置,那么你可以在<code>classpath</code>上添加一个<code>c3p0.properties</code>文件</p>
+<p>下面给出了一个配置示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">JsonObject config = <span class="keyword">new</span> JsonObject()</span><br><span class="line">  .put(<span class="string">&quot;url&quot;</span>, <span class="string">&quot;jdbc:hsqldb:mem:test?shutdown=true&quot;</span>)</span><br><span class="line">  .put(<span class="string">&quot;driver_class&quot;</span>, <span class="string">&quot;org.hsqldb.jdbcDriver&quot;</span>)</span><br><span class="line">  .put(<span class="string">&quot;max_pool_size&quot;</span>, <span class="number">30</span>);</span><br><span class="line"></span><br><span class="line">JDBCClient client = JDBCClient.createShared(vertx, config);</span><br></pre></td></tr></table></figure>
+
+
+<h1 id="Vert-x-MySQL-PostgreSQL-client"><a href="#Vert-x-MySQL-PostgreSQL-client" class="headerlink" title="Vert.x MySQL - PostgreSQL client"></a>Vert.x MySQL - PostgreSQL client</h1><p><code>MySQL / PostgreSQL</code>客户端为Vert.x应用提供了一个与<code>MySQL / PostgreSQL</code>数据库交互的接口.</p>
+<p>它使用<code>Mauricio Linhares</code>开源驱动与<code>MySQL / PostgreSQL</code>数据库进行非阻塞交互.</p>
+<h2 id="Creating-a-the-client-1"><a href="#Creating-a-the-client-1" class="headerlink" title="Creating a the client"></a>Creating a the client</h2><p>下面给出了几种创建方式：</p>
+<h4 id="Using-default-shared-pool"><a href="#Using-default-shared-pool" class="headerlink" title="Using default shared pool"></a>Using default shared pool</h4><p>在大多数情况下,我们需要在多个客户端实例中共享同一个连接池</p>
+<p>例如你通过部署多个<code>verticle</code>实例的方式进行程序拓展,但是可以每个<code>verticle</code>可以共享同一个连接池.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">JsonObject mySQLClientConfig = <span class="keyword">new</span> JsonObject().put(<span class="string">&quot;host&quot;</span>, <span class="string">&quot;mymysqldb.mycompany&quot;</span>);</span><br><span class="line">AsyncSQLClient mySQLClient = MySQLClient.createShared(vertx, mySQLClientConfig);</span><br><span class="line"></span><br><span class="line"><span class="comment">// To create a PostgreSQL client:</span></span><br><span class="line"></span><br><span class="line">JsonObject postgreSQLClientConfig = <span class="keyword">new</span> JsonObject().put(<span class="string">&quot;host&quot;</span>, <span class="string">&quot;mypostgresqldb.mycompany&quot;</span>);</span><br><span class="line">AsyncSQLClient postgreSQLClient = PostgreSQLClient.createShared(vertx, postgreSQLClientConfig);</span><br></pre></td></tr></table></figure>
+<p><code>MySQLClient.createShared</code>或者<code>PostgreSQLClient.createShared</code>会根据指定的配置创建一个连接池. 随后再调用这俩个方式时会使用同一个连接池,同时新的配置不会被采用.</p>
+<h4 id="Specifying-a-pool-name"><a href="#Specifying-a-pool-name" class="headerlink" title="Specifying a pool name"></a>Specifying a pool name</h4><p>你也可以像下面这样指定一个连接池的名字.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">JsonObject mySQLClientConfig = <span class="keyword">new</span> JsonObject().put(<span class="string">&quot;host&quot;</span>, <span class="string">&quot;mymysqldb.mycompany&quot;</span>);</span><br><span class="line">AsyncSQLClient mySQLClient = MySQLClient.createShared(vertx, mySQLClientConfig, <span class="string">&quot;MySQLPool1&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// To create a PostgreSQL client:</span></span><br><span class="line"></span><br><span class="line">JsonObject postgreSQLClientConfig = <span class="keyword">new</span> JsonObject().put(<span class="string">&quot;host&quot;</span>, <span class="string">&quot;mypostgresqldb.mycompany&quot;</span>);</span><br><span class="line">AsyncSQLClient postgreSQLClient = PostgreSQLClient.createShared(vertx, postgreSQLClientConfig, <span class="string">&quot;PostgreSQLPool1&quot;</span>);</span><br></pre></td></tr></table></figure>
+<p>如果不同的客户端使用相同的<code>Vertx</code>实例和相同的连接池名字,那么他们将使用同一个连接池.</p>
+<p>使用这种创建方式你可以在不同的客户端上使用不同的<code>datasource</code>, 例如和不同的数据库进行交互.</p>
+<h4 id="Creating-a-client-with-a-non-shared-data-source-1"><a href="#Creating-a-client-with-a-non-shared-data-source-1" class="headerlink" title="Creating a client with a non shared data source"></a>Creating a client with a non shared data source</h4><p>虽然在大部分情况下不同的客户端实例需要共享相同的<code>data source</code>,但是有时候也可能客户端需要一个非共享的<code>data source</code>, 你可以使用<code>MySQLClient.createNonShared</code>或者<code>PostgreSQLClient.createNonShared</code>方法.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">JsonObject mySQLClientConfig = <span class="keyword">new</span> JsonObject().put(<span class="string">&quot;host&quot;</span>, <span class="string">&quot;mymysqldb.mycompany&quot;</span>);</span><br><span class="line">AsyncSQLClient mySQLClient = MySQLClient.createNonShared(vertx, mySQLClientConfig);</span><br><span class="line"></span><br><span class="line"><span class="comment">// To create a PostgreSQL client:</span></span><br><span class="line"></span><br><span class="line">JsonObject postgreSQLClientConfig = <span class="keyword">new</span> JsonObject().put(<span class="string">&quot;host&quot;</span>, <span class="string">&quot;mypostgresqldb.mycompany&quot;</span>);</span><br><span class="line">AsyncSQLClient postgreSQLClient = PostgreSQLClient.createNonShared(vertx, postgreSQLClientConfig);</span><br></pre></td></tr></table></figure>
+<p>这种方式和调用<code>MySQLClient.createNonShared</code>或者<code>PostgreSQLClient.createNonShared</code>时传递一个唯一的<code>data source</code>名字达到相同的效果.</p>
+<h2 id="Closing-the-client-1"><a href="#Closing-the-client-1" class="headerlink" title="Closing the client"></a>Closing the client</h2><p>你可以在整个<code>verticle</code>生命周期之内都持有客户端的引用,但是一旦你使用完该客户端你就应该调用<code>close</code>关闭它.</p>
+<h2 id="Getting-a-connection-1"><a href="#Getting-a-connection-1" class="headerlink" title="Getting a connection"></a>Getting a connection</h2><p>当你成功创建出客户端之后,你可以使用<code>getConnection</code>方法来获得一个连接.</p>
+<p>当连接池中有了可用连接之后,<code>handler</code>会获得一个可用连接</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">client.getConnection(res -&gt; &#123;</span><br><span class="line">  <span class="keyword">if</span> (res.succeeded()) &#123;</span><br><span class="line"></span><br><span class="line">    SQLConnection connection = res.result();</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Got a connection</span></span><br><span class="line"></span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// Failed to get connection - deal with it</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>连接是<code>SQLConnection</code>的一个实例, <code>SQLConnection</code>是一个被<code>Sql</code>客户端使用的公共接口.</p>
+<blockquote>
+<p>需要注意的是<code>date</code>和<code>timestamps</code>类型. 无论何时从数据库中获取<code>date</code>时, 客户端会将它转换成<code>ISO 8601</code>形式的字符串(<code>yyyy-MM-ddTHH:mm:ss.SSS</code>).<code>Mysql</code>会忽略毫秒数.</p>
+</blockquote>
+<h2 id="Configuration-1"><a href="#Configuration-1" class="headerlink" title="Configuration"></a>Configuration</h2><p><code>PostgreSql</code>和<code>MySql</code>使用了下面相同的配置：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;host&quot;</span> : &lt;your-host&gt;,</span><br><span class="line">  <span class="attr">&quot;port&quot;</span> : &lt;your-port&gt;,</span><br><span class="line">  <span class="attr">&quot;maxPoolSize&quot;</span> : &lt;maximum-number-of-open-connections&gt;,</span><br><span class="line">  <span class="attr">&quot;username&quot;</span> : &lt;your-username&gt;,</span><br><span class="line">  <span class="attr">&quot;password&quot;</span> : &lt;your-password&gt;,</span><br><span class="line">  <span class="attr">&quot;database&quot;</span> : &lt;name-of-your-database&gt;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<ul>
+<li><code>host</code> : 数据库主机地址(默认是<code>localhost</code>)</li>
+<li><code>port</code> : 数据库端口(<code>PostgreSQL</code>默认是5432. <code>MySQL</code>默认是3306)</li>
+<li><code>maxPoolSize</code> : 连接池保持开启的最大数量,默认是10.</li>
+<li><code>username</code> : 连接数据库使用的用户名.(<code>PostgreSQL</code>的默认值是<code>postgres</code>, <code>MySQL</code>的默认值是<code>root</code>)</li>
+<li><code>password</code> : 连接数据库使用的密码(默认没有设置密码).</li>
+<li><code>database</code> : 连接的数据库名称.(默认值是<code>test</code>)</li>
+</ul>
+<h1 id="Common-SQL-interface"><a href="#Common-SQL-interface" class="headerlink" title="Common SQL interface"></a>Common SQL interface</h1><p>通用<code>SQL</code>接口是用来和Vertx<code>SQL</code>服务交互的.</p>
+<p>通过指定的SQL服务接口我们可以获取一个指定的连接.</p>
+<h1 id="The-SQL-Connection"><a href="#The-SQL-Connection" class="headerlink" title="The SQL Connection"></a>The SQL Connection</h1><p>我们使用<code>SQLConnection</code>表示与一个数据库的连接.</p>
+<h3 id="Auto-commit"><a href="#Auto-commit" class="headerlink" title="Auto-commit"></a>Auto-commit</h3><p>当连接的<code>auto commit</code>被设置为<code>true</code>. 这意味着每个操作都会在连接自己的事务中被高效地执行.</p>
+<p>如果你想要在一个单独的事务中执行多个操作,你应该使用<code>setAutoCommit</code>方法将<code>auto commit</code>被设置为<code>false</code>.</p>
+<p>当操作完成之后,我们设置的<code>handler</code>会自动地被调用.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">connection.setAutoCommit(<span class="keyword">false</span>, res -&gt; &#123;</span><br><span class="line">  <span class="keyword">if</span> (res.succeeded()) &#123;</span><br><span class="line">    <span class="comment">// OK!</span></span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// Failed!</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="Executing-queries"><a href="#Executing-queries" class="headerlink" title="Executing queries"></a>Executing queries</h3><p>我们使用<code>query</code>来执行查询操作</p>
+<p><code>query</code>方法的参数是原生<code>SQL</code>语句, 我们不必使用针对不同的数据库使用不同的<code>SQL</code>方言.</p>
+<p>当查询完成之后,我们设置的<code>handler</code>会自动地被调用. <code>query</code>的结果使用<code>ResultSet</code>表示.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">connection.query(<span class="string">&quot;SELECT ID, FNAME, LNAME, SHOE_SIZE from PEOPLE&quot;</span>, res -&gt; &#123;</span><br><span class="line">  <span class="keyword">if</span> (res.succeeded()) &#123;</span><br><span class="line">    <span class="comment">// Get the result set</span></span><br><span class="line">    ResultSet resultSet = res.result();</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// Failed!</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p><code>ResultSet</code>实例中的<code>getColumnNames</code>方法可以获得可用列名, <code>getResults</code>可以获得查询真实的结果.</p>
+<p>实际上,查询的结果是一个<code>JsonArray</code>的<code>List</code>实例,每一个元素都代表一行结果.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">List&lt;String&gt; columnNames = resultSet.getColumnNames();</span><br><span class="line"></span><br><span class="line">List&lt;JsonArray&gt; results = resultSet.getResults();</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (JsonArray row: results) &#123;</span><br><span class="line"></span><br><span class="line">  String id = row.getString(<span class="number">0</span>);</span><br><span class="line">  String fName = row.getString(<span class="number">1</span>);</span><br><span class="line">  String lName = row.getString(<span class="number">2</span>);</span><br><span class="line">  <span class="keyword">int</span> shoeSize = row.getInteger(<span class="number">3</span>);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>另外你还可以使用<code>getRows</code>获取一个<code>Json</code>对象实例的<code>List</code>, 这种方式简化了刚才的方式,但是有一点需要注意的是,<code>SQL</code>结果可能包含重复的列名, 如果你的情景是这种情况,你应该使用<code>getResults</code>.</p>
+<p>下面给出了一种使用<code>getRows</code>获取结果的示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">List&lt;JsonObject&gt; rows = resultSet.getRows();</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (JsonObject row: rows) &#123;</span><br><span class="line"></span><br><span class="line">  String id = row.getString(<span class="string">&quot;ID&quot;</span>);</span><br><span class="line">  String fName = row.getString(<span class="string">&quot;FNAME&quot;</span>);</span><br><span class="line">  String lName = row.getString(<span class="string">&quot;LNAME&quot;</span>);</span><br><span class="line">  <span class="keyword">int</span> shoeSize = row.getInteger(<span class="string">&quot;SHOE_SIZE&quot;</span>);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Prepared-statement-queries"><a href="#Prepared-statement-queries" class="headerlink" title="Prepared statement queries"></a>Prepared statement queries</h3><p>我们可以使用<code>queryWithParams</code>来执行<code>prepared statement</code>查询.</p>
+<p>下例中,演示了使用方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">String query = <span class="string">&quot;SELECT ID, FNAME, LNAME, SHOE_SIZE from PEOPLE WHERE LNAME=? AND SHOE_SIZE &gt; ?&quot;</span>;</span><br><span class="line">JsonArray params = <span class="keyword">new</span> JsonArray().add(<span class="string">&quot;Fox&quot;</span>).add(<span class="number">9</span>);</span><br><span class="line"></span><br><span class="line">connection.queryWithParams(query, params, res -&gt; &#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (res.succeeded()) &#123;</span><br><span class="line">    <span class="comment">// Get the result set</span></span><br><span class="line">    ResultSet resultSet = res.result();</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// Failed!</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="Executing-INSERT-UPDATE-or-DELETE"><a href="#Executing-INSERT-UPDATE-or-DELETE" class="headerlink" title="Executing INSERT, UPDATE or DELETE"></a>Executing INSERT, UPDATE or DELETE</h3><p>我们可以直接使用<code>update</code>方法进行数据更新操作.</p>
+<p>同样<code>update</code>方法的参数同样是原生<code>SQL</code>语句,不必使用<code>SQL</code>方言.</p>
+<p>当更新完成之后,我们会获得一个更新结果<code>UpdateResult</code>。</p>
+<p>我们可以调用更新结果的<code>getUpdated</code>方法获得有多少行发生了改变, 而且如果更新时生成了一些key,那么我们可以通过<code>getKeys</code>获得</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">List&lt;String&gt; columnNames = resultSet.getColumnNames();</span><br><span class="line"></span><br><span class="line">List&lt;JsonArray&gt; results = resultSet.getResults();</span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> (JsonArray row: results) &#123;</span><br><span class="line"></span><br><span class="line">  String id = row.getString(<span class="number">0</span>);</span><br><span class="line">  String fName = row.getString(<span class="number">1</span>);</span><br><span class="line">  String lName = row.getString(<span class="number">2</span>);</span><br><span class="line">  <span class="keyword">int</span> shoeSize = row.getInteger(<span class="number">3</span>);</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Prepared-statement-updates"><a href="#Prepared-statement-updates" class="headerlink" title="Prepared statement updates"></a>Prepared statement updates</h3><p>如果想要执行<code>prepared statement</code>更新操作,我们可以使用<code>updateWithParams</code>.</p>
+<p>如下例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">String update = <span class="string">&quot;UPDATE PEOPLE SET SHOE_SIZE = 10 WHERE LNAME=?&quot;</span>;</span><br><span class="line">JsonArray params = <span class="keyword">new</span> JsonArray().add(<span class="string">&quot;Fox&quot;</span>);</span><br><span class="line"></span><br><span class="line">connection.updateWithParams(update, params, res -&gt; &#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> (res.succeeded()) &#123;</span><br><span class="line"></span><br><span class="line">    UpdateResult updateResult = res.result();</span><br><span class="line"></span><br><span class="line">    System.out.println(<span class="string">&quot;No. of rows updated: &quot;</span> + updateResult.getUpdated());</span><br><span class="line"></span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Failed!</span></span><br><span class="line"></span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="Executing-other-operations"><a href="#Executing-other-operations" class="headerlink" title="Executing other operations"></a>Executing other operations</h3><p>如果想要执行其他数据库操作,例如创建数据库,你可以使用<code>execute</code>方法.</p>
+<p>同样<code>execute</code>执行的语句也是原生<code>SQL</code>语句.当操作执行完之后,我们设置的<code>handler</code>会被调用.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">String sql = <span class="string">&quot;CREATE TABLE PEOPLE (ID int generated by default as identity (start with 1 increment by 1) not null,&quot;</span> +</span><br><span class="line">             <span class="string">&quot;FNAME varchar(255), LNAME varchar(255), SHOE_SIZE int);&quot;</span>;</span><br><span class="line"></span><br><span class="line">connection.execute(sql, execute -&gt; &#123;</span><br><span class="line">  <span class="keyword">if</span> (execute.succeeded()) &#123;</span><br><span class="line">    System.out.println(<span class="string">&quot;Table created !&quot;</span>);</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// Failed!</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="Using-transactions"><a href="#Using-transactions" class="headerlink" title="Using transactions"></a>Using transactions</h3><p>如果想要使用事务,那么首先要调用<code>setAutoCommit</code>将<code>auto-commit</code>设置为<code>false</code>.</p>
+<p>接下来你就可以进行事务操作, 例如提交时使用<code>commit</code>, 回滚时使用<code>rollback</code>.</p>
+<p>一旦<code>commit/rollback</code>完成之后, 我们设置的<code>handler</code>会被调用, 然后下一个事务会自动开始.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">connection.commit(res -&gt; &#123;</span><br><span class="line">  <span class="keyword">if</span> (res.succeeded()) &#123;</span><br><span class="line">    <span class="comment">// Committed OK!</span></span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="comment">// Failed!</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="Closing-connections"><a href="#Closing-connections" class="headerlink" title="Closing connections"></a>Closing connections</h3><p>当你执行完全部的操作之后,你应该使用<code>close</code>将连接资源还给连接池.</p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://wangmingco.github.io/2015/08/27/%E7%BF%BB%E8%AF%91/vertx/vertx3_data_access/" title="Vertx 3 Data Access" target="_blank" rel="external">https://wangmingco.github.io/2015/08/27/翻译/vertx/vertx3_data_access/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/wangmingco" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/wangmingco" target="_blank"><span class="text-dark">王明</span><small class="ml-1x">Coder</small></a></h3>
+        <div>一个纯粹的技术开发者。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2015/09/08/Java/maven/Archiva/" title="Archiva 学习"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2015/08/15/%E7%BF%BB%E8%AF%91/vertx/vertx3_metrics_and_monitoring/" title="Vertx 3 Metrics And Monitoring"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>感谢您的支持，我会继续努力的!</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/images/donate/alipayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开支付宝扫一扫，即可进行扫码打赏哦</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/images/donate/wechatpayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开微信扫一扫，即可进行扫码打赏哦</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> 支付宝</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> 微信支付</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/wangmingco" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="https://gitee.com/wangmingco" target="_blank" title="Gitee" data-toggle=tooltip data-placement=top><i class="icon icon-gitee"></i></a></li>
+        
+        <li><a href="https://weibo.com/wangmingco" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://www.zhihu.com/people/wangmingco" target="_blank" title="Zhihu" data-toggle=tooltip data-placement=top><i class="icon icon-zhihu"></i></a></li>
+        
+        <li><a href="https://www.douban.com/people/xxxyy/" target="_blank" title="Douban" data-toggle=tooltip data-placement=top><i class="icon icon-douban"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>

@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+   <!-- google 爬取标记 -->
+   <meta name="google-site-verification" content="aH2bcbMuMlpfF61i9p--iBH54wvMywGXfWg8U6RpxFA" />
+   <!-- bing 爬取标记 -->
+   <meta name="msvalidate.01" content="CBAB9A13FF212142D6C250D9C0D31F28" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>CGLib 动态代理 原理解析 | 王明的技术博客</title>
+  <meta name="description" content="CGLib 动态代理 原理解析 首先来看一段CGLib代理的测试代码(MethodInterceptor的测试, 其他类型这里不做展开了). Util类的代码在后面给出的码云片段中 1234567891011121314151617181920212223242526272829303132public class MethodInterceptorTest &amp;#123;	public stat">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CGLib 动态代理 原理解析">
+<meta property="og:url" content="https://wangmingco.github.io/2019/05/21/Java/lib/CGLib%20Proxy/index.html">
+<meta property="og:site_name" content="王明的技术博客">
+<meta property="og:description" content="CGLib 动态代理 原理解析 首先来看一段CGLib代理的测试代码(MethodInterceptor的测试, 其他类型这里不做展开了). Util类的代码在后面给出的码云片段中 1234567891011121314151617181920212223242526272829303132public class MethodInterceptorTest &amp;#123;	public stat">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/javalib/cglib1.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/javalib/cglib2.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/javalib/cglib3.jpg">
+<meta property="article:published_time" content="2019-05-20T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-07-04T01:44:52.061Z">
+<meta property="article:author" content="王明">
+<meta property="article:tag" content="Java 三方库">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/javalib/cglib1.jpg">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://wangmingco.github.io/2019/05/21/Java/lib/CGLib%20Proxy/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="王明的技术博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/wangmingco" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">王明</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Coder</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Beijing, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">项目</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books">
+            
+            <i class="icon icon-book-fill"></i>
+            
+            <span class="menu-title">书单</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">友链</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/wangmingco" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="https://gitee.com/wangmingco" target="_blank" title="Gitee" data-toggle=tooltip data-placement=top><i class="icon icon-gitee"></i></a></li>
+        
+        <li><a href="https://weibo.com/wangmingco" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://www.zhihu.com/people/wangmingco" target="_blank" title="Zhihu" data-toggle=tooltip data-placement=top><i class="icon icon-zhihu"></i></a></li>
+        
+        <li><a href="https://www.douban.com/people/xxxyy/" target="_blank" title="Douban" data-toggle=tooltip data-placement=top><i class="icon icon-douban"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Groovy/">Groovy</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">140</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Nginx/">Nginx</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/NoSql/">NoSql</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/PHP/">PHP</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/PYTHON2/">PYTHON2</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Shell/">Shell</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ZooKeeper/">ZooKeeper</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/awk/">awk</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/haskell/">haskell</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E6%BA%90/">开源</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><span class="category-list-count">11</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9D%82%E6%96%87/">杂文</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><span class="category-list-count">11</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BF%BB%E8%AF%91/">翻译</a><span class="category-list-count">15</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java-IO/" rel="tag">Java IO</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java-%E4%B8%89%E6%96%B9%E5%BA%93/" rel="tag">Java 三方库</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java-%E7%BD%91%E7%BB%9C/" rel="tag">Java 网络</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaSE/" rel="tag">JavaSE</a><span class="tag-list-count">32</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/" rel="tag">JavaScript</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Javasist/" rel="tag">Javasist</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Memcached/" rel="tag">Memcached</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MongoDB/" rel="tag">MongoDB</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Netty/" rel="tag">Netty</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PEG-js/" rel="tag">PEG.js</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React/" rel="tag">React</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Redis/" rel="tag">Redis</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/asm/" rel="tag">asm</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmh/" rel="tag">jmh</a><span class="tag-list-count">14</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jol/" rel="tag">jol</a><span class="tag-list-count">24</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm/" rel="tag">jvm</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven/" rel="tag">maven</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mybatis/" rel="tag">mybatis</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vertx2/" rel="tag">vertx2</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vertx3/" rel="tag">vertx3</a><span class="tag-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/Java-IO/" style="font-size: 13.33px;">Java IO</a> <a href="/tags/Java-%E4%B8%89%E6%96%B9%E5%BA%93/" style="font-size: 13.83px;">Java 三方库</a> <a href="/tags/Java-%E7%BD%91%E7%BB%9C/" style="font-size: 13.5px;">Java 网络</a> <a href="/tags/JavaSE/" style="font-size: 14px;">JavaSE</a> <a href="/tags/JavaScript/" style="font-size: 13.42px;">JavaScript</a> <a href="/tags/Javasist/" style="font-size: 13.25px;">Javasist</a> <a href="/tags/Memcached/" style="font-size: 13px;">Memcached</a> <a href="/tags/MongoDB/" style="font-size: 13.17px;">MongoDB</a> <a href="/tags/Netty/" style="font-size: 13.5px;">Netty</a> <a href="/tags/PEG-js/" style="font-size: 13px;">PEG.js</a> <a href="/tags/React/" style="font-size: 13px;">React</a> <a href="/tags/Redis/" style="font-size: 13.17px;">Redis</a> <a href="/tags/asm/" style="font-size: 13.25px;">asm</a> <a href="/tags/jmh/" style="font-size: 13.67px;">jmh</a> <a href="/tags/jol/" style="font-size: 13.92px;">jol</a> <a href="/tags/jvm/" style="font-size: 13.75px;">jvm</a> <a href="/tags/maven/" style="font-size: 13px;">maven</a> <a href="/tags/mybatis/" style="font-size: 13.58px;">mybatis</a> <a href="/tags/mysql/" style="font-size: 13.42px;">mysql</a> <a href="/tags/vertx2/" style="font-size: 13.08px;">vertx2</a> <a href="/tags/vertx3/" style="font-size: 13.25px;">vertx3</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/06/">六月 2022</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">四月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">一月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">六月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">二月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">十一月 2018</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">四月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">十二月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">十一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">九月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">六月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">37</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">八月 2015</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">七月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">九月 2014</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">四月 2014</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/09/">九月 2013</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2022/06/30/Java/mybatis/mybatis%20mapper%E5%8A%A0%E8%BD%BD/" class="title">(no title)</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-06-30T01:31:47.097Z" itemprop="datePublished">2022-06-30</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/06/20/%E6%95%B0%E6%8D%AE%E5%BA%93/sql/" class="title">SQL 手册</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-06-19T16:00:00.000Z" itemprop="datePublished">2022-06-20</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E6%9D%82%E6%96%87/">杂文</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/06/01/%E6%9D%82%E6%96%87/duizhang/" class="title">对账</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-05-31T16:00:00.000Z" itemprop="datePublished">2022-06-01</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/04/12/%E5%89%8D%E7%AB%AF/REACT%20%E8%AF%AD%E6%B3%95/" class="title">React 学习</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-04-12T02:21:00.000Z" itemprop="datePublished">2022-04-12</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Java/">Java</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/01/10/Java/jvm/centos%E7%BC%96%E8%AF%91openjdk/" class="title">Centos7 编译调试 OpenJDK11</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-01-09T16:00:00.000Z" itemprop="datePublished">2022-01-10</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-Java/lib/CGLib Proxy" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      CGLib 动态代理 原理解析
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2019/05/21/Java/lib/CGLib%20Proxy/" class="article-date">
+	  <time datetime="2019-05-20T16:00:00.000Z" itemprop="datePublished">2019-05-21</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/Java/">Java</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/Java-%E4%B8%89%E6%96%B9%E5%BA%93/" rel="tag">Java 三方库</a>
+  </span>
+
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2019/05/21/Java/lib/CGLib%20Proxy/#comments" class="article-comment-link">评论</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <script src="/assets/asciinema-player.js"></script><link rel="stylesheet" type="text/css" href="/assets/asciinema-player.css" />
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/63272694">CGLib 动态代理 原理解析</a></p>
+<p>首先来看一段CGLib代理的测试代码(<code>MethodInterceptor</code>的测试, 其他类型这里不做展开了). <code>Util</code>类的代码在后面给出的码云片段中</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MethodInterceptorTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> InterruptedException </span>&#123;</span><br><span class="line">		List list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">		Enhancer enhancer = <span class="keyword">new</span> Enhancer();</span><br><span class="line">		enhancer.setSuperclass(A.class);</span><br><span class="line">		enhancer.setCallback((MethodInterceptor) (obj, method, args1, proxy) -&gt; &#123;</span><br><span class="line">			System.out.println(<span class="string">&quot;proxy start : &quot;</span> + proxy.getClass() + <span class="string">&quot;: &quot;</span> + obj.getClass());</span><br><span class="line">			Util.printCreateInfo(list.get(<span class="number">0</span>));</span><br><span class="line">			Object res2 = proxy.invokeSuper(obj, args1);</span><br><span class="line">			System.out.println(<span class="string">&quot;proxy over&quot;</span>);</span><br><span class="line">			<span class="keyword">return</span> res2;</span><br><span class="line">		&#125;);</span><br><span class="line"></span><br><span class="line">		A proxy = (A) enhancer.create();</span><br><span class="line">		list.add(proxy);</span><br><span class="line">		System.out.println(proxy.getClass().getName().replaceAll(<span class="string">&quot;\\.&quot;</span>, <span class="string">&quot;/&quot;</span>));</span><br><span class="line">		proxy.printHi();</span><br><span class="line">		proxy.printFinalHi();</span><br><span class="line"></span><br><span class="line">		Util.printClassInfo(proxy);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">public</span> <span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">A</span> </span>&#123;</span><br><span class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">printHi</span><span class="params">()</span> </span>&#123;</span><br><span class="line">			System.out.println(<span class="string">&quot;hi&quot;</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">printFinalHi</span><span class="params">()</span> </span>&#123;</span><br><span class="line">			System.out.println(<span class="string">&quot;hi&quot;</span>);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>下面的输出结果除了测试动态代理生效结果外, 还将动态代理生成的类名也输出出来了. 这些类名信息, 在后面的分析中会用到.</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">Current Pid is:<span class="number">54801</span></span><br><span class="line">co/wangming/cglib/methodinterceptor/MethodInterceptorTest$A$$EnhancerByCGLIB$$b5ca7abc</span><br><span class="line">proxy start : <span class="class"><span class="keyword">class</span> <span class="title">net</span>.<span class="title">sf</span>.<span class="title">cglib</span>.<span class="title">proxy</span>.<span class="title">MethodProxy</span>: <span class="title">class</span> <span class="title">co</span>.<span class="title">wangming</span>.<span class="title">cglib</span>.<span class="title">methodinterceptor</span>.<span class="title">MethodInterceptorTest</span>$<span class="title">A</span>$$<span class="title">EnhancerByCGLIB</span>$$<span class="title">b5ca7abc</span></span></span><br><span class="line"><span class="class">*****************<span class="title">CreateInfo</span>***********************</span></span><br><span class="line"><span class="class"><span class="title">Proxy</span> <span class="title">Class</span>: <span class="title">class</span> <span class="title">co</span>.<span class="title">wangming</span>.<span class="title">cglib</span>.<span class="title">methodinterceptor</span>.<span class="title">MethodInterceptorTest</span>$<span class="title">A</span>$$<span class="title">EnhancerByCGLIB</span>$$<span class="title">b5ca7abc</span></span></span><br><span class="line"><span class="class"><span class="title">CGLIB</span>$<span class="title">printHi</span>$0$<span class="title">Proxy</span> <span class="title">CreateInfo</span> : <span class="title">class</span> <span class="title">net</span>.<span class="title">sf</span>.<span class="title">cglib</span>.<span class="title">proxy</span>.<span class="title">MethodProxy</span>$<span class="title">CreateInfo</span></span></span><br><span class="line"><span class="class"><span class="title">CGLIB</span>$<span class="title">printHi</span>$0$<span class="title">Proxy</span> <span class="title">CreateInfo</span> <span class="title">c1</span>: <span class="title">class</span> <span class="title">co</span>.<span class="title">wangming</span>.<span class="title">cglib</span>.<span class="title">methodinterceptor</span>.<span class="title">MethodInterceptorTest</span>$<span class="title">A</span></span></span><br><span class="line"><span class="class"><span class="title">CGLIB</span>$<span class="title">printHi</span>$0$<span class="title">Proxy</span> <span class="title">CreateInfo</span> <span class="title">c2</span>: <span class="title">class</span> <span class="title">co</span>.<span class="title">wangming</span>.<span class="title">cglib</span>.<span class="title">methodinterceptor</span>.<span class="title">MethodInterceptorTest</span>$<span class="title">A</span>$$<span class="title">EnhancerByCGLIB</span>$$<span class="title">b5ca7abc</span></span></span><br><span class="line"><span class="class"><span class="title">CGLIB</span>$<span class="title">equals</span>$1$<span class="title">Proxy</span> <span class="title">CreateInfo</span> : <span class="title">class</span> <span class="title">net</span>.<span class="title">sf</span>.<span class="title">cglib</span>.<span class="title">proxy</span>.<span class="title">MethodProxy</span>$<span class="title">CreateInfo</span></span></span><br><span class="line"><span class="class"><span class="title">CGLIB</span>$<span class="title">equals</span>$1$<span class="title">Proxy</span> <span class="title">CreateInfo</span> <span class="title">c1</span>: <span class="title">class</span> <span class="title">java</span>.<span class="title">lang</span>.<span class="title">Object</span></span></span><br><span class="line"><span class="class"><span class="title">CGLIB</span>$<span class="title">equals</span>$1$<span class="title">Proxy</span> <span class="title">CreateInfo</span> <span class="title">c2</span>: <span class="title">class</span> <span class="title">co</span>.<span class="title">wangming</span>.<span class="title">cglib</span>.<span class="title">methodinterceptor</span>.<span class="title">MethodInterceptorTest</span>$<span class="title">A</span>$$<span class="title">EnhancerByCGLIB</span>$$<span class="title">b5ca7abc</span></span></span><br><span class="line"><span class="class"><span class="title">CGLIB</span>$<span class="title">toString</span>$2$<span class="title">Proxy</span> <span class="title">CreateInfo</span> : <span class="title">class</span> <span class="title">net</span>.<span class="title">sf</span>.<span class="title">cglib</span>.<span class="title">proxy</span>.<span class="title">MethodProxy</span>$<span class="title">CreateInfo</span></span></span><br><span class="line"><span class="class"><span class="title">CGLIB</span>$<span class="title">toString</span>$2$<span class="title">Proxy</span> <span class="title">CreateInfo</span> <span class="title">c1</span>: <span class="title">class</span> <span class="title">java</span>.<span class="title">lang</span>.<span class="title">Object</span></span></span><br><span class="line"><span class="class"><span class="title">CGLIB</span>$<span class="title">toString</span>$2$<span class="title">Proxy</span> <span class="title">CreateInfo</span> <span class="title">c2</span>: <span class="title">class</span> <span class="title">co</span>.<span class="title">wangming</span>.<span class="title">cglib</span>.<span class="title">methodinterceptor</span>.<span class="title">MethodInterceptorTest</span>$<span class="title">A</span>$$<span class="title">EnhancerByCGLIB</span>$$<span class="title">b5ca7abc</span></span></span><br><span class="line"><span class="class"><span class="title">CGLIB</span>$<span class="title">hashCode</span>$3$<span class="title">Proxy</span> <span class="title">CreateInfo</span> : <span class="title">class</span> <span class="title">net</span>.<span class="title">sf</span>.<span class="title">cglib</span>.<span class="title">proxy</span>.<span class="title">MethodProxy</span>$<span class="title">CreateInfo</span></span></span><br><span class="line"><span class="class"><span class="title">CGLIB</span>$<span class="title">hashCode</span>$3$<span class="title">Proxy</span> <span class="title">CreateInfo</span> <span class="title">c1</span>: <span class="title">class</span> <span class="title">java</span>.<span class="title">lang</span>.<span class="title">Object</span></span></span><br><span class="line"><span class="class"><span class="title">CGLIB</span>$<span class="title">hashCode</span>$3$<span class="title">Proxy</span> <span class="title">CreateInfo</span> <span class="title">c2</span>: <span class="title">class</span> <span class="title">co</span>.<span class="title">wangming</span>.<span class="title">cglib</span>.<span class="title">methodinterceptor</span>.<span class="title">MethodInterceptorTest</span>$<span class="title">A</span>$$<span class="title">EnhancerByCGLIB</span>$$<span class="title">b5ca7abc</span></span></span><br><span class="line"><span class="class"><span class="title">CGLIB</span>$<span class="title">clone</span>$4$<span class="title">Proxy</span> <span class="title">CreateInfo</span> : <span class="title">class</span> <span class="title">net</span>.<span class="title">sf</span>.<span class="title">cglib</span>.<span class="title">proxy</span>.<span class="title">MethodProxy</span>$<span class="title">CreateInfo</span></span></span><br><span class="line"><span class="class"><span class="title">CGLIB</span>$<span class="title">clone</span>$4$<span class="title">Proxy</span> <span class="title">CreateInfo</span> <span class="title">c1</span>: <span class="title">class</span> <span class="title">java</span>.<span class="title">lang</span>.<span class="title">Object</span></span></span><br><span class="line"><span class="class"><span class="title">CGLIB</span>$<span class="title">clone</span>$4$<span class="title">Proxy</span> <span class="title">CreateInfo</span> <span class="title">c2</span>: <span class="title">class</span> <span class="title">co</span>.<span class="title">wangming</span>.<span class="title">cglib</span>.<span class="title">methodinterceptor</span>.<span class="title">MethodInterceptorTest</span>$<span class="title">A</span>$$<span class="title">EnhancerByCGLIB</span>$$<span class="title">b5ca7abc</span></span></span><br><span class="line"><span class="class">*****************<span class="title">CreateInfo</span>***********************</span></span><br><span class="line"><span class="class"><span class="title">hi</span></span></span><br><span class="line"><span class="class"><span class="title">proxy</span> <span class="title">over</span></span></span><br><span class="line"><span class="class"><span class="title">hi</span></span></span><br><span class="line"><span class="class">*****************<span class="title">FastClassInfo</span>***********************</span></span><br><span class="line"><span class="class"><span class="title">Proxy</span> <span class="title">Class</span>: <span class="title">class</span> <span class="title">co</span>.<span class="title">wangming</span>.<span class="title">cglib</span>.<span class="title">methodinterceptor</span>.<span class="title">MethodInterceptorTest</span>$<span class="title">A</span>$$<span class="title">EnhancerByCGLIB</span>$$<span class="title">b5ca7abc</span></span></span><br><span class="line"><span class="class"><span class="title">CGLIB</span>$<span class="title">printHi</span>$0$<span class="title">Proxy</span> <span class="title">FastClassInfo</span> : <span class="title">class</span> <span class="title">net</span>.<span class="title">sf</span>.<span class="title">cglib</span>.<span class="title">proxy</span>.<span class="title">MethodProxy</span>$<span class="title">FastClassInfo</span></span></span><br><span class="line"><span class="class"><span class="title">CGLIB</span>$<span class="title">printHi</span>$0$<span class="title">Proxy</span> <span class="title">FastClass</span> <span class="title">f1</span>: <span class="title">class</span> <span class="title">co</span>.<span class="title">wangming</span>.<span class="title">cglib</span>.<span class="title">methodinterceptor</span>.<span class="title">MethodInterceptorTest</span>$<span class="title">A</span>$$<span class="title">FastClassByCGLIB</span>$$65<span class="title">f2d708</span></span></span><br><span class="line"><span class="class"><span class="title">CGLIB</span>$<span class="title">printHi</span>$0$<span class="title">Proxy</span> <span class="title">FastClass</span> <span class="title">f2</span>: <span class="title">class</span> <span class="title">co</span>.<span class="title">wangming</span>.<span class="title">cglib</span>.<span class="title">methodinterceptor</span>.<span class="title">MethodInterceptorTest</span>$<span class="title">A</span>$$<span class="title">EnhancerByCGLIB</span>$$<span class="title">b5ca7abc</span>$$<span class="title">FastClassByCGLIB</span>$$19<span class="title">e0f1ba</span></span></span><br><span class="line"><span class="class"><span class="title">CGLIB</span>$<span class="title">printHi</span>$0$<span class="title">Proxy</span> <span class="title">FastClass</span> <span class="title">i1</span>: 0</span></span><br><span class="line"><span class="class"><span class="title">CGLIB</span>$<span class="title">printHi</span>$0$<span class="title">Proxy</span> <span class="title">FastClass</span> <span class="title">i2</span>: 14</span></span><br><span class="line"><span class="class">----&gt;</span></span><br><span class="line"><span class="class">----&gt;</span></span><br><span class="line"><span class="class">----&gt;</span></span><br><span class="line"><span class="class">----&gt;</span></span><br><span class="line"><span class="class">****************<span class="title">FastClassInfo</span>************************</span></span><br></pre></td></tr></table></figure>
+
+<p>由于生成的代理类的代码过于长, 而知乎没有折叠功能, 所以我将这个代码片段放到了码云上面 . A的代理类的名称是: <code>MethodInterceptorTest$A$$EnhancerByCGLIB$$b5ca7abc</code> 生成的类在底部</p>
+<p>从<code>printHi()</code>方法入手, 看看它的代理是怎么实现的.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 在MethodInterceptorTest$A$$EnhancerByCGLIB$$b5ca7abc类内部, 有下面俩个和printHi方法相关的属性</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// printHi()的反射对应的Method对象</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> Method CGLIB$printHi$<span class="number">0</span>$Method;</span><br><span class="line"><span class="comment">// printHi()方法CGLib实现的代理对象</span></span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> MethodProxy CGLIB$printHi$<span class="number">0</span>$Proxy;</span><br><span class="line"><span class="comment">// 在demo里设置的callback</span></span><br><span class="line"><span class="keyword">private</span> MethodInterceptor CGLIB$CALLBACK_0;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 在实例化对象的时候, 会调用CGLIB$BIND_CALLBACKS()方法. </span></span><br><span class="line"><span class="keyword">public</span> MethodInterceptorTest$A$$EnhancerByCGLIB$$9805b321() &#123;</span><br><span class="line">        CGLIB$BIND_CALLBACKS(<span class="keyword">this</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">void</span> CGLIB$BIND_CALLBACKS(Object var0) &#123;</span><br><span class="line">        MethodInterceptorTest$A$$EnhancerByCGLIB$$b5ca7abc var1 = (MethodInterceptorTest$A$$EnhancerByCGLIB$$b5ca7abc)var0;</span><br><span class="line">        <span class="keyword">if</span> (!var1.CGLIB$BOUND) &#123;</span><br><span class="line">            var1.CGLIB$BOUND = <span class="keyword">true</span>;</span><br><span class="line">            Object var10000 = CGLIB$THREAD_CALLBACKS.get();</span><br><span class="line">            <span class="keyword">if</span> (var10000 == <span class="keyword">null</span>) &#123;</span><br><span class="line">                var10000 = CGLIB$STATIC_CALLBACKS;</span><br><span class="line">                <span class="keyword">if</span> (var10000 == <span class="keyword">null</span>) &#123;</span><br><span class="line">                    <span class="keyword">return</span>;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">            var1.CGLIB$CALLBACK_0 = (MethodInterceptor)((Callback[])var10000)[<span class="number">0</span>];</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 在类加载的时候会调用CGLIB$STATICHOOK1()方法, 该方法主要是对上面说到的那俩个类的属性进行初始化操作</span></span><br><span class="line"><span class="keyword">static</span> &#123;</span><br><span class="line">        CGLIB$STATICHOOK1();</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">static</span> <span class="keyword">void</span> CGLIB$STATICHOOK1() &#123;</span><br><span class="line">        CGLIB$THREAD_CALLBACKS = <span class="keyword">new</span> ThreadLocal();</span><br><span class="line">        CGLIB$emptyArgs = <span class="keyword">new</span> Object[<span class="number">0</span>];</span><br><span class="line">        Class var0 = Class.forName(<span class="string">&quot;co.wangming.cglib.methodinterceptor.MethodInterceptorTest$A$$EnhancerByCGLIB$$b5ca7abc&quot;</span>);</span><br><span class="line">        Class var1;</span><br><span class="line">        CGLIB$printHi$<span class="number">0</span>$Method = ReflectUtils.findMethods(<span class="keyword">new</span> String[]&#123;<span class="string">&quot;printHi&quot;</span>, <span class="string">&quot;()V&quot;</span>&#125;, (var1).getDeclaredMethods())[<span class="number">0</span>];</span><br><span class="line">        CGLIB$printHi$<span class="number">0</span>$Proxy = MethodProxy.create(var1, var0, <span class="string">&quot;()V&quot;</span>, <span class="string">&quot;printHi&quot;</span>, <span class="string">&quot;CGLIB$printHi$0&quot;</span>);</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 代理子类生成的printHi()的代理方法. </span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">printHi</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        MethodInterceptor var10000 = <span class="keyword">this</span>.CGLIB$CALLBACK_0;</span><br><span class="line">        <span class="keyword">if</span> (var10000 == <span class="keyword">null</span>) &#123;</span><br><span class="line">            CGLIB$BIND_CALLBACKS(<span class="keyword">this</span>);</span><br><span class="line">            var10000 = <span class="keyword">this</span>.CGLIB$CALLBACK_0;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 如果没有设置callback对象, 也就是不用代理, 则直接调用原生方法</span></span><br><span class="line">        <span class="keyword">if</span> (var10000 != <span class="keyword">null</span>) &#123;</span><br><span class="line">            var10000.intercept(<span class="keyword">this</span>, CGLIB$printHi$<span class="number">0</span>$Method, CGLIB$emptyArgs, CGLIB$printHi$<span class="number">0</span>$Proxy);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">super</span>.printHi();</span><br><span class="line">        &#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>上面简单分析了代理子类的实现, 但是这都不是重点, 真正的魔法在callback里面. demo里面callback是这么写的</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">enhancer.setCallback((MethodInterceptor) (obj, method, args1, proxy) -&gt; &#123;</span><br><span class="line">			System.out.println(<span class="string">&quot;proxy start : &quot;</span> + proxy.getClass() + <span class="string">&quot;: &quot;</span> + obj.getClass());</span><br><span class="line">			Object res = proxy.invokeSuper(obj, args);</span><br><span class="line">			System.out.println(<span class="string">&quot;proxy over&quot;</span>);</span><br><span class="line">			<span class="keyword">return</span> res;</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>proxy参数的类型是<code>MethodProxy</code>类型, <code>MethodProxy</code>有俩个<code>invoke</code>方法:</p>
+<ul>
+<li><code>invoke(Object obj, Object[] args)</code>: obj参数不能是<code>MethodInterceptor#intercept()</code>方法的第一个参数obj对象, 否则会造成栈溢出</li>
+<li><code>invokeSuper(Object obj, Object[] args)</code>: obj参数必须是<code>MethodInterceptor#intercept()</code>方法的第一个参数obj对象</li>
+</ul>
+<p>在使用<code>MethodInterceptor</code>的时候, 一定要注意上面这俩点, 下面我们就从<code>invoke/invokeSuper</code>方法入手, 分析一下.</p>
+<p>由于这一块的源码过多, 我就不一一都贴出来了, 我画了俩张图帮大家理顺一下.</p>
+<p><img src="https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/javalib/cglib1.jpg"><br><img src="https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/javalib/cglib2.jpg"></p>
+<p><code>MethodProxy</code>类里面有一个<code>CreateInfo</code>对象. <code>CreateInfo</code>内部有俩个<code>Class</code>对象, 分别是</p>
+<ul>
+<li>c1: 目标类的Class对象</li>
+<li>c2: 目标类的强化类的Class对象, 也就是CGLib生成的目标类的代理子类</li>
+</ul>
+<p>CGLib会利用<code>CreateInfo</code>对象去构建出<code>FastClassInfo</code>这个对象. 构建过程就是通过<code>CreateInfo</code>的c1/c2去分别构建出<code>FastClassInfo</code>里面的<code>FastClass</code>类型的f1/f2.</p>
+<p>也就是说, 真正的是构建了俩个<code>FastClass</code>对象出来. <code>FastClass</code>对象是通过<code>FastClass</code>内部类<code>Generator</code>进行构建的. 而内部类<code>Generator</code>是将构建过程交给了它的父类<code>AbstractClassGenerator#generate()</code>方法的.</p>
+<p><code>AbstractClassGenerator#generate()</code>又是通过其内部类<code>GeneratorStrategy</code>的对象执行了构建. 最终实现构建的是<code>FastClass#Generator()</code>的<code>generateClass()</code>方法, 该方法实例化了一个<code>FastClassEmitter</code>对象, <code>FastClassEmitter</code>对象内部就是通过ASM去构建Class对象的.</p>
+<p>invoke/invokeSuper方法实现如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> Object <span class="title">invoke</span><span class="params">(Object obj, Object[] args)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// 创建FastClassInfo</span></span><br><span class="line">            init();</span><br><span class="line">            FastClassInfo fci = fastClassInfo;</span><br><span class="line">            <span class="keyword">return</span> fci.f1.invoke(fci.i1, obj, args);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InvocationTargetException e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> e.getTargetException();</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IllegalArgumentException e) &#123;</span><br><span class="line">            <span class="keyword">if</span> (fastClassInfo.i1 &lt; <span class="number">0</span>)</span><br><span class="line">                <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">&quot;Protected method: &quot;</span> + sig1);</span><br><span class="line">            <span class="keyword">throw</span> e;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">invokeSuper</span><span class="params">(Object obj, Object[] args)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="comment">// 创建FastClassInfo</span></span><br><span class="line">            init();</span><br><span class="line">            FastClassInfo fci = fastClassInfo;</span><br><span class="line">            <span class="keyword">return</span> fci.f2.invoke(fci.i2, obj, args);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (InvocationTargetException e) &#123;</span><br><span class="line">            <span class="keyword">throw</span> e.getTargetException();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>init()方法如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">init</span><span class="params">()</span></span></span><br><span class="line"><span class="function"> </span>&#123;</span><br><span class="line">     <span class="keyword">if</span> (fastClassInfo == <span class="keyword">null</span>)</span><br><span class="line">     &#123;</span><br><span class="line">         <span class="keyword">synchronized</span> (initLock)</span><br><span class="line">         &#123;</span><br><span class="line">             <span class="keyword">if</span> (fastClassInfo == <span class="keyword">null</span>)</span><br><span class="line">             &#123;</span><br><span class="line">                 CreateInfo ci = createInfo;</span><br><span class="line"></span><br><span class="line">                 FastClassInfo fci = <span class="keyword">new</span> FastClassInfo();</span><br><span class="line">                 fci.f1 = helper(ci, ci.c1);</span><br><span class="line">                 fci.f2 = helper(ci, ci.c2);</span><br><span class="line">                 <span class="comment">// 根据方法签名, 找到方法所在位置索引, 这个值会在FastClass的子类中用到</span></span><br><span class="line">                 fci.i1 = fci.f1.getIndex(sig1);</span><br><span class="line">                 fci.i2 = fci.f2.getIndex(sig2);</span><br><span class="line">                 fastClassInfo = fci;</span><br><span class="line">                 createInfo = <span class="keyword">null</span>;</span><br><span class="line">             &#125;</span><br><span class="line">         &#125;</span><br><span class="line">     &#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>针对<code>init()</code>方法的过程可以参考一下下面的时序图</p>
+<p><img src="https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/javalib/cglib3.jpg"></p>
+<p>可以看出来, 整个CGLib的核心就在于这个<code>FastClass</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">abstract</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FastClass</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> Class type;</span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>FastClass</code>是一个抽象类, CGLib在运行时通过<code>FastClass</code>内的<code>Generator</code>这个内部类将其子类动态生成出来, 然后再利用<code>ClassLoader</code>将生成的子类加载进JVM里面去.</p>
+<p>其实, CGLib会为我们生成很多个代理类, 不单单是目标类的子类, 例如上文提到的FastClass f1, FastClass f2的子类是不同的.</p>
+<ul>
+<li><code>MethodInterceptorTest$A$$FastClassByCGLIB$$65f2d708</code> : <code>FastClassInfo#f1</code>, <code>MethodProxy的invoke()</code>方法进行调用</li>
+<li><code>MethodInterceptorTest$A$$EnhancerByCGLIB$$b5ca7abc$$FastClassByCGLIB$$19e0f1ba</code> : <code>FastClassInfo#f2</code>, <code>MethodProxy</code>的<code>invokeSuper()</code>方法进行调用</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MethodInterceptorTest</span>$<span class="title">A</span>$$<span class="title">FastClassByCGLIB</span>$$65<span class="title">f2d708</span> <span class="keyword">extends</span> <span class="title">FastClass</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">invoke</span><span class="params">(<span class="keyword">int</span> var1, Object var2, Object[] var3)</span> <span class="keyword">throws</span> InvocationTargetException </span>&#123;</span><br><span class="line">        A var10000 = (A)var2;</span><br><span class="line">        <span class="keyword">int</span> var10001 = var1;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">switch</span>(var10001) &#123;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">0</span>:</span><br><span class="line">                var10000.printHi();</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line">                var10000.printFinalHi();</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line">                A.printStaticHi();</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">3</span>:</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">new</span> Boolean(var10000.equals(var3[<span class="number">0</span>]));</span><br><span class="line">            <span class="keyword">case</span> <span class="number">4</span>:</span><br><span class="line">                <span class="keyword">return</span> var10000.toString();</span><br><span class="line">            <span class="keyword">case</span> <span class="number">5</span>:</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">new</span> Integer(var10000.hashCode());</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Throwable var4) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> InvocationTargetException(var4);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在刚开始的demo中, 如果进行如下调用, 会发生递归.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">eznhancer.setCallback((MethodInterceptor) (obj, method, args1, proxy) -&gt; &#123;</span><br><span class="line">			System.out.println(<span class="string">&quot;proxy start : &quot;</span> + proxy.getClass() + <span class="string">&quot;: &quot;</span> + obj.getClass());</span><br><span class="line">			Util.printCreateInfo(list.get(<span class="number">0</span>));</span><br><span class="line">			Object res2 = proxy.invoke(obj, args1); <span class="comment">// 注意,这里将invokeSuper()换成了invoke()</span></span><br><span class="line">			System.out.println(<span class="string">&quot;proxy over&quot;</span>);</span><br><span class="line">			<span class="keyword">return</span> res2;</span><br><span class="line">		&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>这是因为(FastClassInfo#i1 的值为0, 因此var1为0, 刚开始的运行日志有输出 )</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MethodInterceptorTest</span>$<span class="title">A</span>$$<span class="title">FastClassByCGLIB</span>$$65<span class="title">f2d708</span> <span class="keyword">extends</span> <span class="title">FastClass</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">invoke</span><span class="params">(<span class="keyword">int</span> var1, Object var2, Object[] var3)</span> <span class="keyword">throws</span> InvocationTargetException </span>&#123;</span><br><span class="line">        A var10000 = (A)var2;</span><br><span class="line">        <span class="keyword">int</span> var10001 = var1;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">switch</span>(var10001) &#123;</span><br><span class="line">             <span class="keyword">case</span> <span class="number">0</span>:</span><br><span class="line">                var10000.printHi();</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Throwable var4) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> InvocationTargetException(var4);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>此时的var10000就是obj, 那么流畅就成了又会去调用<code>MethodInterceptorTest$A$$EnhancerByCGLIB$$b5ca7abc</code>的<code>printHi()</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">final</span> <span class="keyword">void</span> <span class="title">printHi</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        MethodInterceptor var10000 = <span class="keyword">this</span>.CGLIB$CALLBACK_0;</span><br><span class="line">        <span class="comment">// 如果没有设置callback对象, 也就是不用代理, 则直接调用原生方法</span></span><br><span class="line">        <span class="keyword">if</span> (var10000 != <span class="keyword">null</span>) &#123;</span><br><span class="line">            var10000.intercept(<span class="keyword">this</span>, CGLIB$printHi$<span class="number">0</span>$Method, CGLIB$emptyArgs, CGLIB$printHi$<span class="number">0</span>$Proxy);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">super</span>.printHi();</span><br><span class="line">        &#125;</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>因此当调用<code>MethodProxy</code>的<code>invoke()</code>方法时, 必须不能是<code>MethodInterceptor#intercept</code>的第一个obj参数.</p>
+<p>而invokeSuper就不会有这个问题, FastClassInfo#i2的值为 14,</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">MethodInterceptorTest</span>$<span class="title">A</span>$$<span class="title">EnhancerByCGLIB</span>$$<span class="title">b5ca7abc</span>$$<span class="title">FastClassByCGLIB</span>$$19<span class="title">e0f1ba</span> <span class="keyword">extends</span> <span class="title">FastClass</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> Object <span class="title">invoke</span><span class="params">(<span class="keyword">int</span> var1, Object var2, Object[] var3)</span> <span class="keyword">throws</span> InvocationTargetException </span>&#123;</span><br><span class="line">        b5ca7abc var10000 = (b5ca7abc)var2;</span><br><span class="line">        <span class="keyword">int</span> var10001 = var1;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">switch</span>(var10001) &#123;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">7</span>:</span><br><span class="line">                var10000.printHi();</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">14</span>:</span><br><span class="line">                var10000.CGLIB$printHi$<span class="number">0</span>();</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">21</span>:</span><br><span class="line">                var10000.printFinalHi();</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">            <span class="keyword">case</span> <span class="number">22</span>:</span><br><span class="line">                A.printStaticHi();</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (Throwable var4) &#123;</span><br><span class="line">            <span class="keyword">throw</span> <span class="keyword">new</span> InvocationTargetException(var4);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">throw</span> <span class="keyword">new</span> IllegalArgumentException(<span class="string">&quot;Cannot find matching method/constructor&quot;</span>);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>因此执行的是<code>var10000.CGLIB$printHi$0()</code>这个方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> <span class="keyword">void</span> CGLIB$printHi$<span class="number">0</span>() &#123;</span><br><span class="line">       <span class="keyword">super</span>.printHi();</span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<p>这是直接调用A的<code>printHi()</code>方法进行调用.</p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://wangmingco.github.io/2019/05/21/Java/lib/CGLib%20Proxy/" title="CGLib 动态代理 原理解析" target="_blank" rel="external">https://wangmingco.github.io/2019/05/21/Java/lib/CGLib Proxy/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/wangmingco" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/wangmingco" target="_blank"><span class="text-dark">王明</span><small class="ml-1x">Coder</small></a></h3>
+        <div>一个纯粹的技术开发者。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2019/05/23/Java/io/JavaIO%E5%8E%9F%E7%90%86%E5%89%96%E6%9E%90%E4%B9%8B%20%E7%A3%81%E7%9B%98IO/" title="JavaIO原理剖析之 磁盘IO"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2019/05/20/Java/javase/JDK%20%E5%8A%A8%E6%80%81%E4%BB%A3%E7%90%86%E5%AE%9E%E7%8E%B0%E4%B8%8E%E5%8E%9F%E7%90%86/" title="JDK 动态代理实现与原理"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>感谢您的支持，我会继续努力的!</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/images/donate/alipayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开支付宝扫一扫，即可进行扫码打赏哦</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/images/donate/wechatpayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开微信扫一扫，即可进行扫码打赏哦</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> 支付宝</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> 微信支付</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/wangmingco" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="https://gitee.com/wangmingco" target="_blank" title="Gitee" data-toggle=tooltip data-placement=top><i class="icon icon-gitee"></i></a></li>
+        
+        <li><a href="https://weibo.com/wangmingco" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://www.zhihu.com/people/wangmingco" target="_blank" title="Zhihu" data-toggle=tooltip data-placement=top><i class="icon icon-zhihu"></i></a></li>
+        
+        <li><a href="https://www.douban.com/people/xxxyy/" target="_blank" title="Douban" data-toggle=tooltip data-placement=top><i class="icon icon-douban"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>

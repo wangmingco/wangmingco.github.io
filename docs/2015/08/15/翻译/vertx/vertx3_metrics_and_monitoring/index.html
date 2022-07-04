@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+   <!-- google 爬取标记 -->
+   <meta name="google-site-verification" content="aH2bcbMuMlpfF61i9p--iBH54wvMywGXfWg8U6RpxFA" />
+   <!-- bing 爬取标记 -->
+   <meta name="msvalidate.01" content="CBAB9A13FF212142D6C250D9C0D31F28" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>Vertx 3 Metrics And Monitoring | 王明的技术博客</title>
+  <meta name="description" content="FeaturesMeasured接口提供一套简单的API来检索metrics,很多Vert.x组件都实现了这个接口,例如 HttpServer, NetServer,甚至Vertx实例自身. 我们基于Dropwizard接口配置JMX报告,这个接口将Vert.x像JMX MBeans那样暴露出来. Getting started想要使用metrics,首先我们在pom文件里依赖下面的仓库： 12">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vertx 3 Metrics And Monitoring">
+<meta property="og:url" content="https://wangmingco.github.io/2015/08/15/%E7%BF%BB%E8%AF%91/vertx/vertx3_metrics_and_monitoring/index.html">
+<meta property="og:site_name" content="王明的技术博客">
+<meta property="og:description" content="FeaturesMeasured接口提供一套简单的API来检索metrics,很多Vert.x组件都实现了这个接口,例如 HttpServer, NetServer,甚至Vertx实例自身. 我们基于Dropwizard接口配置JMX报告,这个接口将Vert.x像JMX MBeans那样暴露出来. Getting started想要使用metrics,首先我们在pom文件里依赖下面的仓库： 12">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2015-08-15T09:22:00.000Z">
+<meta property="article:modified_time" content="2022-07-04T02:07:21.215Z">
+<meta property="article:author" content="王明">
+<meta property="article:tag" content="vertx3">
+<meta name="twitter:card" content="summary">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://wangmingco.github.io/2015/08/15/%E7%BF%BB%E8%AF%91/vertx/vertx3_metrics_and_monitoring/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="王明的技术博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 5.4.0"></head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/wangmingco" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">王明</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Coder</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Beijing, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">项目</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books">
+            
+            <i class="icon icon-book-fill"></i>
+            
+            <span class="menu-title">书单</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">友链</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/wangmingco" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="https://gitee.com/wangmingco" target="_blank" title="Gitee" data-toggle=tooltip data-placement=top><i class="icon icon-gitee"></i></a></li>
+        
+        <li><a href="https://weibo.com/wangmingco" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://www.zhihu.com/people/wangmingco" target="_blank" title="Zhihu" data-toggle=tooltip data-placement=top><i class="icon icon-zhihu"></i></a></li>
+        
+        <li><a href="https://www.douban.com/people/xxxyy/" target="_blank" title="Douban" data-toggle=tooltip data-placement=top><i class="icon icon-douban"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Groovy/">Groovy</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">140</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Nginx/">Nginx</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/NoSql/">NoSql</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/PHP/">PHP</a><span class="category-list-count">2</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/PYTHON2/">PYTHON2</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/Shell/">Shell</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/ZooKeeper/">ZooKeeper</a><span class="category-list-count">6</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/awk/">awk</a><span class="category-list-count">1</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/haskell/">haskell</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E6%BA%90/">开源</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><span class="category-list-count">11</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9D%82%E6%96%87/">杂文</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><span class="category-list-count">11</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BF%BB%E8%AF%91/">翻译</a><span class="category-list-count">15</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java-IO/" rel="tag">Java IO</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java-%E4%B8%89%E6%96%B9%E5%BA%93/" rel="tag">Java 三方库</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java-%E7%BD%91%E7%BB%9C/" rel="tag">Java 网络</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaSE/" rel="tag">JavaSE</a><span class="tag-list-count">32</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/" rel="tag">JavaScript</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Javasist/" rel="tag">Javasist</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Memcached/" rel="tag">Memcached</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MongoDB/" rel="tag">MongoDB</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Netty/" rel="tag">Netty</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PEG-js/" rel="tag">PEG.js</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React/" rel="tag">React</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Redis/" rel="tag">Redis</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/asm/" rel="tag">asm</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmh/" rel="tag">jmh</a><span class="tag-list-count">14</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jol/" rel="tag">jol</a><span class="tag-list-count">24</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm/" rel="tag">jvm</a><span class="tag-list-count">17</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven/" rel="tag">maven</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mybatis/" rel="tag">mybatis</a><span class="tag-list-count">10</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vertx2/" rel="tag">vertx2</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vertx3/" rel="tag">vertx3</a><span class="tag-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/Java-IO/" style="font-size: 13.33px;">Java IO</a> <a href="/tags/Java-%E4%B8%89%E6%96%B9%E5%BA%93/" style="font-size: 13.83px;">Java 三方库</a> <a href="/tags/Java-%E7%BD%91%E7%BB%9C/" style="font-size: 13.5px;">Java 网络</a> <a href="/tags/JavaSE/" style="font-size: 14px;">JavaSE</a> <a href="/tags/JavaScript/" style="font-size: 13.42px;">JavaScript</a> <a href="/tags/Javasist/" style="font-size: 13.25px;">Javasist</a> <a href="/tags/Memcached/" style="font-size: 13px;">Memcached</a> <a href="/tags/MongoDB/" style="font-size: 13.17px;">MongoDB</a> <a href="/tags/Netty/" style="font-size: 13.5px;">Netty</a> <a href="/tags/PEG-js/" style="font-size: 13px;">PEG.js</a> <a href="/tags/React/" style="font-size: 13px;">React</a> <a href="/tags/Redis/" style="font-size: 13.17px;">Redis</a> <a href="/tags/asm/" style="font-size: 13.25px;">asm</a> <a href="/tags/jmh/" style="font-size: 13.67px;">jmh</a> <a href="/tags/jol/" style="font-size: 13.92px;">jol</a> <a href="/tags/jvm/" style="font-size: 13.75px;">jvm</a> <a href="/tags/maven/" style="font-size: 13px;">maven</a> <a href="/tags/mybatis/" style="font-size: 13.58px;">mybatis</a> <a href="/tags/mysql/" style="font-size: 13.42px;">mysql</a> <a href="/tags/vertx2/" style="font-size: 13.08px;">vertx2</a> <a href="/tags/vertx3/" style="font-size: 13.25px;">vertx3</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/06/">六月 2022</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">四月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">一月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">六月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">二月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">十一月 2018</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">四月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">十二月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">十一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">九月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">六月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">37</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">八月 2015</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">七月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">九月 2014</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">四月 2014</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/09/">九月 2013</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                
+              </p>
+              <p class="item-title">
+                <a href="/2022/06/30/Java/mybatis/mybatis%20mapper%E5%8A%A0%E8%BD%BD/" class="title">(no title)</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-06-30T01:31:47.097Z" itemprop="datePublished">2022-06-30</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/06/20/%E6%95%B0%E6%8D%AE%E5%BA%93/sql/" class="title">SQL 手册</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-06-19T16:00:00.000Z" itemprop="datePublished">2022-06-20</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E6%9D%82%E6%96%87/">杂文</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/06/01/%E6%9D%82%E6%96%87/duizhang/" class="title">对账</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-05-31T16:00:00.000Z" itemprop="datePublished">2022-06-01</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/04/12/%E5%89%8D%E7%AB%AF/REACT%20%E8%AF%AD%E6%B3%95/" class="title">React 学习</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-04-12T02:21:00.000Z" itemprop="datePublished">2022-04-12</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Java/">Java</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/01/10/Java/jvm/centos%E7%BC%96%E8%AF%91openjdk/" class="title">Centos7 编译调试 OpenJDK11</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-01-09T16:00:00.000Z" itemprop="datePublished">2022-01-10</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-翻译/vertx/vertx3_metrics_and_monitoring" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Vertx 3 Metrics And Monitoring
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2015/08/15/%E7%BF%BB%E8%AF%91/vertx/vertx3_metrics_and_monitoring/" class="article-date">
+	  <time datetime="2015-08-15T09:22:00.000Z" itemprop="datePublished">2015-08-15</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/%E7%BF%BB%E8%AF%91/">翻译</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/vertx3/" rel="tag">vertx3</a>
+  </span>
+
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2015/08/15/%E7%BF%BB%E8%AF%91/vertx/vertx3_metrics_and_monitoring/#comments" class="article-comment-link">评论</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+      
+        <script src="/assets/asciinema-player.js"></script><link rel="stylesheet" type="text/css" href="/assets/asciinema-player.css" />
+<h1 id="Features"><a href="#Features" class="headerlink" title="Features"></a>Features</h1><p><code>Measured</code>接口提供一套简单的API来检索<code>metrics</code>,很多<code>Vert.x</code>组件都实现了这个接口,例如<code> HttpServer, NetServer</code>,甚至<code>Vertx</code>实例自身.</p>
+<p>我们基于<code>Dropwizard</code>接口配置<code>JMX</code>报告,这个接口将<code>Vert.x</code>像<code>JMX MBeans</code>那样暴露出来.</p>
+<h1 id="Getting-started"><a href="#Getting-started" class="headerlink" title="Getting started"></a>Getting started</h1><p>想要使用<code>metrics</code>,首先我们在pom文件里依赖下面的仓库：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>io.vertx<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>vertx-metrics<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">version</span>&gt;</span>$&#123;vertx.metrics.version&#125;<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>然后我们使用<code>DropwizardMetricsOptions</code>对<code>Vertx</code>实例开启<code>metrics</code>.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Vertx vertx = Vertx.vertx(<span class="keyword">new</span> VertxOptions().setMetricsOptions(</span><br><span class="line">    <span class="keyword">new</span> DropwizardMetricsOptions().setEnabled(<span class="keyword">true</span>)</span><br><span class="line">));</span><br></pre></td></tr></table></figure>
+<p>你也可以开启<code>JMX</code>:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Vertx vertx = Vertx.vertx(<span class="keyword">new</span> VertxOptions().setMetricsOptions(</span><br><span class="line">    <span class="keyword">new</span> DropwizardMetricsOptions().setJmxEnabled(<span class="keyword">true</span>)</span><br><span class="line">));</span><br></pre></td></tr></table></figure>
+
+
+<h1 id="Metrics-service"><a href="#Metrics-service" class="headerlink" title="Metrics service"></a>Metrics service</h1><h1 id="Naming"><a href="#Naming" class="headerlink" title="Naming"></a>Naming</h1><p>下文中列出的每一个测量组件都会被分配一个名字. 每个<code>metric</code>都可以通过全限定名<code>baseName + . + metricName</code>从<code>Vertx</code>实例中获得.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">JsonObject metrics = metricsService.getMetricsSnapshot(vertx);</span><br><span class="line">metrics.getJsonObject(<span class="string">&quot;vertx.eventbus.handlers&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>或者使用<code>metric</code>名字获得该自身.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">EventBus eventBus = vertx.eventBus();</span><br><span class="line">JsonObject metrics = metricsService.getMetricsSnapshot(eventBus);</span><br><span class="line">metrics.getJsonObject(<span class="string">&quot;handlers&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<h1 id="Retrieving-metrics"><a href="#Retrieving-metrics" class="headerlink" title="Retrieving metrics"></a>Retrieving metrics</h1><p>一旦开启了<code>metrics</code>功能, <code>MetricsService</code>可以从任意<code>Measured</code>对象中检索出<code>metrics</code>快照, <code>Measured</code>对象提供了一个<code>meteric name</code>和<code>meteric data</code>映射关系的map,这个map通过<code>JsonObject</code>存储。</p>
+<p>下面的例子打印出<code>Vertx</code>实例中所有的<code>metrics</code>.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">MetricsService metricsService = MetricsService.create(vertx);</span><br><span class="line">JsonObject metrics = metricsService.getMetricsSnapshot(vertx);</span><br><span class="line">System.out.println(metrics);</span><br></pre></td></tr></table></figure>
+
+<p>由于<code>HttpServer</code>实现了<code>Measured</code>,你可以轻松地抓取到该http服务器上所有的<code>metrics</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">MetricsService metricsService = MetricsService.create(vertx);</span><br><span class="line">HttpServer server = vertx.createHttpServer();</span><br><span class="line"><span class="comment">// set up server</span></span><br><span class="line">JsonObject metrics = metricsService.getMetricsSnapshot(server);</span><br></pre></td></tr></table></figure>
+
+
+<h1 id="Data"><a href="#Data" class="headerlink" title="Data"></a>Data</h1><p>下面列出了每个<code>dropwizard metric</code>在<code>JSON</code>中的表现形式. 对于每个<code>metric</code>详细信息请参考<a target="_blank" rel="noopener" href="http://www.gnim.wang/2015/07/07/dropwizard/">Dropwizard metrics documentation</a></p>
+<h3 id="Gauge"><a href="#Gauge" class="headerlink" title="Gauge"></a>Gauge</h3><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;value&quot;</span> : value <span class="comment">// any json value</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Counter"><a href="#Counter" class="headerlink" title="Counter"></a>Counter</h3><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;count&quot;</span> : <span class="number">1</span> <span class="comment">// number</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Histogram"><a href="#Histogram" class="headerlink" title="Histogram"></a>Histogram</h3><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;count&quot;</span>  : <span class="number">1</span> <span class="comment">// long</span></span><br><span class="line">  <span class="string">&quot;min&quot;</span>    : <span class="number">1</span> <span class="comment">// long</span></span><br><span class="line">  <span class="string">&quot;max&quot;</span>    : <span class="number">1</span> <span class="comment">// long</span></span><br><span class="line">  <span class="string">&quot;mean&quot;</span>   : <span class="number">1.0</span> <span class="comment">// double</span></span><br><span class="line">  <span class="string">&quot;stddev&quot;</span> : <span class="number">1.0</span> <span class="comment">// double</span></span><br><span class="line">  <span class="string">&quot;median&quot;</span> : <span class="number">1.0</span> <span class="comment">// double</span></span><br><span class="line">  <span class="string">&quot;75%&quot;</span>    : <span class="number">1.0</span> <span class="comment">// double</span></span><br><span class="line">  <span class="string">&quot;95%&quot;</span>    : <span class="number">1.0</span> <span class="comment">// double</span></span><br><span class="line">  <span class="string">&quot;98%&quot;</span>    : <span class="number">1.0</span> <span class="comment">// double</span></span><br><span class="line">  <span class="string">&quot;99%&quot;</span>    : <span class="number">1.0</span> <span class="comment">// double</span></span><br><span class="line">  <span class="string">&quot;99.9%&quot;</span>  : <span class="number">1.0</span> <span class="comment">// double</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Meter"><a href="#Meter" class="headerlink" title="Meter"></a>Meter</h3><figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;count&quot;</span>             : <span class="number">1</span> <span class="comment">// long</span></span><br><span class="line">  <span class="string">&quot;meanRate&quot;</span>          : <span class="number">1.0</span> <span class="comment">// double</span></span><br><span class="line">  <span class="string">&quot;oneMinuteRate&quot;</span>     : <span class="number">1.0</span> <span class="comment">// double</span></span><br><span class="line">  <span class="string">&quot;fiveMinuteRate&quot;</span>    : <span class="number">1.0</span> <span class="comment">// double</span></span><br><span class="line">  <span class="string">&quot;fifteenMinuteRate&quot;</span> : <span class="number">1.0</span> <span class="comment">// double</span></span><br><span class="line">  <span class="string">&quot;rate&quot;</span>              : <span class="string">&quot;events/second&quot;</span> <span class="comment">// string representing rate</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="ThroughputMeter"><a href="#ThroughputMeter" class="headerlink" title="ThroughputMeter"></a>ThroughputMeter</h3><p>扩展自<code>Meter</code>,提供即时吞吐量。</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="attr">&quot;count&quot;</span>             : <span class="number">40</span> <span class="comment">// long</span></span><br><span class="line">  <span class="string">&quot;meanRate&quot;</span>          : <span class="number">2.0</span> <span class="comment">// double</span></span><br><span class="line">  <span class="string">&quot;oneSecondRate&quot;</span>     : <span class="number">3</span> <span class="comment">// long - number of occurence for the last second</span></span><br><span class="line">  <span class="string">&quot;oneMinuteRate&quot;</span>     : <span class="number">1.0</span> <span class="comment">// double</span></span><br><span class="line">  <span class="string">&quot;fiveMinuteRate&quot;</span>    : <span class="number">1.0</span> <span class="comment">// double</span></span><br><span class="line">  <span class="string">&quot;fifteenMinuteRate&quot;</span> : <span class="number">1.0</span> <span class="comment">// double</span></span><br><span class="line">  <span class="string">&quot;rate&quot;</span>              : <span class="string">&quot;events/second&quot;</span> <span class="comment">// string representing rate</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Timer"><a href="#Timer" class="headerlink" title="Timer"></a>Timer</h3><p><code>Histogram</code>和<code>Meter</code>的组合：</p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="comment">// histogram data</span></span><br><span class="line">  <span class="attr">&quot;count&quot;</span>  : <span class="number">1</span> <span class="comment">// long</span></span><br><span class="line">  <span class="string">&quot;min&quot;</span>    : <span class="number">1</span> <span class="comment">// long</span></span><br><span class="line">  <span class="string">&quot;max&quot;</span>    : <span class="number">1</span> <span class="comment">// long</span></span><br><span class="line">  <span class="string">&quot;mean&quot;</span>   : <span class="number">1.0</span> <span class="comment">// double</span></span><br><span class="line">  <span class="string">&quot;stddev&quot;</span> : <span class="number">1.0</span> <span class="comment">// double</span></span><br><span class="line">  <span class="string">&quot;median&quot;</span> : <span class="number">1.0</span> <span class="comment">// double</span></span><br><span class="line">  <span class="string">&quot;75%&quot;</span>    : <span class="number">1.0</span> <span class="comment">// double</span></span><br><span class="line">  <span class="string">&quot;95%&quot;</span>    : <span class="number">1.0</span> <span class="comment">// double</span></span><br><span class="line">  <span class="string">&quot;98%&quot;</span>    : <span class="number">1.0</span> <span class="comment">// double</span></span><br><span class="line">  <span class="string">&quot;99%&quot;</span>    : <span class="number">1.0</span> <span class="comment">// double</span></span><br><span class="line">  <span class="string">&quot;99.9%&quot;</span>  : <span class="number">1.0</span> <span class="comment">// double</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// meter data</span></span><br><span class="line">  <span class="string">&quot;meanRate&quot;</span>          : <span class="number">1.0</span> <span class="comment">// double</span></span><br><span class="line">  <span class="string">&quot;oneMinuteRate&quot;</span>     : <span class="number">1.0</span> <span class="comment">// double</span></span><br><span class="line">  <span class="string">&quot;fiveMinuteRate&quot;</span>    : <span class="number">1.0</span> <span class="comment">// double</span></span><br><span class="line">  <span class="string">&quot;fifteenMinuteRate&quot;</span> : <span class="number">1.0</span> <span class="comment">// double</span></span><br><span class="line">  <span class="string">&quot;rate&quot;</span>              : <span class="string">&quot;events/second&quot;</span> <span class="comment">// string representing rate</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="Throughput-Timer"><a href="#Throughput-Timer" class="headerlink" title="Throughput Timer"></a>Throughput Timer</h3><p>拓展自<code>Timer</code>,提供即时吞吐量的<code>metric</code></p>
+<figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="comment">// histogram data</span></span><br><span class="line">  <span class="attr">&quot;count&quot;</span>      : <span class="number">1</span> <span class="comment">// long</span></span><br><span class="line">  <span class="string">&quot;min&quot;</span>        : <span class="number">1</span> <span class="comment">// long</span></span><br><span class="line">  <span class="string">&quot;max&quot;</span>        : <span class="number">1</span> <span class="comment">// long</span></span><br><span class="line">  <span class="string">&quot;mean&quot;</span>       : <span class="number">1.0</span> <span class="comment">// double</span></span><br><span class="line">  <span class="string">&quot;stddev&quot;</span>     : <span class="number">1.0</span> <span class="comment">// double</span></span><br><span class="line">  <span class="string">&quot;median&quot;</span>     : <span class="number">1.0</span> <span class="comment">// double</span></span><br><span class="line">  <span class="string">&quot;75%&quot;</span>        : <span class="number">1.0</span> <span class="comment">// double</span></span><br><span class="line">  <span class="string">&quot;95%&quot;</span>        : <span class="number">1.0</span> <span class="comment">// double</span></span><br><span class="line">  <span class="string">&quot;98%&quot;</span>        : <span class="number">1.0</span> <span class="comment">// double</span></span><br><span class="line">  <span class="string">&quot;99%&quot;</span>        : <span class="number">1.0</span> <span class="comment">// double</span></span><br><span class="line">  <span class="string">&quot;99.9%&quot;</span>      : <span class="number">1.0</span> <span class="comment">// double</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// meter data</span></span><br><span class="line">  <span class="string">&quot;meanRate&quot;</span>          : <span class="number">1.0</span> <span class="comment">// double</span></span><br><span class="line">  <span class="string">&quot;oneSecondRate&quot;</span>     : <span class="number">3</span> <span class="comment">// long - number of occurence for the last second</span></span><br><span class="line">  <span class="string">&quot;oneMinuteRate&quot;</span>     : <span class="number">1.0</span> <span class="comment">// double</span></span><br><span class="line">  <span class="string">&quot;fiveMinuteRate&quot;</span>    : <span class="number">1.0</span> <span class="comment">// double</span></span><br><span class="line">  <span class="string">&quot;fifteenMinuteRate&quot;</span> : <span class="number">1.0</span> <span class="comment">// double</span></span><br><span class="line">  <span class="string">&quot;rate&quot;</span>              : <span class="string">&quot;events/second&quot;</span> <span class="comment">// string representing rate</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h1 id="The-metrics"><a href="#The-metrics" class="headerlink" title="The metrics"></a>The metrics</h1><p>下面列出了当前支持的<code>metric</code></p>
+<h2 id="Vert-x-metrics"><a href="#Vert-x-metrics" class="headerlink" title="Vert.x metrics"></a>Vert.x metrics</h2><ul>
+<li><p><code>vertx.event-loop-size</code> - <code>event loop pool</code>线程的数量。(<code>Gauge</code>表示)</p>
+</li>
+<li><p><code>vertx.worker-pool-size</code> - <code>worker pool</code>线程的数量。(<code>Gauge</code>表示)</p>
+</li>
+<li><p><code>vertx.cluster-host</code> - <code>cluster-host</code>设置。(<code>Gauge</code>表示)</p>
+</li>
+<li><p><code>vertx.cluster-port</code> - <code>cluster-port</code>设置。(<code>Gauge</code>表示)</p>
+</li>
+<li><p><code>vertx.verticles</code> - 当前被部署的<code>verticle</code>的数量。(<code>Counter</code>表示)</p>
+</li>
+</ul>
+<h2 id="Event-bus-metrics"><a href="#Event-bus-metrics" class="headerlink" title="Event bus metrics"></a>Event bus metrics</h2><p>Base name: <code>vertx.eventbus</code></p>
+<ul>
+<li><p><code>handlers</code> - <code>event bus</code>里<code>handler</code>的数量.(<code>Counter</code>表示) </p>
+</li>
+<li><p><code>handlers.myaddress</code> - Timer,表示<code>myaddress</code>的<code>handler</code>接收到消息的比例</p>
+</li>
+<li><p><code>messages.bytes-read</code> - Meter, 表示接收到远端消息时读到的字节数的<code>Meter</code> </p>
+</li>
+<li><p><code>messages.bytes-written</code> - 向远端发送消息时,写入字节的<code>Meter</code></p>
+</li>
+<li><p><code>messages.pending</code> - 接收到消息但并没有传递给<code>handller</code>的统计消息数的<code>Counter</code></p>
+</li>
+<li><p><code>messages.pending-local</code> - 接收到<code>locally</code>消息但并没有传递给<code>handller</code>的统计消息数的<code>Counter</code></p>
+</li>
+<li><p><code>messages.pending-remote</code> - Counter, 表示接收到远端但是并没有传递给handler的消息数量. </p>
+</li>
+<li><p><code>messages.received</code> - ThroughputMeter,表示接收到消息的比例 </p>
+</li>
+<li><p><code>messages.received-local</code> - ThroughputMeter,表示接收到本地消息的比例 </p>
+</li>
+<li><p><code>messages.received-remote</code> - ThroughputMeter, 表示接收到远程消息接收到的比例 </p>
+</li>
+<li><p><code>messages.delivered</code> - [throughpu_metert], 表示消息传递给handler的比例. </p>
+</li>
+<li><p><code>messages.delivered-local</code> - ThroughputMeter,表示local消息传递给handler的比例.</p>
+</li>
+<li><p><code>messages.delivered-remote</code> - ThroughputMeter,表示remote消息传递给handler的比例.</p>
+</li>
+<li><p><code>messages.sent</code> - [throughput_metert], 表示发送出去的消息的比例. </p>
+</li>
+<li><p><code>messages.sent-local</code> -ThroughputMeter, 表示本地<code>send</code>出去的消息的比例. </p>
+</li>
+<li><p><code>messages.sent-remote</code> - ThroughputMeter, 表示远端<code>send</code>出去的消息的比例. </p>
+</li>
+<li><p><code>messages.published</code> - ThroughputMeter, 表示<code>publish</code>出去的消息的比例. </p>
+</li>
+<li><p><code>messages.published-local</code> - ThroughputMeter, 表示向本地<code>publish</code>出去的消息的比例.</p>
+</li>
+<li><p><code>messages.published-remote</code> - ThroughputMeter, 表示给远端<code>publish</code>出去的消息的比例. </p>
+</li>
+<li><p><code>messages.reply-failures</code> - Meter, 表示<code>reply</code>失败的比例</p>
+</li>
+</ul>
+<p><code>monitored event bus handlers</code> 通过向<code>handler</code>注册地址上的<code>match</code>来完成配置. 由于Vert.x可以在<code>event bus</code>进行海量的注册,因此比较好的配置是在默认的情况下我们不对任何<code>handler</code>进行监听.</p>
+<p><code>monitored handlers</code>可以通过一个指定的<code>address match</code>或者<code>regex match</code>在<code>DropwizardMetricsOptions</code>中完成配置.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Vertx vertx = Vertx.vertx(<span class="keyword">new</span> VertxOptions().setMetricsOptions(</span><br><span class="line">    <span class="keyword">new</span> DropwizardMetricsOptions().</span><br><span class="line">        setEnabled(<span class="keyword">true</span>).</span><br><span class="line">        addMonitoredEventBusHandler(</span><br><span class="line">            <span class="keyword">new</span> Match().setValue(<span class="string">&quot;some-address&quot;</span>)).</span><br><span class="line">        addMonitoredEventBusHandler(</span><br><span class="line">            <span class="keyword">new</span> Match().setValue(<span class="string">&quot;business-.*&quot;</span>).setType(MatchType.REGEX))</span><br><span class="line">));</span><br></pre></td></tr></table></figure>
+<blockquote>
+<p>警告：如果你使用<code>regex match</code>, 当出现错误的<code>regex</code>,那么可能会<code>match</code>出大量的<code>handler</code></p>
+</blockquote>
+<h2 id="Http-server-metrics"><a href="#Http-server-metrics" class="headerlink" title="Http server metrics"></a>Http server metrics</h2><p>Base name: <code>vertx.http.servers.&lt;host&gt;:&lt;port&gt;</code></p>
+<p><code>Http server</code>除了包含<code>Net Server</code>的<code>metrics</code>之外还包含下面这些：</p>
+<ul>
+<li><p><code>requests</code> - 请求的<code>Throughput Timer</code>和该请求出现的比例</p>
+</li>
+<li><p><code>&lt;http-method&gt;-requests</code> - 指定的<code>http method</code>请求的<code>Throughput Timer</code>和该<code>http method</code>请求的出现的比例</p>
+<blockquote>
+<p>Examples: get-requests, post-requests</p>
+</blockquote>
+</li>
+<li><p><code>&lt;http-method&gt;-requests./&lt;uri&gt;</code> - 指定的<code>http method &amp; URI</code>请求的<code>Throughput Timer</code>和该请求的出现的比例</p>
+<blockquote>
+<p>Examples: get-requests./some/uri, post-requests./some/uri?foo=bar</p>
+</blockquote>
+</li>
+<li><p><code>responses-1xx</code> - 回应状态码为<code>1xx</code>的<code>ThroughputMeter</code> </p>
+</li>
+<li><p><code>responses-2xx</code> - 回应状态码为<code>2xx</code>的<code>ThroughputMeter</code></p>
+</li>
+<li><p><code>responses-3xx</code> - 回应状态码为<code>3xx</code>的<code>ThroughputMeter</code></p>
+</li>
+<li><p><code>responses-4xx</code> - 回应状态码为<code>4xx</code>的<code>ThroughputMeter</code></p>
+</li>
+<li><p><code>responses-5xx</code> - 回应状态码为<code>5xx</code>的<code>ThroughputMeter</code></p>
+</li>
+<li><p><code>open-websockets</code> - 统计开启的<code>web socket</code>连接数的<code>Counter</code></p>
+</li>
+<li><p><code>open-websockets.&lt;remote-host&gt;</code> - 统计对某个指定的<code>remote host</code>开启的<code>web socket</code>连接数的<code>Counter</code></p>
+</li>
+</ul>
+<p>不管是<code>exact match</code>还是<code>regex match</code>,<code>Http URI metrics</code>必须在<code>DropwizardMetricsOptions</code>中显式地配置.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">Vertx vertx = Vertx.vertx(<span class="keyword">new</span> VertxOptions().setMetricsOptions(</span><br><span class="line">    <span class="keyword">new</span> DropwizardMetricsOptions().</span><br><span class="line">        setEnabled(<span class="keyword">true</span>).</span><br><span class="line">        addMonitoredHttpServerUri(</span><br><span class="line">            <span class="keyword">new</span> Match().setValue(<span class="string">&quot;/&quot;</span>)).</span><br><span class="line">        addMonitoredHttpServerUri(</span><br><span class="line">            <span class="keyword">new</span> Match().setValue(<span class="string">&quot;/foo/.*&quot;</span>).setType(MatchType.REGEX))</span><br><span class="line">));</span><br></pre></td></tr></table></figure>
+<p>For bytes-read and bytes-written the bytes represent the body of the request/response, so headers, etc are ignored.</p>
+<h2 id="Http-client-metrics"><a href="#Http-client-metrics" class="headerlink" title="Http client metrics"></a>Http client metrics</h2><p>Base name: <code>vertx.http.clients.@&lt;id&gt;</code></p>
+<p><code>Http client</code>除了包含<code>Http Server</code>全部的<code>metrics</code>之外,还包含下面这些.</p>
+<ul>
+<li><p><code>connections.max-pool-size</code> - 表示最大连接池大小的<code>Gauge</code></p>
+</li>
+<li><p><code>connections.pool-ratio</code> - 表示<code>open connections / max connection pool size</code>的比例<code>Gauge</code></p>
+</li>
+<li><p><code>responses-1xx</code> - 回应状态码为<code>1xx</code>的<code>Meter</code> </p>
+</li>
+<li><p><code>responses-2xx</code> - 回应状态码为<code>2xx</code>的<code>Meter</code></p>
+</li>
+<li><p><code>responses-3xx</code> - 回应状态码为<code>3xx</code>的<code>Meter</code></p>
+</li>
+<li><p><code>responses-4xx</code> - 回应状态码为<code>4xx</code>的<code>Meter</code></p>
+</li>
+<li><p><code>responses-5xx</code> - 回应状态码为<code>5xx</code>的<code>Meter</code></p>
+</li>
+</ul>
+<h2 id="Net-server-metrics"><a href="#Net-server-metrics" class="headerlink" title="Net server metrics"></a>Net server metrics</h2><p>Base name: <code>vertx.net.servers.&lt;host&gt;:&lt;port&gt;</code></p>
+<ul>
+<li><code>open-netsockets</code> - 开启的<code>socket</code>连接数的<code>Counter</code></li>
+<li><code>open-netsockets.&lt;remote-host&gt;</code> - 统计对于某个指定<code>remote host</code>开启的<code>socket</code>连接数的<code>Counter</code></li>
+<li><code>connections</code> - 某个连接的<code>Timer</code>和该连接出现的比例</li>
+<li><code>exceptions</code> - 出现异常次数的<code>Counter</code></li>
+<li><code>bytes-read</code> - 已读字节数的<code>Histogram</code>.</li>
+<li><code>bytes-written</code> - 写出字节数的<code>Histogram</code>.</li>
+</ul>
+<h2 id="Net-client-metrics"><a href="#Net-client-metrics" class="headerlink" title="Net client metrics"></a>Net client metrics</h2><p>Base name: <code>vertx.net.clients.@&lt;id&gt;</code></p>
+<p><code>Net client</code>包含全部的<code>Net Server</code>的<code>metrics</code></p>
+<h2 id="Datagram-socket-metrics"><a href="#Datagram-socket-metrics" class="headerlink" title="Datagram socket metrics"></a>Datagram socket metrics</h2><p>Base name: <code>vertx.datagram</code></p>
+<ul>
+<li><code>sockets</code> - 统计<code>datagram sockets</code>数的<code>Counter</code></li>
+<li><code>exceptions</code> - 统计异常出现次数的<code>Counter</code></li>
+<li><code>bytes-written</code> - 写出字节数的<code>Histogram</code>.</li>
+<li><code>&lt;host&gt;:&lt;port&gt;.bytes-read</code> - 已读字节数的<code>Histogram</code>.</li>
+</ul>
+<p>只有当<code>datagram socket</code>被监听的时候上面的统计才有效。</p>
+<h1 id="JMX"><a href="#JMX" class="headerlink" title="JMX"></a>JMX</h1><p>JMX is disabled by default.</p>
+<p><code>JMX</code>是被默认不开启的.</p>
+<p>如果你想要开启<code>JMX</code>,你需要像下面那样开启它.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Vertx vertx = Vertx.vertx(<span class="keyword">new</span> VertxOptions().setMetricsOptions(</span><br><span class="line">    <span class="keyword">new</span> DropwizardMetricsOptions().setJmxEnabled(<span class="keyword">true</span>)</span><br><span class="line">));</span><br></pre></td></tr></table></figure>
+
+<p>如果你是从命令行中运行<code>Vert.x</code>想要开启<code>JMX</code>, 你可以在<code>vertx</code>或者<code>vertx.bat</code>脚本中将<code>JMX_OPTS</code>那一行取消掉注释.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">JMX_OPTS=&quot;-Dcom.sun.management.jmxremote -Dvertx.options.jmxEnabled=true&quot;</span><br></pre></td></tr></table></figure>
+
+<p>你可以配置<code>MBeans</code>创建时是处于哪个域名下的:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Vertx vertx = Vertx.vertx(<span class="keyword">new</span> VertxOptions().setMetricsOptions(</span><br><span class="line">    <span class="keyword">new</span> DropwizardMetricsOptions().</span><br><span class="line">        setJmxEnabled(<span class="keyword">true</span>).</span><br><span class="line">        setJmxDomain(<span class="string">&quot;mydomain&quot;</span>)</span><br><span class="line">));</span><br></pre></td></tr></table></figure>
+
+
+<h1 id="Enabling-remote-JMX"><a href="#Enabling-remote-JMX" class="headerlink" title="Enabling remote JMX"></a>Enabling remote JMX</h1><p>如果你想<code>metrics</code>远程被<code>JMX</code>暴露，最少你需要设置下面这个系统属性:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">com.sun.management.jmxremote</span><br></pre></td></tr></table></figure>
+<p>如果你是通过命令行运行Vert.x，那么你需要在<code>vertx or vertx.bat</code>文件中将<code>JMX_OPTS</code>的注释去掉。</p>
+<p>如果你在公共服务器上运行Vert.x，那么你需要小心对<code>JMX</code>的远程访问了。</p>
+<p>Please see the Oracle JMX documentation for more information on configuring JMX</p>
+<h1 id="Accessing-Dropwizard-Registry"><a href="#Accessing-Dropwizard-Registry" class="headerlink" title="Accessing Dropwizard Registry"></a>Accessing Dropwizard Registry</h1><p>When configuring the metrics service, an optional registry name can be specified for registering the underlying Dropwizard Registry in the the Dropwizard Shared Registry so you can retrieve this registry and use according to your needs.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">VertxOptions options = <span class="keyword">new</span> VertxOptions().setMetricsOptions(</span><br><span class="line">  <span class="keyword">new</span> MetricsServiceOptions().setEnabled(<span class="keyword">true</span>).setRegistryName(<span class="string">&quot;the_name&quot;</span>)</span><br><span class="line">);</span><br><span class="line">Vertx vertx = Vertx.vertxt(options);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Get the registry</span></span><br><span class="line">MetricRegistry registry = SharedMetricRegistries.getOrCreate(<span class="string">&quot;the_name&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Do whatever you need with the registry</span></span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://wangmingco.github.io/2015/08/15/%E7%BF%BB%E8%AF%91/vertx/vertx3_metrics_and_monitoring/" title="Vertx 3 Metrics And Monitoring" target="_blank" rel="external">https://wangmingco.github.io/2015/08/15/翻译/vertx/vertx3_metrics_and_monitoring/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/wangmingco" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/wangmingco" target="_blank"><span class="text-dark">王明</span><small class="ml-1x">Coder</small></a></h3>
+        <div>一个纯粹的技术开发者。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2015/08/27/%E7%BF%BB%E8%AF%91/vertx/vertx3_data_access/" title="Vertx 3 Data Access"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2015/08/10/%E7%BF%BB%E8%AF%91/vertx/vertx3_web/" title="Vertx 3 Web"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>感谢您的支持，我会继续努力的!</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/images/donate/alipayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开支付宝扫一扫，即可进行扫码打赏哦</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/images/donate/wechatpayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开微信扫一扫，即可进行扫码打赏哦</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> 支付宝</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> 微信支付</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/wangmingco" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="https://gitee.com/wangmingco" target="_blank" title="Gitee" data-toggle=tooltip data-placement=top><i class="icon icon-gitee"></i></a></li>
+        
+        <li><a href="https://weibo.com/wangmingco" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://www.zhihu.com/people/wangmingco" target="_blank" title="Zhihu" data-toggle=tooltip data-placement=top><i class="icon icon-zhihu"></i></a></li>
+        
+        <li><a href="https://www.douban.com/people/xxxyy/" target="_blank" title="Douban" data-toggle=tooltip data-placement=top><i class="icon icon-douban"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>
