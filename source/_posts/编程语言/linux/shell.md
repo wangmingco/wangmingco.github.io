@@ -1,4 +1,6 @@
-category: Shell
+---
+category: 编程语言
+tag: Shell
 date: 2015-10-08
 title: Shell 编程
 ---

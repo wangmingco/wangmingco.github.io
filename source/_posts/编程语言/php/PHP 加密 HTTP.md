@@ -1,5 +1,6 @@
 ---
-category: PHP
+category: 编程语言
+tag: PHP
 title: PHP 加密 Http 发送
 date: 2018-05-28 20:43:00
 ---

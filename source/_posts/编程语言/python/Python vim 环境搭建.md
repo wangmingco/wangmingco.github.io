@@ -1,4 +1,6 @@
-category: PYTHON2
+---
+category: 编程语言
+tag: PYTHON2
 date: 2017-02-09
 title: PYTHON vim 环境搭建
 ---

@@ -1,8 +1,9 @@
-category: PYTHON2
+---
+category: 编程语言
+tag: PYTHON2
 date: 2015-08-06
 title: PYTHON2 基础语法
 ---
-## 
 
 ## 控制流程
 ### if

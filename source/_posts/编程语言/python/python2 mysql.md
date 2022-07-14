@@ -1,4 +1,6 @@
-category: PYTHON2
+---
+category: 编程语言
+tag: PYTHON2
 date: 2017-09-05
 title: PYTHON2 Mysql
 ---

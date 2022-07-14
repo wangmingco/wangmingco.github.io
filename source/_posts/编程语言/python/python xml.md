@@ -1,4 +1,6 @@
-category: PYTHON2
+---
+category: 编程语言
+tag: PYTHON2
 date: 2017-06-13
 title: PYTHON 处理XML
 ---

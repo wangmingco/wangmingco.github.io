@@ -1,4 +1,6 @@
-category: PHP
+---
+category: 编程语言
+tag: PHP
 date: 2015-12-16
 title: PHP 语法初探
 ---

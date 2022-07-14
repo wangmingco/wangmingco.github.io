@@ -1,4 +1,6 @@
-category: PYTHON2
+---
+category: 编程语言
+tag: PYTHON2
 date: 2017-05-19
 title: Pycharm 远程开发
 ---

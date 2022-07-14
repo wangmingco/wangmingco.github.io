@@ -1,4 +1,6 @@
-category: PYTHON2
+---
+category: 编程语言
+tag: PYTHON2
 date: 2015-08-09
 title: PYTHON2 第三方库
 ---
