@@ -1,5 +1,6 @@
 ---
-category: Nginx
+category: 中间件
+tag: Nginx
 date: 2016-03-06
 title: Nginx负载均衡实战
 ---

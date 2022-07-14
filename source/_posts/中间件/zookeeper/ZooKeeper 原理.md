@@ -1,5 +1,6 @@
 ---
-category: ZooKeeper
+category: 中间件
+tag: ZooKeeper
 date: 2015-07-13
 title: ZooKeeper 原理
 ---

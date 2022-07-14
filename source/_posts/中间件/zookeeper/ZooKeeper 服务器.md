@@ -1,5 +1,6 @@
 ---
-category: ZooKeeper
+category: 中间件
+tag: ZooKeeper
 date: 2013-09-13
 title: ZooKeeper 服务器
 ---

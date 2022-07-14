@@ -1,5 +1,6 @@
 ---
-category: Nginx
+category: 中间件
+tag: Nginx
 date: 2016-04-23
 title: nginx web服务器
 ---

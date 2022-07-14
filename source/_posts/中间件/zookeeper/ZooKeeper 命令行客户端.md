@@ -1,5 +1,6 @@
 ---
-category: ZooKeeper
+category: 中间件
+tag: ZooKeeper
 date: 2013-11-20
 title: ZooKeeper 命令行客户端
 ---

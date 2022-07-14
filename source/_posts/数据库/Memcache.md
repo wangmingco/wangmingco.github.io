@@ -1,5 +1,5 @@
 ---
-category: NoSql
+category: 数据库
 tag: Memcached
 date: 2015-11-18
 title: memcached

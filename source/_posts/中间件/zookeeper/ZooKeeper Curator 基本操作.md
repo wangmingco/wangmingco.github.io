@@ -1,5 +1,6 @@
 ---
-category: ZooKeeper
+category: 中间件
+tag: ZooKeeper
 date: 2016-04-27
 title: ZooKeeper Curator 基本操作
 ---

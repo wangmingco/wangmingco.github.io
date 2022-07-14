@@ -1,5 +1,6 @@
 ---
 category: 数据库
+tag: mysql
 date: 2016-03-16
 title: Data too long for column 引起的设置 sql_mod
 ---

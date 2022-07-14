@@ -1,5 +1,6 @@
 ---
 category: 数据库
+tag: mysql
 date: 2016-03-16
 title: Mysql 数据压缩
 ---

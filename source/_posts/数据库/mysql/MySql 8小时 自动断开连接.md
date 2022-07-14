@@ -1,5 +1,6 @@
 ---
 category: 数据库
+tag: mysql
 date: 2016-12-15
 title: MySql 8小时 自动断开连接
 ---
