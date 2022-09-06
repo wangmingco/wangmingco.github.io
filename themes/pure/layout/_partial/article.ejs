@@ -15,6 +15,7 @@
       </div>
     </div>
     <div class="article-entry marked-body" itemprop="articleBody">
+   
       <% if (post.excerpt && index){ %>
         <%- post.excerpt %>
         <% if (theme.config.excerpt_link){ %>
@@ -23,6 +24,14 @@
           </p>
         <% } %>
       <% } else { %>
+    
+        <%- toc(page.content, {
+        class: 'post-toc',
+        list_number: false
+        }) %>
+        
+        <br/>
+
         <%- post.content %>
       <% } %>
     </div>
