@@ -33,6 +33,8 @@ body{height:100%;margin:0px;padding:0px}
         var zoomCtrl = new BMapGL.ZoomControl();  // 添加缩放控件
         map.addControl(zoomCtrl);
 
+        // https://api.map.baidu.com/lbsapi/getpoint/index.html
+
         var bowuguan = [
             {x: 116.403757, y: 39.916727, title: '故宫'},
             {x: 116.403757, y: 39.916727, title: '中国国家博物馆'},
@@ -104,11 +106,13 @@ body{height:100%;margin:0px;padding:0px}
             {x: 117.310896, y: 40.187348, title: '金海湖景区'},
             {x: 116.689259, y: 40.467871, title: '北京青龙峡风景区'},
             {x: 116.690837, y: 40.403587, title: '雁栖湖景区'},
+            {x: 116.16884, y: 39.941638, title: '模式口大街'},
+            {x: 116.190196, y: 39.968527, title: '八大处公园'},
         ]
         addToMap(jingdian, map, 'blue')
 
         var ertong = [
-            {x: 116.399085, y: 39.97747, title: ' 北京科学中心儿童乐园'},
+            {x: 116.399085, y: 39.97747, title: '北京科学中心儿童乐园'},
             {x: 116.34482, y: 39.946348, title: '动物园'},
             {x: 116.32865, y: 39.505009, title: '北京野生动物园'},
             {x: 116.40504, y: 40.012384, title: '中国科学技术馆'},
@@ -118,7 +122,12 @@ body{height:100%;margin:0px;padding:0px}
             {x: 116.215518, y: 39.917811, title: '北京石景山游乐园'},
             {x: 116.500997, y: 39.873927, title: '北京欢乐谷'},
             {x: 116.68782, y: 39.86099, title: '北京环球度假区'},
-
+            {x: 116.330065, y: 39.949641, title: '中国国家图书馆'},
+            {x: 116.469182, y: 39.875885, title: '首都图书馆'},
+            {x: 116.450539, y: 39.932873, title: '北京法国文化中心'},
+            {x: 116.407571, y: 39.974156, title: '朝阳区少儿图书馆'},
+            {x: 116.197868, y: 39.917206, title: '石景山儿童图书馆'},
+            {x: 116.168305, y: 39.944034, title: '第四纪冰川遗迹陈列馆'},
         ]
         addToMap(ertong, map, 'green')
 
