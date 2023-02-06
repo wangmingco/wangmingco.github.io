@@ -1,6 +1,6 @@
 ---
 category: 数据库
-date: 2022-06-20
+date: 2019-06-20
 title: SQL 手册
 ---
 

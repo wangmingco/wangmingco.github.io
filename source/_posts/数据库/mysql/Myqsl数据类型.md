@@ -174,18 +174,3 @@ mysql> select utc_timestamp(), utc_date(), utc_time(), now()
 ```
 
 因为我国位于东八时区，所以本地时间 = UTC 时间 + 8 小时。UTC 时间在业务涉及多个国家和地区的时候，非常有用。
-
-###
-
-```sql
-
-```
-```sql
-
-```
-```sql
-
-```
-```sql
-
-```
