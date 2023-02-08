@@ -13,29 +13,38 @@ body{height:100%;margin:0px;padding:0px}
 </script>
 </head> 
   
-<body> 
+<body>
+    <div id="selectors">
+        <input id="bowuguan" class="inputCheckBox" type="checkbox" checked="checked">博物馆</input>
+        <input id="jingdian" class="inputCheckBox" type="checkbox" checked="checked">景点</input>
+        <input id="ertong" class="inputCheckBox" type="checkbox" checked="checked">儿童</input>
+        <input id="jucahng" class="inputCheckBox" type="checkbox" >剧场</input>
+        <input id="simiao" class="inputCheckBox" type="checkbox" >寺庙</input>
+        <input id="shangchang" class="inputCheckBox" type="checkbox" >商场</input>
+        <br/><br/>
+    </div> 
     <div id="container"></div>
    
 
 <script type="text/javascript">
-    function initMap() {
-        var map = new BMapGL.Map("container");
 
-        // 创建地图实例 
-        var point = new BMapGL.Point(116.404, 39.915);
-        // 创建点坐标 
-        map.centerAndZoom(point, 15);
-        // 初始化地图，设置中心点坐标和地图级别 
+    const map = new BMapGL.Map("container");
 
-        map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
-        var scaleCtrl = new BMapGL.ScaleControl();  // 添加比例尺控件
-        map.addControl(scaleCtrl);
-        var zoomCtrl = new BMapGL.ZoomControl();  // 添加缩放控件
-        map.addControl(zoomCtrl);
+    // 创建地图实例 
+    const point = new BMapGL.Point(116.404, 39.915);
+    // 创建点坐标 
+    map.centerAndZoom(point, 15);
+    // 初始化地图，设置中心点坐标和地图级别 
 
-        // https://api.map.baidu.com/lbsapi/getpoint/index.html
+    map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
+    const scaleCtrl = new BMapGL.ScaleControl();  // 添加比例尺控件
+    map.addControl(scaleCtrl);
+    const zoomCtrl = new BMapGL.ZoomControl();  // 添加缩放控件
+    map.addControl(zoomCtrl);
 
-        var bowuguan = [
+    // https://api.map.baidu.com/lbsapi/getpoint/index.html
+
+    var bowuguanData = [
             {x: 116.403757, y: 39.916727, title: '故宫'},
             {x: 116.348486, y: 39.911876, title: '首都博物馆'},
             {x: 116.403757, y: 39.916727, title: '中国国家博物馆'},
@@ -89,9 +98,8 @@ body{height:100%;margin:0px;padding:0px}
             {x: 116.320303, y: 39.975885, title: '中国人民大学博物馆'},
             {x: 116.30852, y: 39.835739,  title: '北京汽车博物馆'}
         ]
-        addToMap(bowuguan, map, 'red')
 
-        var jingdian = [
+        var jingdianData = [
             {x: 116.419342, y: 39.888663, title: '天坛'},
             {x: 116.400824, y: 39.997574, title: '鸟巢'},
             {x: 116.419654, y: 39.953183, title: '国子监'},
@@ -111,9 +119,8 @@ body{height:100%;margin:0px;padding:0px}
             {x: 116.16884, y: 39.941638, title: '模式口大街'},
             {x: 116.190196, y: 39.968527, title: '八大处公园'},
         ]
-        addToMap(jingdian, map, 'blue')
 
-        var ertong = [
+        var ertongData = [
             {x: 116.399085, y: 39.97747, title: '北京科学中心儿童乐园'},
             {x: 116.34482, y: 39.946348, title: '动物园'},
             {x: 116.32865, y: 39.505009, title: '北京野生动物园'},
@@ -131,9 +138,8 @@ body{height:100%;margin:0px;padding:0px}
             {x: 116.197868, y: 39.917206, title: '石景山儿童图书馆'},
             {x: 116.168305, y: 39.944034, title: '第四纪冰川遗迹陈列馆'},
         ]
-        addToMap(ertong, map, 'green')
-
-        var aolai = [
+        
+        var shangchangData = [
             {x: 116.603045, y: 40.016812, title: '斯普瑞斯奥特莱斯'},
             {x: 116.49428, y: 39.883897, title: '燕莎奥特莱斯购物中心(北京店)'},
             {x: 116.512258, y: 40.041838, title: '北京赛特奥莱(香江北路店)'},
@@ -141,9 +147,8 @@ body{height:100%;margin:0px;padding:0px}
             {x: 116.331261, y: 39.833241, title: '花乡奥莱村'},
             {x: 116.194065, y: 39.769172, title: '首创奥特莱斯'},
         ]
-        addToMap(aolai, map, 'yellowgreen')
-
-        var juchang = [
+        
+        var juchangData = [
             {x: 116.379436, y: 39.954111, title: '解放军歌剧院'},
             {x: 116.46857, y: 39.89774, title: '北京歌舞剧院'},
             {x: 116.44315, y: 39.935238, title: '中央歌剧院'},
@@ -170,9 +175,8 @@ body{height:100%;margin:0px;padding:0px}
             {x: 116.322663, y: 39.91767, title: '未来剧院'},
             {x: 116.418988, y: 39.947532, title: '东图剧场'},
         ]
-        addToMap(juchang, map, 'Purple')
 
-        var simiao = [
+        var simiaoData = [
             {x: 116.037356, y: 39.911876, title: '潭柘寺'},
             {x: 116.376434, y: 39.890972, title: '法源寺'},
             {x: 116.0927, y: 39.875637, title: '戒台寺'},
@@ -203,7 +207,6 @@ body{height:100%;margin:0px;padding:0px}
             {x: 116.416976, y: 39.943954, title: '城隍庙'},
             {x: 116.315893, y: 40.00668, title: '正觉寺'},
         ]
-        addToMap(simiao, map, 'goldenrod')
 
         var huabing = [
             {x: 116.465087, y: 39.916776, title: '国贸溜冰场(国贸写字楼2座店)'},
@@ -247,9 +250,74 @@ body{height:100%;margin:0px;padding:0px}
             {x: 116.470618, y: 39.931562, title: '团结湖公园-轮滑场'},
             {x: 116.51621, y: 40.176343, title: '海源春旱冰场'},
         ]
+        
+    const selectData = (event) => {
+      
+      if (event.id == "bowuguan") {
+        if (event.checked == true) {
+            addOverlay(bowuguanData, 'red')
+        } else {
+            removeOverlay(bowuguanData)
+        }
+      }
+      if (event.id == "jingdian") {
+        if (event.checked == true) {
+            addOverlay(jingdianData, 'blue')
+        } else {
+            removeOverlay(jingdianData)
+        }
+      }
+      if (event.id == "ertong") {
+        if (event.checked == true) {
+            addOverlay(ertongData, 'green')
+        } else {
+            removeOverlay(ertongData)
+        }
+      }
+      if (event.id == "jucahng") {
+        if (event.checked == true) {
+            addOverlay(juchangData, 'Purple')
+        } else {
+            removeOverlay(juchangData)
+        }
+      }
+      if (event.id == "simiao") {
+        if (event.checked == true) {
+            addOverlay(simiaoData, 'goldenrod')
+        } else {
+            removeOverlay(simiaoData)
+        }
+      }
+      if (event.id == "shangchang") {
+        if (event.checked == true) {
+            addOverlay(shangchangData, 'yellowgreen')
+        } else {
+            removeOverlay(shangchangData)
+        }
+      }
+
+    }
+    
+    const handler = (event) => {
+        selectData(event.explicitOriginalTarget)
     }
 
-    function addToMap(array, map, color) {
+    selectData(document.querySelector('#bowuguan'))
+    selectData(document.querySelector('#jingdian'))
+    selectData(document.querySelector('#ertong'))
+    selectData(document.querySelector('#jucahng'))
+    selectData(document.querySelector('#simiao'))
+    selectData(document.querySelector('#shangchang'))
+    document.querySelector('#bowuguan').addEventListener('change', handler);
+    document.querySelector('#jingdian').addEventListener('change', handler);
+    document.querySelector('#ertong').addEventListener('change', handler);
+    document.querySelector('#jucahng').addEventListener('change', handler);
+    document.querySelector('#simiao').addEventListener('change', handler);
+    document.querySelector('#shangchang').addEventListener('change', handler);
+
+
+    function addOverlay(array, color) {
+        console.log(map)
         array.forEach(function(item, index) {
             map.addOverlay(new BMapGL.Marker(new BMapGL.Point(item.x, item.y)));
 
@@ -274,7 +342,21 @@ body{height:100%;margin:0px;padding:0px}
         })
     }
 
-    initMap()
+    function removeOverlay(array) {
+
+        var allOverlay = map.getOverlays();
+        allOverlay.map(overlay => {
+            array.forEach(function(item, index) {
+                if(overlay.content == item.title){
+                    overlay.hide()
+                    map.removeOverlay(overlay);
+                }
+            })
+        })
+    }
+
+    
+
 </script> 
 </body> 
 </html>
