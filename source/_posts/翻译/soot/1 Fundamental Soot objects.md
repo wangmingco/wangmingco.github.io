@@ -15,15 +15,13 @@ Soot的类继承结构非常庞大和复杂，本节为读者介绍一些在Soot
 
 ### Body
 
-在教程![Creating a class from scratch]() 中已经提到过`Body`这个概念。下面我们会更加详细的阐述`Body`特性。
+在教程[Creating a class from scratch]() 中已经提到过`Body`这个概念。下面我们会更加详细的阐述`Body`特性。
 
 Soot使用`Body`存储方法的代码。在Soot中有四种类型的`Body`，每种`Body`都是一种中间表示(IR)
 * BafBody
 * JimpleBody
 * ShimpleBody
 * GrimpBody
-
-Also, recall that a chain is a list-like data structure providing constant-time access to chain elements, including insertion and removal.
 
 在`Body`中三个最主要的链就是 
 * `Unit`链
