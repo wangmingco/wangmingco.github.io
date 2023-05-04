@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>https://wangmingco.github.io/2021/12/09/html/travel_baidu/</loc>
+    <lastmod>2023-05-04</lastmod>
+  </url>
+  <url>
+    <loc>https://wangmingco.github.io/2022/08/05/%E7%BF%BB%E8%AF%91/soot/1%20Fundamental%20Soot%20objects/</loc>
+    <lastmod>2023-02-06</lastmod>
+  </url>
+  <url>
     <loc>https://wangmingco.github.io/2016/12/15/%E6%95%B0%E6%8D%AE%E5%BA%93/mysql/Myqsl%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B/</loc>
     <lastmod>2022-11-15</lastmod>
   </url>
@@ -38,10 +46,6 @@
   </url>
   <url>
     <loc>https://wangmingco.github.io/2019/05/04/%E7%BF%BB%E8%AF%91/javassist/Javasist%204%20Introspection%20and%20customization/</loc>
-    <lastmod>2022-09-30</lastmod>
-  </url>
-  <url>
-    <loc>https://wangmingco.github.io/2022/08/05/%E7%BF%BB%E8%AF%91/soot/1%20Fundamental%20Soot%20objects/</loc>
     <lastmod>2022-09-30</lastmod>
   </url>
   <url>
@@ -390,10 +394,6 @@
   </url>
   <url>
     <loc>https://wangmingco.github.io/2016/03/06/%E4%B8%AD%E9%97%B4%E4%BB%B6/nginx/nginx%E5%AE%89%E8%A3%85%E4%B8%8E%E5%91%BD%E4%BB%A4/</loc>
-    <lastmod>2022-09-30</lastmod>
-  </url>
-  <url>
-    <loc>https://wangmingco.github.io/2021/12/09/html/bj_baidu/</loc>
     <lastmod>2022-09-30</lastmod>
   </url>
   <url>

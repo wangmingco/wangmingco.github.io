@@ -61,7 +61,7 @@ body{height:100%;margin:0px;padding:0px}
             {x: 116.375341, y: 39.914214, title: '民族文化宫博物馆'},
             {x: 116.527178, y: 40.002671, title: '中国电影博物馆'},
             {x: 116.365278, y: 39.931588, title: '北京鲁迅博物馆'},
-            {x: 116.415449, y: 39.931473, title: '中国美术馆'},
+            {x: 116.417259, y: 39.930527, title: '中国美术馆'},
             {x: 116.404162, y: 39.908892, title: '毛主席纪念堂'},
             {x: 116.726914, y: 39.967915, title: '中国体育博物馆'},
             {x: 116.377722, y: 39.928967, title: '中国地质博物馆'},
@@ -96,8 +96,7 @@ body{height:100%;margin:0px;padding:0px}
             {x: 116.684891, y: 40.305098, title: '老爷车博物馆'},
             {x: 116.437639, y: 39.916824, title: '中国邮政邮票博物馆'},
             {x: 116.320303, y: 39.975885, title: '中国人民大学博物馆'},
-            {x: 116.30852, y: 39.835739,  title: '北京汽车博物馆'},
-            {x: 116.404125, y: 40.009944,  title: '中国工艺美术馆'}
+            {x: 116.30852, y: 39.835739,  title: '北京汽车博物馆'}
         ]
 
         var jingdianData = [
@@ -252,6 +251,11 @@ body{height:100%;margin:0px;padding:0px}
             {x: 116.51621, y: 40.176343, title: '海源春旱冰场'},
         ]
         
+
+    const handler = (event) => {
+        selectData(event.explicitOriginalTarget)
+    }
+
     const selectData = (event) => {
       
       if (event.id == "bowuguan") {
@@ -299,10 +303,6 @@ body{height:100%;margin:0px;padding:0px}
 
     }
     
-    const handler = (event) => {
-        selectData(event.explicitOriginalTarget)
-    }
-
     selectData(document.querySelector('#bowuguan'))
     selectData(document.querySelector('#jingdian'))
     selectData(document.querySelector('#ertong'))
@@ -356,7 +356,6 @@ body{height:100%;margin:0px;padding:0px}
         })
     }
 
-    
 
 </script> 
 </body> 
