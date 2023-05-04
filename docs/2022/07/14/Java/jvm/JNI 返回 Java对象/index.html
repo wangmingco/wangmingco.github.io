@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+   <!-- google 爬取标记 -->
+   <meta name="google-site-verification" content="aH2bcbMuMlpfF61i9p--iBH54wvMywGXfWg8U6RpxFA" />
+   <!-- bing 爬取标记 -->
+   <meta name="msvalidate.01" content="CBAB9A13FF212142D6C250D9C0D31F28" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>JNI 返回 Java对象 | 王明的技术博客</title>
+  <meta name="description" content="Java代码 1234567891011121314151617181920package jnijava;public class JniJava &amp;#123;    public static void main(String[] args) &amp;#123;                System.load(&quot;&#x2F;Users&#x2F;wangming&#x2F;NetBeansProjects&#x2F;jn">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JNI 返回 Java对象">
+<meta property="og:url" content="https://wangmingco.github.io/2022/07/14/Java/jvm/JNI%20%E8%BF%94%E5%9B%9E%20Java%E5%AF%B9%E8%B1%A1/index.html">
+<meta property="og:site_name" content="王明的技术博客">
+<meta property="og:description" content="Java代码 1234567891011121314151617181920package jnijava;public class JniJava &amp;#123;    public static void main(String[] args) &amp;#123;                System.load(&quot;&#x2F;Users&#x2F;wangming&#x2F;NetBeansProjects&#x2F;jn">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-07-13T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-09-30T10:05:41.763Z">
+<meta property="article:author" content="王明">
+<meta property="article:tag" content="jvm">
+<meta name="twitter:card" content="summary">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://wangmingco.github.io/2022/07/14/Java/jvm/JNI%20%E8%BF%94%E5%9B%9E%20Java%E5%AF%B9%E8%B1%A1/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="王明的技术博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/wangmingco" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">王明</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Coder</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Beijing, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">项目</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books">
+            
+            <i class="icon icon-book-fill"></i>
+            
+            <span class="menu-title">书单</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">友链</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/wangmingco" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="https://gitee.com/wangmingco" target="_blank" title="Gitee" data-toggle=tooltip data-placement=top><i class="icon icon-gitee"></i></a></li>
+        
+        <li><a href="https://weibo.com/wangmingco" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://www.zhihu.com/people/wangmingco" target="_blank" title="Zhihu" data-toggle=tooltip data-placement=top><i class="icon icon-zhihu"></i></a></li>
+        
+        <li><a href="https://www.douban.com/people/xxxyy/" target="_blank" title="Douban" data-toggle=tooltip data-placement=top><i class="icon icon-douban"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">143</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/">中间件</a><span class="category-list-count">11</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E6%BA%90/">开源</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><span class="category-list-count">17</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9D%82%E6%96%87/">杂文</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><span class="category-list-count">11</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a><span class="category-list-count">23</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BF%BB%E8%AF%91/">翻译</a><span class="category-list-count">16</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Groovy/" rel="tag">Groovy</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java-IO/" rel="tag">Java IO</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java-%E4%B8%89%E6%96%B9%E5%BA%93/" rel="tag">Java 三方库</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java-%E7%BD%91%E7%BB%9C/" rel="tag">Java 网络</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaSE/" rel="tag">JavaSE</a><span class="tag-list-count">32</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/" rel="tag">JavaScript</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Javasist/" rel="tag">Javasist</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Memcached/" rel="tag">Memcached</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MongoDB/" rel="tag">MongoDB</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Netty/" rel="tag">Netty</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nginx/" rel="tag">Nginx</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PEG-js/" rel="tag">PEG.js</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PHP/" rel="tag">PHP</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PYTHON2/" rel="tag">PYTHON2</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React/" rel="tag">React</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Redis/" rel="tag">Redis</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shell/" rel="tag">Shell</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ZooKeeper/" rel="tag">ZooKeeper</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/asm/" rel="tag">asm</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/awk/" rel="tag">awk</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c-cpp/" rel="tag">c/cpp</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/haskell/" rel="tag">haskell</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmh/" rel="tag">jmh</a><span class="tag-list-count">14</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jol/" rel="tag">jol</a><span class="tag-list-count">24</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm/" rel="tag">jvm</a><span class="tag-list-count">18</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven/" rel="tag">maven</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mybatis/" rel="tag">mybatis</a><span class="tag-list-count">11</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">9</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/soot/" rel="tag">soot</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vertx2/" rel="tag">vertx2</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vertx3/" rel="tag">vertx3</a><span class="tag-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/Groovy/" style="font-size: 13.43px;">Groovy</a> <a href="/tags/Java-IO/" style="font-size: 13.36px;">Java IO</a> <a href="/tags/Java-%E4%B8%89%E6%96%B9%E5%BA%93/" style="font-size: 13.86px;">Java 三方库</a> <a href="/tags/Java-%E7%BD%91%E7%BB%9C/" style="font-size: 13.43px;">Java 网络</a> <a href="/tags/JavaSE/" style="font-size: 14px;">JavaSE</a> <a href="/tags/JavaScript/" style="font-size: 13.36px;">JavaScript</a> <a href="/tags/Javasist/" style="font-size: 13.21px;">Javasist</a> <a href="/tags/Memcached/" style="font-size: 13px;">Memcached</a> <a href="/tags/MongoDB/" style="font-size: 13.14px;">MongoDB</a> <a href="/tags/Netty/" style="font-size: 13.43px;">Netty</a> <a href="/tags/Nginx/" style="font-size: 13.29px;">Nginx</a> <a href="/tags/PEG-js/" style="font-size: 13px;">PEG.js</a> <a href="/tags/PHP/" style="font-size: 13.07px;">PHP</a> <a href="/tags/PYTHON2/" style="font-size: 13.5px;">PYTHON2</a> <a href="/tags/React/" style="font-size: 13px;">React</a> <a href="/tags/Redis/" style="font-size: 13.14px;">Redis</a> <a href="/tags/Shell/" style="font-size: 13px;">Shell</a> <a href="/tags/ZooKeeper/" style="font-size: 13.36px;">ZooKeeper</a> <a href="/tags/asm/" style="font-size: 13.21px;">asm</a> <a href="/tags/awk/" style="font-size: 13px;">awk</a> <a href="/tags/c-cpp/" style="font-size: 13px;">c/cpp</a> <a href="/tags/haskell/" style="font-size: 13.14px;">haskell</a> <a href="/tags/jmh/" style="font-size: 13.71px;">jmh</a> <a href="/tags/jol/" style="font-size: 13.93px;">jol</a> <a href="/tags/jvm/" style="font-size: 13.79px;">jvm</a> <a href="/tags/maven/" style="font-size: 13px;">maven</a> <a href="/tags/mybatis/" style="font-size: 13.64px;">mybatis</a> <a href="/tags/mysql/" style="font-size: 13.57px;">mysql</a> <a href="/tags/soot/" style="font-size: 13px;">soot</a> <a href="/tags/vertx2/" style="font-size: 13.07px;">vertx2</a> <a href="/tags/vertx3/" style="font-size: 13.21px;">vertx3</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">八月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/07/">七月 2022</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">四月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">一月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">六月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">二月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">十一月 2018</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">四月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">十二月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">十一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">十月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">九月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">六月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">37</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">八月 2015</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">七月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">九月 2014</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">四月 2014</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/09/">九月 2013</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E7%BF%BB%E8%AF%91/">翻译</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/08/05/%E7%BF%BB%E8%AF%91/soot/1%20Fundamental%20Soot%20objects/" class="title">Soot 基础对象 [译]</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-08-05T02:21:00.000Z" itemprop="datePublished">2022-08-05</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Java/">Java</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/07/14/Java/jvm/JNI%20%E8%BF%94%E5%9B%9E%20Java%E5%AF%B9%E8%B1%A1/" class="title">JNI 返回 Java对象</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-07-13T16:00:00.000Z" itemprop="datePublished">2022-07-14</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/07/10/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/cpp/NetBeans%20Debug%20Cpp/" class="title">NetBeans Debug Cpp</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-07-09T16:00:00.000Z" itemprop="datePublished">2022-07-10</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/04/12/%E5%89%8D%E7%AB%AF/REACT%20%E8%AF%AD%E6%B3%95/" class="title">React 学习</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-04-12T02:21:00.000Z" itemprop="datePublished">2022-04-12</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Java/">Java</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/01/10/Java/jvm/centos%E7%BC%96%E8%AF%91openjdk/" class="title">Centos7 编译调试 OpenJDK11</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-01-09T16:00:00.000Z" itemprop="datePublished">2022-01-10</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-Java/jvm/JNI 返回 Java对象" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      JNI 返回 Java对象
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2022/07/14/Java/jvm/JNI%20%E8%BF%94%E5%9B%9E%20Java%E5%AF%B9%E8%B1%A1/" class="article-date">
+	  <time datetime="2022-07-13T16:00:00.000Z" itemprop="datePublished">2022-07-14</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/Java/">Java</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/jvm/" rel="tag">jvm</a>
+  </span>
+
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2022/07/14/Java/jvm/JNI%20%E8%BF%94%E5%9B%9E%20Java%E5%AF%B9%E8%B1%A1/#comments" class="article-comment-link">评论</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+   
+      
+    
+        
+        
+        <br/>
+
+        <script src="/assets/asciinema-player.js"></script><link rel="stylesheet" type="text/css" href="/assets/asciinema-player.css" />
+<p>Java代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> jnijava;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JniJava</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        </span><br><span class="line">        System.load(<span class="string">&quot;/Users/wangming/NetBeansProjects/jnicpp/dist/Debug/GNU-MacOSX/libjnicpp.dylib&quot;</span>);</span><br><span class="line">        System.out.println(<span class="string">&quot;JniJava&quot;</span>);</span><br><span class="line">        </span><br><span class="line">        Obj obj = print();</span><br><span class="line">        System.out.println(obj.str);</span><br><span class="line">        System.out.println(obj.i);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">native</span> Obj <span class="title">print</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Obj</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> String str;</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">int</span> i;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>jni代码, 这是c语言的写法。如果要换成c++的需要将<code>(*env)-&gt;FindClass(env, &quot;jnijava/Obj&quot;);</code>转换成<code>env-&gt;FindClass(&quot;jnijava/Obj&quot;)</code></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;JniJava.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function">jobject JNICALL <span class="title">Java_jnijava_JniJava_print</span></span></span><br><span class="line"><span class="function">  <span class="params">(JNIEnv *env, jclass object)</span> </span>&#123;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 找到目标类</span></span><br><span class="line">    jclass objClass = (*env)-&gt;<span class="built_in">FindClass</span>(env, <span class="string">&quot;jnijava/Obj&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 调用类的实例化方法，然后实例化</span></span><br><span class="line">    jmethodID initMethod = (*env)-&gt;<span class="built_in">GetMethodID</span>(env, objClass, <span class="string">&quot;&lt;init&gt;&quot;</span>, <span class="string">&quot;()V&quot;</span>);</span><br><span class="line">    jobject obj = (*env)-&gt;<span class="built_in">NewObject</span>(env, objClass, initMethod);</span><br><span class="line">        </span><br><span class="line">    <span class="comment">// 找到要赋值的属性</span></span><br><span class="line">    jfieldID str = (*env)-&gt;<span class="built_in">GetFieldID</span>(env, objClass, <span class="string">&quot;str&quot;</span>, <span class="string">&quot;Ljava/lang/String;&quot;</span>);</span><br><span class="line">    jfieldID i = (*env)-&gt;<span class="built_in">GetFieldID</span>(env, objClass, <span class="string">&quot;i&quot;</span>, <span class="string">&quot;I&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 对属性进行赋值</span></span><br><span class="line">    (*env)-&gt;<span class="built_in">SetObjectField</span>(env, obj, str, (*env)-&gt;<span class="built_in">NewStringUTF</span>(env, <span class="string">&quot;jnicpp&quot;</span>));</span><br><span class="line">    (*env)-&gt;<span class="built_in">SetIntField</span>(env, obj, i, <span class="number">9999</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> obj;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这就直接在jni里返回了一个Java对象，那么这个Java对象是如何与GC关联起来的呢？关键就在于<code>(*env)-&gt;NewObject(env, objClass, initMethod);</code></p>
+<p>在jdk17中<code>jdk-jdk-17-35/src/hotspot/share/prims/jni.cpp</code> 该方法时如下定义的</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">JNI_ENTRY</span>(jobject, <span class="built_in">jni_NewObject</span>(JNIEnv *env, jclass clazz, jmethodID methodID, ...))</span><br><span class="line">  <span class="built_in">HOTSPOT_JNI_NEWOBJECT_ENTRY</span>(env, clazz, (<span class="keyword">uintptr_t</span>) methodID);</span><br><span class="line"></span><br><span class="line">  jobject obj = <span class="literal">NULL</span>;</span><br><span class="line">  <span class="built_in">DT_RETURN_MARK</span>(NewObject, jobject, (<span class="keyword">const</span> jobject&amp;)obj);</span><br><span class="line"></span><br><span class="line">  instanceOop i = InstanceKlass::<span class="built_in">allocate_instance</span>(JNIHandles::<span class="built_in">resolve_non_null</span>(clazz), CHECK_NULL);</span><br><span class="line">  obj = JNIHandles::<span class="built_in">make_local</span>(THREAD, i);</span><br><span class="line">  va_list args;</span><br><span class="line">  <span class="built_in">va_start</span>(args, methodID);</span><br><span class="line">  <span class="function">JavaValue <span class="title">jvalue</span><span class="params">(T_VOID)</span></span>;</span><br><span class="line">  <span class="function">JNI_ArgumentPusherVaArg <span class="title">ap</span><span class="params">(methodID, args)</span></span>;</span><br><span class="line">  <span class="built_in">jni_invoke_nonstatic</span>(env, &amp;jvalue, obj, JNI_NONVIRTUAL, methodID, &amp;ap, CHECK_NULL);</span><br><span class="line">  <span class="built_in">va_end</span>(args);</span><br><span class="line">  <span class="keyword">return</span> obj;</span><br><span class="line">JNI_END</span><br></pre></td></tr></table></figure>
+
+<p>这里分配一个对象出来 <code>InstanceKlass::allocate_instance(JNIHandles::resolve_non_null(clazz), CHECK_NULL);</code></p>
+<p><code>jdk-jdk-17-35/src/hotspot/share/oops/instanceKlass.inline.hpp</code></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">inline</span> instanceOop <span class="title">InstanceKlass::allocate_instance</span><span class="params">(oop java_class, TRAPS)</span> </span>&#123;</span><br><span class="line">  Klass* k = java_lang_Class::<span class="built_in">as_Klass</span>(java_class);</span><br><span class="line">  <span class="keyword">if</span> (k == <span class="literal">NULL</span>) &#123;</span><br><span class="line">    <span class="function">ResourceMark <span class="title">rm</span><span class="params">(THREAD)</span></span>;</span><br><span class="line">    <span class="built_in">THROW_</span>(vmSymbols::<span class="built_in">java_lang_InstantiationException</span>(), <span class="literal">NULL</span>);</span><br><span class="line">  &#125;</span><br><span class="line">  InstanceKlass* ik = <span class="built_in">cast</span>(k);</span><br><span class="line">  ik-&gt;<span class="built_in">check_valid_for_instantiation</span>(<span class="literal">false</span>, CHECK_NULL);</span><br><span class="line">  ik-&gt;<span class="built_in">initialize</span>(CHECK_NULL);</span><br><span class="line">  <span class="keyword">return</span> ik-&gt;<span class="built_in">allocate_instance</span>(THREAD);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最后一步直接调用<code>InstanceKlass</code>的<code>allocate_instance(THREAD)</code>方法</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">instanceOop <span class="title">InstanceKlass::allocate_instance</span><span class="params">(TRAPS)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">bool</span> has_finalizer_flag = <span class="built_in">has_finalizer</span>(); <span class="comment">// Query before possible GC</span></span><br><span class="line">  <span class="keyword">int</span> size = <span class="built_in">size_helper</span>();  <span class="comment">// Query before forming handle.</span></span><br><span class="line"></span><br><span class="line">  instanceOop i;</span><br><span class="line"></span><br><span class="line">  i = (instanceOop)Universe::<span class="built_in">heap</span>()-&gt;<span class="built_in">obj_allocate</span>(<span class="keyword">this</span>, size, CHECK_NULL);</span><br><span class="line">  <span class="keyword">if</span> (has_finalizer_flag &amp;&amp; !RegisterFinalizersAtInit) &#123;</span><br><span class="line">    i = <span class="built_in">register_finalizer</span>(i, CHECK_NULL);</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> i;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最终也就是调用<code>jdk-jdk-17-35/src/hotspot/share/gc/shared/collectedHeap.inline.hpp</code>的</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">inline</span> oop <span class="title">CollectedHeap::obj_allocate</span><span class="params">(Klass* klass, <span class="keyword">int</span> size, TRAPS)</span> </span>&#123;</span><br><span class="line">  <span class="function">ObjAllocator <span class="title">allocator</span><span class="params">(klass, size, THREAD)</span></span>;</span><br><span class="line">  <span class="keyword">return</span> allocator.<span class="built_in">allocate</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>继续往里面看<code>jdk-jdk-17-35/src/hotspot/share/gc/shared/memAllocator.cpp</code></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">oop <span class="title">MemAllocator::allocate</span><span class="params">()</span> <span class="keyword">const</span> </span>&#123;</span><br><span class="line">  oop obj = <span class="literal">NULL</span>;</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="function">Allocation <span class="title">allocation</span><span class="params">(*<span class="keyword">this</span>, &amp;obj)</span></span>;</span><br><span class="line">    HeapWord* mem = <span class="built_in">mem_allocate</span>(allocation);</span><br><span class="line">    <span class="keyword">if</span> (mem != <span class="literal">NULL</span>) &#123;</span><br><span class="line">      obj = <span class="built_in">initialize</span>(mem);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="comment">// The unhandled oop detector will poison local variable obj,</span></span><br><span class="line">      <span class="comment">// so reset it to NULL if mem is NULL.</span></span><br><span class="line">      obj = <span class="literal">NULL</span>;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">return</span> obj;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>继续看<code>mem_allocate(allocation);</code></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">HeapWord* <span class="title">MemAllocator::mem_allocate</span><span class="params">(Allocation&amp; allocation)</span> <span class="keyword">const</span> </span>&#123;</span><br><span class="line">  <span class="keyword">if</span> (UseTLAB) &#123;</span><br><span class="line">    HeapWord* result = <span class="built_in">allocate_inside_tlab</span>(allocation);</span><br><span class="line">    <span class="keyword">if</span> (result != <span class="literal">NULL</span>) &#123;</span><br><span class="line">      <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">allocate_outside_tlab</span>(allocation);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里是判断一下，是否在TLAB上面分配，我们关心的是heap的GC，直接看<code>allocate_outside_tlab(allocation);</code></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">HeapWord* <span class="title">MemAllocator::allocate_outside_tlab</span><span class="params">(Allocation&amp; allocation)</span> <span class="keyword">const</span> </span>&#123;</span><br><span class="line">  allocation._allocated_outside_tlab = <span class="literal">true</span>;</span><br><span class="line">  HeapWord* mem = Universe::<span class="built_in">heap</span>()-&gt;<span class="built_in">mem_allocate</span>(_word_size, &amp;allocation._overhead_limit_exceeded);</span><br><span class="line">  <span class="keyword">if</span> (mem == <span class="literal">NULL</span>) &#123;</span><br><span class="line">    <span class="keyword">return</span> mem;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="built_in">NOT_PRODUCT</span>(Universe::<span class="built_in">heap</span>()-&gt;<span class="built_in">check_for_non_bad_heap_word_value</span>(mem, _word_size));</span><br><span class="line">  <span class="keyword">size_t</span> size_in_bytes = _word_size * HeapWordSize;</span><br><span class="line">  _thread-&gt;<span class="built_in">incr_allocated_bytes</span>(size_in_bytes);</span><br><span class="line"></span><br><span class="line">  <span class="keyword">return</span> mem;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>heap()-&gt;mem_allocate(_word_size, &amp;allocation._overhead_limit_exceeded)</code> 这一个就是个多态方法了，取决于 <code>heap()</code> 方法返回的是<code>CollectedHeap</code>何种子类了</p>
+<ul>
+<li><code>ParallelScavengeHeap</code> : <code>jdk-jdk-17-35/src/hotspot/share/gc/parallel/parallelScavengeHeap.hpp</code></li>
+<li><code>GenCollectedHeap</code> : <code>jdk-jdk-17-35/src/hotspot/share/gc/shared/genCollectedHeap.hpp</code></li>
+<li><code>EpsilonHeap</code> : <code>jdk-jdk-17-35/src/hotspot/share/gc/epsilon/epsilonHeap.hpp</code></li>
+<li><code>G1CollectedHeap</code> : <code>jdk-jdk-17-35/src/hotspot/share/gc/g1/g1CollectedHeap.hpp</code></li>
+<li><code>ShenandoahHeap</code> : <code>jdk-jdk-17-35/src/hotspot/share/gc/shenandoah/shenandoahHeap.hpp</code></li>
+<li><code>ZCollectedHeap</code> : <code>jdk-jdk-17-35/src/hotspot/share/gc/z/zCollectedHeap.hpp</code></li>
+</ul>
+<p>我们看一下<code>GenCollectedHeap</code> (分成年轻代和老年代俩种区域的分层回收heap)</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">HeapWord* <span class="title">GenCollectedHeap::mem_allocate</span><span class="params">(<span class="keyword">size_t</span> size,</span></span></span><br><span class="line"><span class="params"><span class="function">                                         <span class="keyword">bool</span>* gc_overhead_limit_was_exceeded)</span> </span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="built_in">mem_allocate_work</span>(size,</span><br><span class="line">                           <span class="literal">false</span> <span class="comment">/* is_tlab */</span>,</span><br><span class="line">                           gc_overhead_limit_was_exceeded);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>下面就直接调用GC算法分配</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">HeapWord* <span class="title">GenCollectedHeap::mem_allocate_work</span><span class="params">(<span class="keyword">size_t</span> size,</span></span></span><br><span class="line"><span class="params"><span class="function">                                              <span class="keyword">bool</span> is_tlab,</span></span></span><br><span class="line"><span class="params"><span class="function">                                              <span class="keyword">bool</span>* gc_overhead_limit_was_exceeded)</span> </span>&#123;</span><br><span class="line">  <span class="comment">// In general gc_overhead_limit_was_exceeded should be false so</span></span><br><span class="line">  <span class="comment">// set it so here and reset it to true only if the gc time</span></span><br><span class="line">  <span class="comment">// limit is being exceeded as checked below.</span></span><br><span class="line">  *gc_overhead_limit_was_exceeded = <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line">  HeapWord* result = <span class="literal">NULL</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Loop until the allocation is satisfied, or unsatisfied after GC.</span></span><br><span class="line">  <span class="keyword">for</span> (uint try_count = <span class="number">1</span>, gclocker_stalled_count = <span class="number">0</span>; <span class="comment">/* return or throw */</span>; try_count += <span class="number">1</span>) &#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// First allocation attempt is lock-free.</span></span><br><span class="line">    Generation *young = _young_gen;</span><br><span class="line">    <span class="built_in">assert</span>(young-&gt;<span class="built_in">supports_inline_contig_alloc</span>(),</span><br><span class="line">      <span class="string">&quot;Otherwise, must do alloc within heap lock&quot;</span>);</span><br><span class="line">    <span class="keyword">if</span> (young-&gt;<span class="built_in">should_allocate</span>(size, is_tlab)) &#123;</span><br><span class="line">      result = young-&gt;<span class="built_in">par_allocate</span>(size, is_tlab);</span><br><span class="line">      <span class="keyword">if</span> (result != <span class="literal">NULL</span>) &#123;</span><br><span class="line">        <span class="built_in">assert</span>(<span class="built_in">is_in_reserved</span>(result), <span class="string">&quot;result not in heap&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    uint gc_count_before;  <span class="comment">// Read inside the Heap_lock locked region.</span></span><br><span class="line">    &#123;</span><br><span class="line">      <span class="function">MutexLocker <span class="title">ml</span><span class="params">(Heap_lock)</span></span>;</span><br><span class="line">      <span class="built_in">log_trace</span>(gc, alloc)(<span class="string">&quot;GenCollectedHeap::mem_allocate_work: attempting locked slow path allocation&quot;</span>);</span><br><span class="line">      <span class="comment">// Note that only large objects get a shot at being</span></span><br><span class="line">      <span class="comment">// allocated in later generations.</span></span><br><span class="line">      <span class="keyword">bool</span> first_only = !<span class="built_in">should_try_older_generation_allocation</span>(size);</span><br><span class="line"></span><br><span class="line">      result = <span class="built_in">attempt_allocation</span>(size, is_tlab, first_only);</span><br><span class="line">      <span class="keyword">if</span> (result != <span class="literal">NULL</span>) &#123;</span><br><span class="line">        <span class="built_in">assert</span>(<span class="built_in">is_in_reserved</span>(result), <span class="string">&quot;result not in heap&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> (GCLocker::<span class="built_in">is_active_and_needs_gc</span>()) &#123;</span><br><span class="line">        <span class="keyword">if</span> (is_tlab) &#123;</span><br><span class="line">          <span class="keyword">return</span> <span class="literal">NULL</span>;  <span class="comment">// Caller will retry allocating individual object.</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (!<span class="built_in">is_maximal_no_gc</span>()) &#123;</span><br><span class="line">          <span class="comment">// Try and expand heap to satisfy request.</span></span><br><span class="line">          result = <span class="built_in">expand_heap_and_allocate</span>(size, is_tlab);</span><br><span class="line">          <span class="comment">// Result could be null if we are out of space.</span></span><br><span class="line">          <span class="keyword">if</span> (result != <span class="literal">NULL</span>) &#123;</span><br><span class="line">            <span class="keyword">return</span> result;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (gclocker_stalled_count &gt; GCLockerRetryAllocationCount) &#123;</span><br><span class="line">          <span class="keyword">return</span> <span class="literal">NULL</span>; <span class="comment">// We didn&#x27;t get to do a GC and we didn&#x27;t get any memory.</span></span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// If this thread is not in a jni critical section, we stall</span></span><br><span class="line">        <span class="comment">// the requestor until the critical section has cleared and</span></span><br><span class="line">        <span class="comment">// GC allowed. When the critical section clears, a GC is</span></span><br><span class="line">        <span class="comment">// initiated by the last thread exiting the critical section; so</span></span><br><span class="line">        <span class="comment">// we retry the allocation sequence from the beginning of the loop,</span></span><br><span class="line">        <span class="comment">// rather than causing more, now probably unnecessary, GC attempts.</span></span><br><span class="line">        JavaThread* jthr = JavaThread::<span class="built_in">current</span>();</span><br><span class="line">        <span class="keyword">if</span> (!jthr-&gt;<span class="built_in">in_critical</span>()) &#123;</span><br><span class="line">          <span class="function">MutexUnlocker <span class="title">mul</span><span class="params">(Heap_lock)</span></span>;</span><br><span class="line">          <span class="comment">// Wait for JNI critical section to be exited</span></span><br><span class="line">          GCLocker::<span class="built_in">stall_until_clear</span>();</span><br><span class="line">          gclocker_stalled_count += <span class="number">1</span>;</span><br><span class="line">          <span class="keyword">continue</span>;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">          <span class="keyword">if</span> (CheckJNICalls) &#123;</span><br><span class="line">            <span class="built_in">fatal</span>(<span class="string">&quot;Possible deadlock due to allocating while&quot;</span></span><br><span class="line">                  <span class="string">&quot; in jni critical section&quot;</span>);</span><br><span class="line">          &#125;</span><br><span class="line">          <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="comment">// Read the gc count while the heap lock is held.</span></span><br><span class="line">      gc_count_before = <span class="built_in">total_collections</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function">VM_GenCollectForAllocation <span class="title">op</span><span class="params">(size, is_tlab, gc_count_before)</span></span>;</span><br><span class="line">    VMThread::<span class="built_in">execute</span>(&amp;op);</span><br><span class="line">    <span class="keyword">if</span> (op.<span class="built_in">prologue_succeeded</span>()) &#123;</span><br><span class="line">      result = op.<span class="built_in">result</span>();</span><br><span class="line">      <span class="keyword">if</span> (op.<span class="built_in">gc_locked</span>()) &#123;</span><br><span class="line">         <span class="built_in">assert</span>(result == <span class="literal">NULL</span>, <span class="string">&quot;must be NULL if gc_locked() is true&quot;</span>);</span><br><span class="line">         <span class="keyword">continue</span>;  <span class="comment">// Retry and/or stall as necessary.</span></span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="comment">// Allocation has failed and a collection</span></span><br><span class="line">      <span class="comment">// has been done.  If the gc time limit was exceeded the</span></span><br><span class="line">      <span class="comment">// this time, return NULL so that an out-of-memory</span></span><br><span class="line">      <span class="comment">// will be thrown.  Clear gc_overhead_limit_exceeded</span></span><br><span class="line">      <span class="comment">// so that the overhead exceeded does not persist.</span></span><br><span class="line"></span><br><span class="line">      <span class="keyword">const</span> <span class="keyword">bool</span> limit_exceeded = <span class="built_in">size_policy</span>()-&gt;<span class="built_in">gc_overhead_limit_exceeded</span>();</span><br><span class="line">      <span class="keyword">const</span> <span class="keyword">bool</span> softrefs_clear = <span class="built_in">soft_ref_policy</span>()-&gt;<span class="built_in">all_soft_refs_clear</span>();</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> (limit_exceeded &amp;&amp; softrefs_clear) &#123;</span><br><span class="line">        *gc_overhead_limit_was_exceeded = <span class="literal">true</span>;</span><br><span class="line">        <span class="built_in">size_policy</span>()-&gt;<span class="built_in">set_gc_overhead_limit_exceeded</span>(<span class="literal">false</span>);</span><br><span class="line">        <span class="keyword">if</span> (op.<span class="built_in">result</span>() != <span class="literal">NULL</span>) &#123;</span><br><span class="line">          CollectedHeap::<span class="built_in">fill_with_object</span>(op.<span class="built_in">result</span>(), size);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">NULL</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="built_in">assert</span>(result == <span class="literal">NULL</span> || <span class="built_in">is_in_reserved</span>(result),</span><br><span class="line">             <span class="string">&quot;result not in heap&quot;</span>);</span><br><span class="line">      <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Give a warning if we seem to be looping forever.</span></span><br><span class="line">    <span class="keyword">if</span> ((QueuedAllocationWarningCount &gt; <span class="number">0</span>) &amp;&amp;</span><br><span class="line">        (try_count % QueuedAllocationWarningCount == <span class="number">0</span>)) &#123;</span><br><span class="line">          <span class="built_in">log_warning</span>(gc, ergo)(<span class="string">&quot;GenCollectedHeap::mem_allocate_work retries %d times,&quot;</span></span><br><span class="line">                                <span class="string">&quot; size=&quot;</span> SIZE_FORMAT <span class="string">&quot; %s&quot;</span>, try_count, size, is_tlab ? <span class="string">&quot;(TLAB)&quot;</span> : <span class="string">&quot;&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://wangmingco.github.io/2022/07/14/Java/jvm/JNI%20%E8%BF%94%E5%9B%9E%20Java%E5%AF%B9%E8%B1%A1/" title="JNI 返回 Java对象" target="_blank" rel="external">https://wangmingco.github.io/2022/07/14/Java/jvm/JNI 返回 Java对象/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/wangmingco" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/wangmingco" target="_blank"><span class="text-dark">王明</span><small class="ml-1x">Coder</small></a></h3>
+        <div>一个纯粹的技术开发者。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2022/08/05/%E7%BF%BB%E8%AF%91/soot/1%20Fundamental%20Soot%20objects/" title="Soot 基础对象 [译]"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2022/07/10/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/cpp/NetBeans%20Debug%20Cpp/" title="NetBeans Debug Cpp"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>感谢您的支持，我会继续努力的!</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/images/donate/alipayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开支付宝扫一扫，即可进行扫码打赏哦</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/images/donate/wechatpayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开微信扫一扫，即可进行扫码打赏哦</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> 支付宝</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> 微信支付</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/wangmingco" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="https://gitee.com/wangmingco" target="_blank" title="Gitee" data-toggle=tooltip data-placement=top><i class="icon icon-gitee"></i></a></li>
+        
+        <li><a href="https://weibo.com/wangmingco" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://www.zhihu.com/people/wangmingco" target="_blank" title="Zhihu" data-toggle=tooltip data-placement=top><i class="icon icon-zhihu"></i></a></li>
+        
+        <li><a href="https://www.douban.com/people/xxxyy/" target="_blank" title="Douban" data-toggle=tooltip data-placement=top><i class="icon icon-douban"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>

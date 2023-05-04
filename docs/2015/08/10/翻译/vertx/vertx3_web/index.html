@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+   <!-- google 爬取标记 -->
+   <meta name="google-site-verification" content="aH2bcbMuMlpfF61i9p--iBH54wvMywGXfWg8U6RpxFA" />
+   <!-- bing 爬取标记 -->
+   <meta name="msvalidate.01" content="CBAB9A13FF212142D6C250D9C0D31F28" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>Vertx 3 Web | 王明的技术博客</title>
+  <meta name="description" content="Basic Vert.x-Web conceptsHere’s the 10000 foot view: Router是Vert.x-Web最核心的概念. Router是一个持有零到多个Routes的对象 Router会将HTTP request发送到第一个匹配该请求的route身上. route持有一个与HTTP request相匹配的handler, 然后该handler接受该请求. 然后执">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Vertx 3 Web">
+<meta property="og:url" content="https://wangmingco.github.io/2015/08/10/%E7%BF%BB%E8%AF%91/vertx/vertx3_web/index.html">
+<meta property="og:site_name" content="王明的技术博客">
+<meta property="og:description" content="Basic Vert.x-Web conceptsHere’s the 10000 foot view: Router是Vert.x-Web最核心的概念. Router是一个持有零到多个Routes的对象 Router会将HTTP request发送到第一个匹配该请求的route身上. route持有一个与HTTP request相匹配的handler, 然后该handler接受该请求. 然后执">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2015-08-10T09:10:00.000Z">
+<meta property="article:modified_time" content="2022-09-30T10:05:41.825Z">
+<meta property="article:author" content="王明">
+<meta property="article:tag" content="vertx3">
+<meta name="twitter:card" content="summary">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://wangmingco.github.io/2015/08/10/%E7%BF%BB%E8%AF%91/vertx/vertx3_web/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="王明的技术博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/wangmingco" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">王明</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Coder</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Beijing, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">项目</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books">
+            
+            <i class="icon icon-book-fill"></i>
+            
+            <span class="menu-title">书单</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">友链</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/wangmingco" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="https://gitee.com/wangmingco" target="_blank" title="Gitee" data-toggle=tooltip data-placement=top><i class="icon icon-gitee"></i></a></li>
+        
+        <li><a href="https://weibo.com/wangmingco" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://www.zhihu.com/people/wangmingco" target="_blank" title="Zhihu" data-toggle=tooltip data-placement=top><i class="icon icon-zhihu"></i></a></li>
+        
+        <li><a href="https://www.douban.com/people/xxxyy/" target="_blank" title="Douban" data-toggle=tooltip data-placement=top><i class="icon icon-douban"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">143</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/">中间件</a><span class="category-list-count">11</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E6%BA%90/">开源</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><span class="category-list-count">17</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9D%82%E6%96%87/">杂文</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><span class="category-list-count">11</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a><span class="category-list-count">23</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BF%BB%E8%AF%91/">翻译</a><span class="category-list-count">16</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Groovy/" rel="tag">Groovy</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java-IO/" rel="tag">Java IO</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java-%E4%B8%89%E6%96%B9%E5%BA%93/" rel="tag">Java 三方库</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java-%E7%BD%91%E7%BB%9C/" rel="tag">Java 网络</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaSE/" rel="tag">JavaSE</a><span class="tag-list-count">32</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/" rel="tag">JavaScript</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Javasist/" rel="tag">Javasist</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Memcached/" rel="tag">Memcached</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MongoDB/" rel="tag">MongoDB</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Netty/" rel="tag">Netty</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nginx/" rel="tag">Nginx</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PEG-js/" rel="tag">PEG.js</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PHP/" rel="tag">PHP</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PYTHON2/" rel="tag">PYTHON2</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React/" rel="tag">React</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Redis/" rel="tag">Redis</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shell/" rel="tag">Shell</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ZooKeeper/" rel="tag">ZooKeeper</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/asm/" rel="tag">asm</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/awk/" rel="tag">awk</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c-cpp/" rel="tag">c/cpp</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/haskell/" rel="tag">haskell</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmh/" rel="tag">jmh</a><span class="tag-list-count">14</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jol/" rel="tag">jol</a><span class="tag-list-count">24</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm/" rel="tag">jvm</a><span class="tag-list-count">18</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven/" rel="tag">maven</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mybatis/" rel="tag">mybatis</a><span class="tag-list-count">11</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">9</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/soot/" rel="tag">soot</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vertx2/" rel="tag">vertx2</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vertx3/" rel="tag">vertx3</a><span class="tag-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/Groovy/" style="font-size: 13.43px;">Groovy</a> <a href="/tags/Java-IO/" style="font-size: 13.36px;">Java IO</a> <a href="/tags/Java-%E4%B8%89%E6%96%B9%E5%BA%93/" style="font-size: 13.86px;">Java 三方库</a> <a href="/tags/Java-%E7%BD%91%E7%BB%9C/" style="font-size: 13.43px;">Java 网络</a> <a href="/tags/JavaSE/" style="font-size: 14px;">JavaSE</a> <a href="/tags/JavaScript/" style="font-size: 13.36px;">JavaScript</a> <a href="/tags/Javasist/" style="font-size: 13.21px;">Javasist</a> <a href="/tags/Memcached/" style="font-size: 13px;">Memcached</a> <a href="/tags/MongoDB/" style="font-size: 13.14px;">MongoDB</a> <a href="/tags/Netty/" style="font-size: 13.43px;">Netty</a> <a href="/tags/Nginx/" style="font-size: 13.29px;">Nginx</a> <a href="/tags/PEG-js/" style="font-size: 13px;">PEG.js</a> <a href="/tags/PHP/" style="font-size: 13.07px;">PHP</a> <a href="/tags/PYTHON2/" style="font-size: 13.5px;">PYTHON2</a> <a href="/tags/React/" style="font-size: 13px;">React</a> <a href="/tags/Redis/" style="font-size: 13.14px;">Redis</a> <a href="/tags/Shell/" style="font-size: 13px;">Shell</a> <a href="/tags/ZooKeeper/" style="font-size: 13.36px;">ZooKeeper</a> <a href="/tags/asm/" style="font-size: 13.21px;">asm</a> <a href="/tags/awk/" style="font-size: 13px;">awk</a> <a href="/tags/c-cpp/" style="font-size: 13px;">c/cpp</a> <a href="/tags/haskell/" style="font-size: 13.14px;">haskell</a> <a href="/tags/jmh/" style="font-size: 13.71px;">jmh</a> <a href="/tags/jol/" style="font-size: 13.93px;">jol</a> <a href="/tags/jvm/" style="font-size: 13.79px;">jvm</a> <a href="/tags/maven/" style="font-size: 13px;">maven</a> <a href="/tags/mybatis/" style="font-size: 13.64px;">mybatis</a> <a href="/tags/mysql/" style="font-size: 13.57px;">mysql</a> <a href="/tags/soot/" style="font-size: 13px;">soot</a> <a href="/tags/vertx2/" style="font-size: 13.07px;">vertx2</a> <a href="/tags/vertx3/" style="font-size: 13.21px;">vertx3</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">八月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/07/">七月 2022</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">四月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">一月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">六月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">二月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">十一月 2018</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">四月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">十二月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">十一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">十月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">九月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">六月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">37</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">八月 2015</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">七月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">九月 2014</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">四月 2014</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/09/">九月 2013</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E7%BF%BB%E8%AF%91/">翻译</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/08/05/%E7%BF%BB%E8%AF%91/soot/1%20Fundamental%20Soot%20objects/" class="title">Soot 基础对象 [译]</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-08-05T02:21:00.000Z" itemprop="datePublished">2022-08-05</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Java/">Java</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/07/14/Java/jvm/JNI%20%E8%BF%94%E5%9B%9E%20Java%E5%AF%B9%E8%B1%A1/" class="title">JNI 返回 Java对象</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-07-13T16:00:00.000Z" itemprop="datePublished">2022-07-14</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/07/10/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/cpp/NetBeans%20Debug%20Cpp/" class="title">NetBeans Debug Cpp</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-07-09T16:00:00.000Z" itemprop="datePublished">2022-07-10</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/04/12/%E5%89%8D%E7%AB%AF/REACT%20%E8%AF%AD%E6%B3%95/" class="title">React 学习</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-04-12T02:21:00.000Z" itemprop="datePublished">2022-04-12</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Java/">Java</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/01/10/Java/jvm/centos%E7%BC%96%E8%AF%91openjdk/" class="title">Centos7 编译调试 OpenJDK11</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-01-09T16:00:00.000Z" itemprop="datePublished">2022-01-10</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-翻译/vertx/vertx3_web" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Vertx 3 Web
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2015/08/10/%E7%BF%BB%E8%AF%91/vertx/vertx3_web/" class="article-date">
+	  <time datetime="2015-08-10T09:10:00.000Z" itemprop="datePublished">2015-08-10</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/%E7%BF%BB%E8%AF%91/">翻译</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/vertx3/" rel="tag">vertx3</a>
+  </span>
+
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2015/08/10/%E7%BF%BB%E8%AF%91/vertx/vertx3_web/#comments" class="article-comment-link">评论</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+   
+      
+    
+        <ol class="post-toc"><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Basic-Vert-x-Web-concepts"><span class="post-toc-text">Basic Vert.x-Web concepts</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Handling-requests-and-calling-the-next-handler"><span class="post-toc-text">Handling requests and calling the next handler</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Using-blocking-handlers"><span class="post-toc-text">Using blocking handlers</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Routing-by-exact-path"><span class="post-toc-text">Routing by exact path</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Routing-by-paths-that-begin-with-something"><span class="post-toc-text">Routing by paths that begin with something</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Capturing-path-parameters"><span class="post-toc-text">Capturing path parameters</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Capturing-path-parameters-with-regular-expressions"><span class="post-toc-text">Capturing path parameters with regular expressions</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Routing-with-regular-expressions"><span class="post-toc-text">Routing with regular expressions</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Routing-by-HTTP-method"><span class="post-toc-text">Routing by HTTP method</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Route-order"><span class="post-toc-text">Route order</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Routing-based-on-MIME-type-of-request"><span class="post-toc-text">Routing based on MIME type of request</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Routing-based-on-MIME-types-acceptable-by-the-client"><span class="post-toc-text">Routing based on MIME types acceptable by the client</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Combining-routing-criteria"><span class="post-toc-text">Combining routing criteria</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Enabling-and-disabling-routes"><span class="post-toc-text">Enabling and disabling routes</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Context-data"><span class="post-toc-text">Context data</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Sub-routers"><span class="post-toc-text">Sub-routers</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Default-404-Handling"><span class="post-toc-text">Default 404 Handling</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Error-handling"><span class="post-toc-text">Error handling</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Request-body-handling"><span class="post-toc-text">Request body handling</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Getting-the-request-body"><span class="post-toc-text">Getting the request body</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Merging-form-attributes"><span class="post-toc-text">Merging form attributes</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Handling-file-uploads"><span class="post-toc-text">Handling file uploads</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Handling-cookies"><span class="post-toc-text">Handling cookies</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#Manipulating-cookies"><span class="post-toc-text">Manipulating cookies</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Handling-sessions"><span class="post-toc-text">Handling sessions</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Session-stores"><span class="post-toc-text">Session stores</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#Local-session-store"><span class="post-toc-text">Local session store</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#Clustered-session-store"><span class="post-toc-text">Clustered session store</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Creating-the-session-handler"><span class="post-toc-text">Creating the session handler</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Using-the-session"><span class="post-toc-text">Using the session</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Session-timeout"><span class="post-toc-text">Session timeout</span></a></li></ol></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Authentication"><span class="post-toc-text">Authentication</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Serving-static-resources"><span class="post-toc-text">Serving static resources</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#CORS-handling"><span class="post-toc-text">CORS handling</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Templates"><span class="post-toc-text">Templates</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Error-handler"><span class="post-toc-text">Error handler</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Request-logger"><span class="post-toc-text">Request logger</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Serving-favicons"><span class="post-toc-text">Serving favicons</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Timeout-handler"><span class="post-toc-text">Timeout handler</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#Response-time-handler"><span class="post-toc-text">Response time handler</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#SockJS"><span class="post-toc-text">SockJS</span></a></li><li class="post-toc-item post-toc-level-1"><a class="post-toc-link" href="#SockJS-event-bus-bridge"><span class="post-toc-text">SockJS event bus bridge</span></a></li></ol>
+        
+        <br/>
+
+        <script src="/assets/asciinema-player.js"></script><link rel="stylesheet" type="text/css" href="/assets/asciinema-player.css" />
+<h1 id="Basic-Vert-x-Web-concepts"><a href="#Basic-Vert-x-Web-concepts" class="headerlink" title="Basic Vert.x-Web concepts"></a>Basic Vert.x-Web concepts</h1><p>Here’s the 10000 foot view:</p>
+<p><code>Router</code>是<code>Vert.x-Web</code>最核心的概念. <code>Router</code>是一个持有零到多个<code>Routes</code>的对象</p>
+<p><code>Router</code>会将<code>HTTP request</code>发送到第一个匹配该请求的<code>route</code>身上.</p>
+<p><code>route</code>持有一个与<code>HTTP request</code>相匹配的<code>handler</code>, 然后该<code>handler</code>接受该请求. 然后执行具体任务, 当执行完任务之后你可以选择结束该请求或者将它传递给下一个匹配的<code>handler</code>.</p>
+<p>下面是一个简单的示例：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">HttpServer server = vertx.createHttpServer();</span><br><span class="line"></span><br><span class="line">Router router = Router.router(vertx);</span><br><span class="line"></span><br><span class="line">router.route().handler(routingContext -&gt; &#123;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// This handler will be called for every request</span></span><br><span class="line">  HttpServerResponse response = routingContext.response();</span><br><span class="line">  response.putHeader(<span class="string">&quot;content-type&quot;</span>, <span class="string">&quot;text/plain&quot;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Write to the response and end it</span></span><br><span class="line">  response.end(<span class="string">&quot;Hello World from Vert.x-Web!&quot;</span>);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">server.requestHandler(router::accept).listen(<span class="number">8080</span>);</span><br></pre></td></tr></table></figure>
+
+<p>我们创建了一个<code>HTTP Server</code>服务器, 接着创建了一个<code>router</code>. 我们没有对这个<code>route</code>指定匹配规则,因此它会匹配所有的<code>HTTP request</code>.</p>
+<p>然后我们在该<code>route</code>上设置了一个<code>handler</code>, 这个<code>handler</code>会处理该服务器上所有的<code>HTTP request</code>.</p>
+<p>传递给<code>handler</code>的是一个<code>RoutingContext</code>对象, 该对象包含一个一个标准的<code>Vert.x HttpServerRequest</code>和<code>Vert.x HttpServerResponse</code>,但是还包含了很多其他的<code>Vert.x-Web</code>里的特性.</p>
+<p>对于每一个<code>HTTP request</code>都会生成一个唯一的<code>RoutingContext</code>实例, 但是给实例会传递给所有匹配该请求的<code>handler</code>.</p>
+<h1 id="Handling-requests-and-calling-the-next-handler"><a href="#Handling-requests-and-calling-the-next-handler" class="headerlink" title="Handling requests and calling the next handler"></a>Handling requests and calling the next handler</h1><p>当<code>Vert.x-Web``route</code>一个<code>HTTP Request</code>到一个与之匹配的<code>route</code>，它会向该<code>route</code>的<code>handler</code>传递一个<code>RoutingContext</code>实例.</p>
+<p>如果在当前<code>handler</code>里,你不想结束<code>response</code>, 那么你应该调用下一个相匹配的<code>route</code>继续处理该请求.</p>
+<p>你没有必要在当前<code>handler</code>执行完之前调用下一个<code>route</code>, 你可以稍后再做这件事.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">Route route1 = router.route(<span class="string">&quot;/some/path/&quot;</span>).handler(routingContext -&gt; &#123;</span><br><span class="line"></span><br><span class="line">  HttpServerResponse response = routingContext.response();</span><br><span class="line">  <span class="comment">// enable chunked responses because we will be adding data as</span></span><br><span class="line">  <span class="comment">// we execute over other handlers. This is only required once and</span></span><br><span class="line">  <span class="comment">// only if several handlers do output.</span></span><br><span class="line">  response.setChunked(<span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line">  response.write(<span class="string">&quot;route1\n&quot;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Call the next matching route after a 5 second delay</span></span><br><span class="line">  routingContext.vertx().setTimer(<span class="number">5000</span>, tid -&gt; routingContext.next());</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">Route route2 = router.route(<span class="string">&quot;/some/path/&quot;</span>).handler(routingContext -&gt; &#123;</span><br><span class="line"></span><br><span class="line">  HttpServerResponse response = routingContext.response();</span><br><span class="line">  response.write(<span class="string">&quot;route2\n&quot;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Call the next matching route after a 5 second delay</span></span><br><span class="line">  routingContext.vertx().setTimer(<span class="number">5000</span>, tid -&gt;  routingContext.next());</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">Route route3 = router.route(<span class="string">&quot;/some/path/&quot;</span>).handler(routingContext -&gt; &#123;</span><br><span class="line"></span><br><span class="line">  HttpServerResponse response = routingContext.response();</span><br><span class="line">  response.write(<span class="string">&quot;route3&quot;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Now end the response</span></span><br><span class="line">  routingContext.response().end();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>在上面的例子中, <code>route1</code>被写到<code>response</code>的5秒钟之后,<code>route2</code>被写到<code>response</code>,在过了5秒钟之后,<code>route3</code>被写到<code>response</code>,然后结束掉<code>response</code>.</p>
+<p>注意这一切的发生都是非阻塞的,</p>
+<h1 id="Using-blocking-handlers"><a href="#Using-blocking-handlers" class="headerlink" title="Using blocking handlers"></a>Using blocking handlers</h1><p>在某些环境下,你也许想要在handler执行时,将<code>event loop</code>阻塞住, 例如调用一个阻塞API或者执行一些密集型计算. 这种情况下,你不能在普通<code>handler</code>中进行操作,我们为<code>route</code>提供了一个阻塞的<code>handler</code>.</p>
+<p>阻塞式和非阻塞式<code>handler</code>非常像,只不过阻塞式是由<code>Vert.x</code>从<code>worker pool</code>中借出一个线程进行任务执行,而非是从<code>event loop</code>中.</p>
+<p>下例进行了说明：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">router.route().blockingHandler(routingContext -&gt; &#123;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Do something that might take some time synchronously</span></span><br><span class="line">  service.doSomethingThatBlocks();</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Now call the next handler</span></span><br><span class="line">  routingContext.next();</span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>在默认情况下, Vert.x中任何的阻塞<code>handler</code>都是在相同的上下文中(例如<code>verticle</code>实例中)顺序执行的,这意味着当前一个handler未完成之前,下一个handler是不会执行的. 如果你不关心任务的执行顺序,而且不介意阻塞<code>handler</code>并行执行,你可以在调用<code>blockingHandler</code>方法时传递一个<code>false</code>的参数,让其不按照任务的指定顺序进行执行.</p>
+<h1 id="Routing-by-exact-path"><a href="#Routing-by-exact-path" class="headerlink" title="Routing by exact path"></a>Routing by exact path</h1><p><code>route</code>可以被设定为匹配特定的<code>URI</code>. 在这种情况下,它就可以指定路径的请求了.</p>
+<p>在下面的例子中,<code>handler</code>会被路径为<code>/some/path/</code>的请求调用. 但是我们会忽略末尾斜杠,因此当路径为<code>/some/path</code>和<code>/some/path//</code>该handler都会被调用.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Route route = router.route().path(<span class="string">&quot;/some/path/&quot;</span>);</span><br><span class="line"></span><br><span class="line">route.handler(routingContext -&gt; &#123;</span><br><span class="line">  <span class="comment">// This handler will be called for the following request paths:</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// `/some/path`</span></span><br><span class="line">  <span class="comment">// `/some/path/`</span></span><br><span class="line">  <span class="comment">// `/some/path//`</span></span><br><span class="line">  <span class="comment">//</span></span><br><span class="line">  <span class="comment">// but not:</span></span><br><span class="line">  <span class="comment">// `/some/path/subdir`</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h1 id="Routing-by-paths-that-begin-with-something"><a href="#Routing-by-paths-that-begin-with-something" class="headerlink" title="Routing by paths that begin with something"></a>Routing by paths that begin with something</h1><p>通常情况下,你会想设置一个通用的前置路径. 如果是这种情况你可以使用正则表达式, 但是一个比较简单的实现方式是在<code>route path</code>的末尾加上一个<code>*</code>.</p>
+<p>在下面的例子中,当请求路径前缀为<code>/some/path/</code>的时候,我们设置的<code>handler</code>都会被执行. (例如<code>/some/path/foo.html</code>和<code>/some/path/otherdir/blah.css</code>都是匹配的)</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Route route = router.route().path(<span class="string">&quot;/some/path/*&quot;</span>);</span><br><span class="line"></span><br><span class="line">route.handler(routingContext -&gt; &#123;</span><br><span class="line">  <span class="comment">// This handler will be called for any path that starts with</span></span><br><span class="line">  <span class="comment">// `/some/path/`, e.g.</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// `/some/path`</span></span><br><span class="line">  <span class="comment">// `/some/path/`</span></span><br><span class="line">  <span class="comment">// `/some/path/subdir`</span></span><br><span class="line">  <span class="comment">// `/some/path/subdir/blah.html`</span></span><br><span class="line">  <span class="comment">//</span></span><br><span class="line">  <span class="comment">// but not:</span></span><br><span class="line">  <span class="comment">// `/some/bath`</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>你还可以将路径参数放在<code>route()</code>方法里</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Route route = router.route(<span class="string">&quot;/some/path/*&quot;</span>);</span><br><span class="line"></span><br><span class="line">route.handler(routingContext -&gt; &#123;</span><br><span class="line">  <span class="comment">// This handler will be called same as previous example</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h1 id="Capturing-path-parameters"><a href="#Capturing-path-parameters" class="headerlink" title="Capturing path parameters"></a>Capturing path parameters</h1><p>我们可以在请求参数上使用通配符进行匹配路径</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Route route = router.route(HttpMethod.POST, <span class="string">&quot;/catalogue/products/:productype/:productid/&quot;</span>);</span><br><span class="line"></span><br><span class="line">route.handler(routingContext -&gt; &#123;</span><br><span class="line"></span><br><span class="line">  String productType = routingContext.request().getParam(<span class="string">&quot;producttype&quot;</span>);</span><br><span class="line">  String productID = routingContext.request().getParam(<span class="string">&quot;productid&quot;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Do something with them...</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>通配符由<code>:</code>组成,将其放在参数名后面. 参数名由字母和数字下划线组成.</p>
+<p>在上面的例子中,如果一个<code>POST</code>请求地址是<code>/catalogue/products/tools/drill123/</code>, 那么上面的<code>route</code>会被匹配到, <code>productType</code>接收到<code>tools</code>值, <code>productID</code>会接收到<code>drill123</code>值.</p>
+<h1 id="Capturing-path-parameters-with-regular-expressions"><a href="#Capturing-path-parameters-with-regular-expressions" class="headerlink" title="Capturing path parameters with regular expressions"></a>Capturing path parameters with regular expressions</h1><p>当使用正则表达式的时候,你还可以捕获路径参数：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">Route route = router.routeWithRegex(<span class="string">&quot;.*foo&quot;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// This regular expression matches paths that start with something like:</span></span><br><span class="line"><span class="comment">// &quot;/foo/bar&quot; - where the &quot;foo&quot; is captured into param0 and the &quot;bar&quot; is captured into</span></span><br><span class="line"><span class="comment">// param1</span></span><br><span class="line">route.pathRegex(<span class="string">&quot;\\/([^\\/]+)\\/([^\\/]+)&quot;</span>).handler(routingContext -&gt; &#123;</span><br><span class="line"></span><br><span class="line">  String productType = routingContext.request().getParam(<span class="string">&quot;param0&quot;</span>);</span><br><span class="line">  String productID = routingContext.request().getParam(<span class="string">&quot;param1&quot;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Do something with them...</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>在上面的例子中,如果请求路径是<code>/tools/drill123/</code>, 那么我们设置的<code>route</code>会被匹配到, 然后<code>productType</code>会接收到参数值<code>tools</code>, <code>productID</code>会接收到参数值<code>drill123</code>.</p>
+<p>Captures are denoted in regular expressions with capture groups (i.e. surrounding the capture with round brackets)</p>
+<h1 id="Routing-with-regular-expressions"><a href="#Routing-with-regular-expressions" class="headerlink" title="Routing with regular expressions"></a>Routing with regular expressions</h1><p>正则还可以被使用在<code>URI</code>路径的匹配上：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Route route = router.route().pathRegex(<span class="string">&quot;.*foo&quot;</span>);</span><br><span class="line"></span><br><span class="line">route.handler(routingContext -&gt; &#123;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// This handler will be called for:</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// /some/path/foo</span></span><br><span class="line">  <span class="comment">// /foo</span></span><br><span class="line">  <span class="comment">// /foo/bar/wibble/foo</span></span><br><span class="line">  <span class="comment">// /foo/bar</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// But not:</span></span><br><span class="line">  <span class="comment">// /bar/wibble</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>还有一种做法是,正则可以在创建<code>route</code>时进行指定.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Route route = router.routeWithRegex(<span class="string">&quot;.*foo&quot;</span>);</span><br><span class="line"></span><br><span class="line">route.handler(routingContext -&gt; &#123;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// This handler will be called same as previous example</span></span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h1 id="Routing-by-HTTP-method"><a href="#Routing-by-HTTP-method" class="headerlink" title="Routing by HTTP method"></a>Routing by HTTP method</h1><p>在默认的情况下<code>route</code>会匹配所有的<code>HTTP methods</code>.</p>
+<p>如果你想要某个<code>route</code>只匹配特定的<code>HTTP method</code>,你可以像下面这样做：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Route route = router.route().method(HttpMethod.POST);</span><br><span class="line"></span><br><span class="line">route.handler(routingContext -&gt; &#123;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// This handler will be called for any POST request</span></span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>或者你在创建<code>route</code>时直接指定：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Route route = router.route(HttpMethod.POST, &quot;/some/path/&quot;);</span><br><span class="line"></span><br><span class="line">route.handler(routingContext -&gt; &#123;</span><br><span class="line"></span><br><span class="line">  // This handler will be called for any POST request to a URI path starting with /some/path/</span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>当然还有其他方式可用,你可以直接调用<code>get()</code>, <code>post</code>, <code>put</code>等方法调用</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">router.get().handler(routingContext -&gt; &#123;</span><br><span class="line"></span><br><span class="line">  // Will be called for any GET request</span><br><span class="line"></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">router.get(&quot;/some/path/&quot;).handler(routingContext -&gt; &#123;</span><br><span class="line"></span><br><span class="line">  // Will be called for any GET request to a path</span><br><span class="line">  // starting with /some/path</span><br><span class="line"></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">router.getWithRegex(&quot;.*foo&quot;).handler(routingContext -&gt; &#123;</span><br><span class="line"></span><br><span class="line">  // Will be called for any GET request to a path</span><br><span class="line">  // ending with `foo`</span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>如果你想要对某个<code>route</code>指定多个<code>HTTP method</code>,你可以像下面这样做：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">Route route = router.route().method(HttpMethod.POST).method(HttpMethod.PUT);</span><br><span class="line"></span><br><span class="line">route.handler(routingContext -&gt; &#123;</span><br><span class="line"></span><br><span class="line">  // This handler will be called for any POST or PUT request</span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h1 id="Route-order"><a href="#Route-order" class="headerlink" title="Route order"></a>Route order</h1><p>在默认情况下<code>routes</code>的排序是按照添加添加进<code>router</code>的顺序进行排序的.</p>
+<p>当<code>router</code>接受到一个请求时, <code>router</code>会遍历自身的每一个<code>route</code>查看是否与请求匹配,如果匹配的话,该route的<code>handler</code>就会被调用.</p>
+<p>如果<code>handler</code>随后调用了下一个<code>handler</code>, 那么下一个与之匹配的<code>route</code>也会被调用.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line">Route route1 = router.route(<span class="string">&quot;/some/path/&quot;</span>).handler(routingContext -&gt; &#123;</span><br><span class="line"></span><br><span class="line">  HttpServerResponse response = routingContext.response();</span><br><span class="line">  <span class="comment">// enable chunked responses because we will be adding data as</span></span><br><span class="line">  <span class="comment">// we execute over other handlers. This is only required once and</span></span><br><span class="line">  <span class="comment">// only if several handlers do output.</span></span><br><span class="line">  response.setChunked(<span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line">  response.write(<span class="string">&quot;route1\n&quot;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Now call the next matching route</span></span><br><span class="line">  routingContext.next();</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">Route route2 = router.route(<span class="string">&quot;/some/path/&quot;</span>).handler(routingContext -&gt; &#123;</span><br><span class="line"></span><br><span class="line">  HttpServerResponse response = routingContext.response();</span><br><span class="line">  response.write(<span class="string">&quot;route2\n&quot;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Now call the next matching route</span></span><br><span class="line">  routingContext.next();</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">Route route3 = router.route(<span class="string">&quot;/some/path/&quot;</span>).handler(routingContext -&gt; &#123;</span><br><span class="line"></span><br><span class="line">  HttpServerResponse response = routingContext.response();</span><br><span class="line">  response.write(<span class="string">&quot;route3&quot;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Now end the response</span></span><br><span class="line">  routingContext.response().end();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>在上面的例子中，输出结果为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">route1</span><br><span class="line">route2</span><br><span class="line">route3</span><br></pre></td></tr></table></figure>
+
+<p><code>/some/path</code>开头的请求都是按照刚才的那个顺序进行<code>route</code>调用的.</p>
+<p>如果你想要改变<code>route</code>的调用顺序,你可以使用<code>order()</code>方法,向其指定一个指定值.</p>
+<p><code>Routes</code>在<code>router</code>中的位置是按照他们添加进去的时间顺序进行排序的, 而且他们的位置是从0开始的.</p>
+<p>当然像上文所说的,你还可以调用<code>order()</code>方法改变这个排序. 需要注意的是序号可以是负数, 例如你想要某个<code>route</code>在序号0的<code>route</code>之前执行,你就可以将某个<code>route</code>序号指定为-1.</p>
+<p>下例中我们改变了<code>route2</code>的序号,确保他在<code>route1</code>之前执行.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">Route route1 = router.route(<span class="string">&quot;/some/path/&quot;</span>).handler(routingContext -&gt; &#123;</span><br><span class="line"></span><br><span class="line">  HttpServerResponse response = routingContext.response();</span><br><span class="line">  response.write(<span class="string">&quot;route1\n&quot;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Now call the next matching route</span></span><br><span class="line">  routingContext.next();</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">Route route2 = router.route(<span class="string">&quot;/some/path/&quot;</span>).handler(routingContext -&gt; &#123;</span><br><span class="line"></span><br><span class="line">  HttpServerResponse response = routingContext.response();</span><br><span class="line">  <span class="comment">// enable chunked responses because we will be adding data as</span></span><br><span class="line">  <span class="comment">// we execute over other handlers. This is only required once and</span></span><br><span class="line">  <span class="comment">// only if several handlers do output.</span></span><br><span class="line">  response.setChunked(<span class="keyword">true</span>);</span><br><span class="line"></span><br><span class="line">  response.write(<span class="string">&quot;route2\n&quot;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Now call the next matching route</span></span><br><span class="line">  routingContext.next();</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">Route route3 = router.route(<span class="string">&quot;/some/path/&quot;</span>).handler(routingContext -&gt; &#123;</span><br><span class="line"></span><br><span class="line">  HttpServerResponse response = routingContext.response();</span><br><span class="line">  response.write(<span class="string">&quot;route3&quot;</span>);</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Now end the response</span></span><br><span class="line">  routingContext.response().end();</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Change the order of route2 so it runs before route1</span></span><br><span class="line">route2.order(-<span class="number">1</span>);</span><br></pre></td></tr></table></figure>
+<p>接下来我们就看到了我们所期望的结果</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">route2</span><br><span class="line">route1</span><br><span class="line">route3</span><br></pre></td></tr></table></figure>
+
+<p>如果俩个<code>route</code>有相同的序号,那么他们会按照添加的顺序进行执行. 你还可以通过调用<code>last()</code>方法将某个<code>route</code>放到最后一个.</p>
+<h1 id="Routing-based-on-MIME-type-of-request"><a href="#Routing-based-on-MIME-type-of-request" class="headerlink" title="Routing based on MIME type of request"></a>Routing based on MIME type of request</h1><p>你可以通过<code>consumes</code>方法指定<code>route</code>需要匹配请求的<code>MIME</code>类型.</p>
+<p>这下面的例子中, 请求包含了一个<code>content-type</code>请求头,该值指定了请求体的<code>MINE</code>类型. 这个值会和<code>consumes</code>方法里的值进行匹配.</p>
+<p><code>MINE</code>类型的匹配可以做到精确匹配.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">router.route().consumes(&quot;text/html&quot;).handler(routingContext -&gt; &#123;</span><br><span class="line"></span><br><span class="line">  // This handler will be called for any request with</span><br><span class="line">  // content-type header set to `text/html`</span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>同样我们还可以进行多个<code>MINE</code>类型的匹配</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">router.route().consumes(&quot;text/html&quot;).consumes(&quot;text/plain&quot;).handler(routingContext -&gt; &#123;</span><br><span class="line"></span><br><span class="line">  // This handler will be called for any request with</span><br><span class="line">  // content-type header set to `text/html` or `text/plain`.</span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>我们还可以通过通配符对子类型进行匹配</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">router.route().consumes(&quot;text/*&quot;).handler(routingContext -&gt; &#123;</span><br><span class="line"></span><br><span class="line">  // This handler will be called for any request with top level type `text`</span><br><span class="line">  // e.g. content-type header set to `text/html` or `text/plain` will both match</span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>我们还可以通过通配符对父类型进行匹配</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">router.route().consumes(&quot;*/json&quot;).handler(routingContext -&gt; &#123;</span><br><span class="line"></span><br><span class="line">  // This handler will be called for any request with sub-type json</span><br><span class="line">  // e.g. content-type header set to `text/json` or `application/json` will both match</span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>如果你在<code>consumers</code>不指定<code>/</code>, 它会假定你指的是子类型.</p>
+<h1 id="Routing-based-on-MIME-types-acceptable-by-the-client"><a href="#Routing-based-on-MIME-types-acceptable-by-the-client" class="headerlink" title="Routing based on MIME types acceptable by the client"></a>Routing based on MIME types acceptable by the client</h1><p><code> HTTP accept header</code>常常用于表示客户端接收到的服务器响应的<code>MIME</code>类型.</p>
+<p><code>accept header</code>可以带有多个<code>MIME</code>类型,他们之间通过<code>&#39;,&#39;</code>分割.</p>
+<p><code>MIME</code>类型还可以有一个<code>q</code>值,<br>MIME types can also have a q value appended to them* which signifies a weighting to apply if more than one response MIME type is available matching the accept header. The q value is a number between 0 and 1.0. If omitted it defaults to 1.0.</p>
+<p>例如,下面的<code>accept header</code>表示只会接受<code>text/plain</code>的<code>MIME</code>类型.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Accept: text/plain</span><br></pre></td></tr></table></figure>
+<p>下面的<code>accept header</code>会接受<code>text/plain</code>和<code>text/html</code>的<code>MIME</code>类型,这俩者直接并没有优先级.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Accept: text/plain, text/html</span><br></pre></td></tr></table></figure>
+<p>但是下面的客户端会会接受<code>text/plain</code>和<code>text/html</code>的<code>MIME</code>类型,但是<code>text/html</code>的优先级高于<code>text/plain</code>, 因为<code>text/html</code>有一个更高的<code>q</code>值. (默认情况下<code>q=1</code>)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Accept: text/plain; q=0.9, text/html</span><br></pre></td></tr></table></figure>
+<p>如果服务器能够同时提供<code>text/plain</code>和<code>text/html</code>, 那么在这个例子中,他就应该提供<code>text/html</code>.</p>
+<p>通过使用<code>produces</code>方法设置了<code>route</code>产生的<code>MIME</code>类型, 例如下面的<code>handler</code>设置了一个<code>MIME</code>类型为<code>application/json</code>的响应</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">router.route().produces(&quot;application/json&quot;).handler(routingContext -&gt; &#123;</span><br><span class="line"></span><br><span class="line">  HttpServerResponse response = routingContext.response();</span><br><span class="line">  response.putHeader(&quot;content-type&quot;, &quot;application/json&quot;);</span><br><span class="line">  response.write(someJSON).end();</span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>在这个例子中,<code>route</code>会匹配到所有的<code> accept header</code>为<code>application/json</code>的请求.</p>
+<p>下面是该<code>accept headers</code>的匹配值:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Accept: application/json</span><br><span class="line">Accept: application/*</span><br><span class="line">Accept: application/json, text/html</span><br><span class="line">Accept: application/json;q=0.7, text/html;q=0.8, text/plain</span><br></pre></td></tr></table></figure>
+
+<p>你还可以设置你的<code>route</code>produce多个<code>MIME</code>类型. 在这种情况中, 你可以使用<code>getAcceptableContentType()</code>方法找到实际接受到的<code>MIME</code>类型</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">router.route().produces(&quot;application/json&quot;).produces(&quot;text/html&quot;).handler(routingContext -&gt; &#123;</span><br><span class="line"></span><br><span class="line">  HttpServerResponse response = routingContext.response();</span><br><span class="line"></span><br><span class="line">  // Get the actual MIME type acceptable</span><br><span class="line">  String acceptableContentType = routingContext.getAcceptableContentType();</span><br><span class="line"></span><br><span class="line">  response.putHeader(&quot;content-type&quot;, acceptableContentType);</span><br><span class="line">  response.write(whatever).end();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>在上面的例子中，如果你发送下面的<code>accept header</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Accept: application/json; q=<span class="number">0.7</span>, text/html</span><br></pre></td></tr></table></figure>
+<p>Then the route would match and acceptableContentType would contain text/html as both are acceptable but that has a higher q value.</p>
+<h1 id="Combining-routing-criteria"><a href="#Combining-routing-criteria" class="headerlink" title="Combining routing criteria"></a>Combining routing criteria</h1><p>你可以将很多<code>route</code>规则组合到一起, 例如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">Route route = router.route(HttpMethod.PUT, <span class="string">&quot;myapi/orders&quot;</span>)</span><br><span class="line">                    .consumes(<span class="string">&quot;application/json&quot;</span>)</span><br><span class="line">                    .produces(<span class="string">&quot;application/json&quot;</span>);</span><br><span class="line"></span><br><span class="line">route.handler(routingContext -&gt; &#123;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// This would be match for any PUT method to paths starting with &quot;myapi/orders&quot; with a</span></span><br><span class="line">  <span class="comment">// content-type of &quot;application/json&quot;</span></span><br><span class="line">  <span class="comment">// and an accept header matching &quot;application/json&quot;</span></span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h1 id="Enabling-and-disabling-routes"><a href="#Enabling-and-disabling-routes" class="headerlink" title="Enabling and disabling routes"></a>Enabling and disabling routes</h1><p>你可以通过调用<code>disable()</code>方法手动的关闭某个<code>route</code>, 被关闭的<code>route</code>会忽略所有的匹配.</p>
+<p>你还可以通过调用<code>enable</code>重新打开被关闭的<code>route</code></p>
+<h1 id="Context-data"><a href="#Context-data" class="headerlink" title="Context data"></a>Context data</h1><p>在一个请求的生命周期之内, 你可以将想要在<code>handler</code>之间共享的数据放在<code>RoutingContext</code>中进行传递.</p>
+<p>下面的例子中,使用<code>put</code>添加数据, 使用<code>get</code>检索数据.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">router.get(<span class="string">&quot;/some/path&quot;</span>).handler(routingContext -&gt; &#123;</span><br><span class="line"></span><br><span class="line">  routingContext.put(<span class="string">&quot;foo&quot;</span>, <span class="string">&quot;bar&quot;</span>);</span><br><span class="line">  routingContext.next();</span><br><span class="line"></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">router.get(<span class="string">&quot;/some/path/other&quot;</span>).handler(routingContext -&gt; &#123;</span><br><span class="line"></span><br><span class="line">  String bar = routingContext.get(<span class="string">&quot;foo&quot;</span>);</span><br><span class="line">  <span class="comment">// Do something with bar</span></span><br><span class="line">  routingContext.response().end();</span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h1 id="Sub-routers"><a href="#Sub-routers" class="headerlink" title="Sub-routers"></a>Sub-routers</h1><p>有时候你也许会有很多<code>handler</code>来处理请求, 在这种情况下将这些<code>handler</code>分配到多个<code>route</code>中是非常有好处的. 另外如果你想在不同的应用程序中通过不同的<code>root</code>路径来复用这些<code>handler</code>, 这种做法同样是很有帮助的.</p>
+<p>为了能达到这种效果, 你可以</p>
+<p>Sometimes if you have a lot of handlers it can make sense to split them up into multiple routers. This is also useful if you want to reuse a set of handlers in a different application, rooted at a different path root.</p>
+<p>To do this you can mount a router at a mount point in another router. The router that is mounted is called a sub-router. Sub routers can mount other sub routers so you can have several levels of sub-routers if you like.</p>
+<p>Let’s look at a simple example of a sub-router mounted with another router.</p>
+<p>This sub-router will maintain the set of handlers that corresponds to a simple fictional REST API. We will mount that on another router. The full implementation of the REST API is not shown.</p>
+<p>Here’s the sub-router:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">Router restAPI = Router.router(vertx);</span><br><span class="line"></span><br><span class="line">restAPI.get(<span class="string">&quot;/products/:productID&quot;</span>).handler(rc -&gt; &#123;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// TODO Handle the lookup of the product....</span></span><br><span class="line">  rc.response().write(productJSON);</span><br><span class="line"></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">restAPI.put(<span class="string">&quot;/products/:productID&quot;</span>).handler(rc -&gt; &#123;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// TODO Add a new product...</span></span><br><span class="line">  rc.response().end();</span><br><span class="line"></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">restAPI.delete(<span class="string">&quot;/products/:productID&quot;</span>).handler(rc -&gt; &#123;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// TODO delete the product...</span></span><br><span class="line">  rc.response().end();</span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>If this router was used as a top level router, then GET/PUT/DELETE requests to urls like /products/product1234 would invoke the API.</p>
+<p>However, let’s say we already have a web-site as described by another router:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">Router mainRouter = Router.router(vertx);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Handle static resources</span></span><br><span class="line">mainRouter.route(<span class="string">&quot;/static/*&quot;</span>).handler(myStaticHandler);</span><br><span class="line"></span><br><span class="line">mainRouter.route(<span class="string">&quot;.*\\.templ&quot;</span>).handler(myTemplateHandler);</span><br></pre></td></tr></table></figure>
+<p>We can now mount the sub router on the main router, against a mount point, in this case /productsAPI</p>
+<p>mainRouter.mountSubRouter(“/productsAPI”, restAPI);<br>This means the REST API is now accessible via paths like: /productsAPI/products/product1234</p>
+<h1 id="Default-404-Handling"><a href="#Default-404-Handling" class="headerlink" title="Default 404 Handling"></a>Default 404 Handling</h1><p>如果没有<code>route</code>匹配到客户端的请求,那么<code>Vert.x-Web</code>会发送一个404的信号错误.</p>
+<p>你可以自行手动设置<code>error handler</code>, 或者选择我们提供的<code>error handler</code>, 如果没有设置<code>error handler</code>，<code>Vert.x-Web</code>会返回一个基本的404回应</p>
+<h1 id="Error-handling"><a href="#Error-handling" class="headerlink" title="Error handling"></a>Error handling</h1><p>我们可以设置<code>handler</code>来处理请求,同样我们还可以设置<code>handler</code>处理<code>route</code>中的失败情况.</p>
+<p><code>Failure handlers</code> 通常是和处理普通<code>handler</code>的<code>route</code>一起工作.</p>
+<p>例如,你可以提供一个<code>failure handler</code>只是用来处理某种特定路径下的或者某种特定<code>HTTP method</code>的失败.</p>
+<p>这种机制就为你向应用程序的不同部分设置不同的<code>failure handler</code>了.</p>
+<p>下面的例子演示了我们向<code>/somepath/</code>开始的路径和<code>GET</code>请求才会被调用的<code>failure handler</code>.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">Route route = router.get(<span class="string">&quot;/somepath/*&quot;</span>);</span><br><span class="line"></span><br><span class="line">route.failureHandler(frc -&gt; &#123;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// This will be called for failures that occur</span></span><br><span class="line">  <span class="comment">// when routing requests to paths starting with</span></span><br><span class="line">  <span class="comment">// &#x27;/somepath/&#x27;</span></span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>如果<code>handler</code>中抛出异常<code>Failure routing</code>就会发生作用, 或者<code>handler</code>调用失败,向客户端发送一个失败的<code>HTTP</code>状态码信号.</p>
+<p>如果我们从<code>handler</code>中捕获一个异常, 我们将会向客户端返回<code>500</code>的状态码.</p>
+<p>在处理失败的时候, <code>failure handler</code>会被传递给<code>routing context</code>, 我们可以在该<code>context</code>中检索出当前的错误, 因此<code>failure handler</code>可以用于生成<code>failure response</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">Route route1 = router.get(<span class="string">&quot;/somepath/path1/&quot;</span>);</span><br><span class="line"></span><br><span class="line">route1.handler(routingContext -&gt; &#123;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Let&#x27;s say this throws a RuntimeException</span></span><br><span class="line">  <span class="keyword">throw</span> <span class="keyword">new</span> RuntimeException(<span class="string">&quot;something happened!&quot;</span>);</span><br><span class="line"></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">Route route2 = router.get(<span class="string">&quot;/somepath/path2&quot;</span>);</span><br><span class="line"></span><br><span class="line">route2.handler(routingContext -&gt; &#123;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// This one deliberately fails the request passing in the status code</span></span><br><span class="line">  <span class="comment">// E.g. 403 - Forbidden</span></span><br><span class="line">  routingContext.fail(<span class="number">403</span>);</span><br><span class="line"></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Define a failure handler</span></span><br><span class="line"><span class="comment">// This will get called for any failures in the above handlers</span></span><br><span class="line">Route route3 = router.get(<span class="string">&quot;/somepath/*&quot;</span>);</span><br><span class="line"></span><br><span class="line">route3.failureHandler(failureRoutingContext -&gt; &#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">int</span> statusCode = failureRoutingContext.statusCode();</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Status code will be 500 for the RuntimeException or 403 for the other failure</span></span><br><span class="line">  HttpServerResponse response = failureRoutingContext.response();</span><br><span class="line">  response.setStatusCode(statusCode).end(<span class="string">&quot;Sorry! Not today&quot;</span>);</span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h1 id="Request-body-handling"><a href="#Request-body-handling" class="headerlink" title="Request body handling"></a>Request body handling</h1><p>The BodyHandler allows you to retrieve request bodies, limit body sizes and handle file uploads.</p>
+<p>You should make sure a body handler is on a matching route for any requests that require this functionality.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">router.route().handler(BodyHandler.create());</span><br></pre></td></tr></table></figure>
+
+<h3 id="Getting-the-request-body"><a href="#Getting-the-request-body" class="headerlink" title="Getting the request body"></a>Getting the request body</h3><p>If you know the request body is JSON, then you can use getBodyAsJson, if you know it’s a string you can use getBodyAsString, or to retrieve it as a buffer use getBody.</p>
+<p>Limiting body size<br>To limit the size of a request body, create the body handler then use setBodyLimit to specifying the maximum body size, in bytes. This is useful to avoid running out of memory with very large bodies.</p>
+<p>If an attempt to send a body greater than the maximum size is made, an HTTP status code of 413 - Request Entity Too Large, will be sent.</p>
+<p>There is no body limit by default.</p>
+<h3 id="Merging-form-attributes"><a href="#Merging-form-attributes" class="headerlink" title="Merging form attributes"></a>Merging form attributes</h3><p>By default, the body handler will merge any form attributes into the request parameters. If you don’t want this behaviour you can use disable it with setMergeFormAttributes.</p>
+<h3 id="Handling-file-uploads"><a href="#Handling-file-uploads" class="headerlink" title="Handling file uploads"></a>Handling file uploads</h3><p>Body handler is also used to handle multi-part file uploads.</p>
+<p>If a body handler is on a matching route for the request, any file uploads will be automatically streamed to the uploads directory, which is file-uploads by default.</p>
+<p>Each file will be given an automatically generated file name, and the file uploads will be available on the routing context with fileUploads.</p>
+<p>Here’s an example:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">router.route().handler(BodyHandler.create());</span><br><span class="line"></span><br><span class="line">router.post(<span class="string">&quot;/some/path/uploads&quot;</span>).handler(routingContext -&gt; &#123;</span><br><span class="line"></span><br><span class="line">  Set&lt;FileUpload&gt; uploads = routingContext.fileUploads();</span><br><span class="line">  <span class="comment">// Do something with uploads....</span></span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>Each file upload is described by a FileUpload instance, which allows various properties such as the name, file-name and size to be accessed.</p>
+<h1 id="Handling-cookies"><a href="#Handling-cookies" class="headerlink" title="Handling cookies"></a>Handling cookies</h1><p><code>Vert.x-Web</code>使用<code>CookieHandler</code>来支持<code>cookies</code>.</p>
+<p>你必须确保当请求需要<code>cookies</code>支持的时候,你已经设置上了<code>cookie handler</code>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">router.route().handler(CookieHandler.create());</span><br></pre></td></tr></table></figure>
+
+<h3 id="Manipulating-cookies"><a href="#Manipulating-cookies" class="headerlink" title="Manipulating cookies"></a>Manipulating cookies</h3><p>你可以向<code>getCookie()</code>方法, 或者通过<code>cookies()</code>方法检索出<code>cookie</code>集合.</p>
+<ul>
+<li><code>getCookie()</code>, 传递一个<code>cookie name</code>的参数来检索出一个<code>cookie</code></li>
+<li><code>cookies()</code>, 检索出<code>cookie</code>集合</li>
+<li><code>removeCookie</code>, 删除一个<code>cookie</code></li>
+<li><code>addCookie</code>, 添加一个<code>cookie</code></li>
+</ul>
+<p>当<code>response headers</code>被写回的时候, <code>cookies</code>集合会自动的被写入到<code>response</code>中.</p>
+<p><code>Cookies</code>是通过<code>Cookie</code>实例进行描述的. 你可以通过该实例检索出<code>cookie</code>中的<code>name</code>, <code>value</code>, <code>domain</code>, <code>path</code> 或者其他的<code>cookie</code>属性.</p>
+<p>下面的例子演示了如何检索和添加<code>cookie</code></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">router.route().handler(CookieHandler.create());</span><br><span class="line"></span><br><span class="line">router.route(<span class="string">&quot;some/path/&quot;</span>).handler(routingContext -&gt; &#123;</span><br><span class="line"></span><br><span class="line">  Cookie someCookie = routingContext.getCookie(<span class="string">&quot;mycookie&quot;</span>);</span><br><span class="line">  String cookieValue = someCookie.getValue();</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Do something with cookie...</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">// Add a cookie - this will get written back in the response automatically</span></span><br><span class="line">  routingContext.addCookie(Cookie.cookie(<span class="string">&quot;othercookie&quot;</span>, <span class="string">&quot;somevalue&quot;</span>));</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+
+<h1 id="Handling-sessions"><a href="#Handling-sessions" class="headerlink" title="Handling sessions"></a>Handling sessions</h1><p><code>Vert.x-Web</code> 同样提供了对于<code>session</code>的支持.</p>
+<p>Sessions last between HTTP requests for the length of a browser session and give you a place where you can add session-scope information, such as a shopping basket.</p>
+<p>Vert.x-Web uses session cookies to identify a session. The session cookie is temporary and will be deleted by your browser when it’s closed.</p>
+<p>We don’t put the actual data of your session in the session cookie - the cookie simply uses an identifier to look-up the actual session on the server. The identifier is a random UUID generated using a secure random, so it should be effectively unguessable.</p>
+<p>Cookies are passed across the wire in HTTP requests and responses so it’s always wise to make sure you are using HTTPS when sessions are being used. Vert.x will warn you if you attempt to use sessions over straight HTTP.</p>
+<p>To enable sessions in your application you must have a SessionHandler on a matching route before your application logic.</p>
+<p>The session handler handles the creation of session cookies and the lookup of the session so you don’t have to do that yourself.</p>
+<h2 id="Session-stores"><a href="#Session-stores" class="headerlink" title="Session stores"></a>Session stores</h2><p>To create a session handler you need to have a session store instance. The session store is the object that holds the actual sessions for your application.</p>
+<p>Vert.x-Web comes with two session store implementations out of the box, and you can also write your own if you prefer.</p>
+<h4 id="Local-session-store"><a href="#Local-session-store" class="headerlink" title="Local session store"></a>Local session store</h4><p>With this store, sessions are stored locally in memory and only available in this instance.</p>
+<p>This store is appropriate if you have just a single Vert.x instance of you are using sticky sessions in your application and have configured your load balancer to always route HTTP requests to the same Vert.x instance.</p>
+<p>If you can’t ensure your requests will all terminate on the same server then don’t use this store as your requests might end up on a server which doesn’t know about your session.</p>
+<p>Local session stores are implemented by using a shared local map, and have a reaper which clears out expired sessions.</p>
+<p>The reaper interval can be configured with LocalSessionStore.create.</p>
+<p>Here are some examples of creating a LocalSessionStore</p>
+<p>SessionStore store1 = LocalSessionStore.create(vertx);</p>
+<p>// Create a local session store specifying the local shared map name to use<br>// This might be useful if you have more than one application in the same<br>// Vert.x instance and want to use different maps for different applications<br>SessionStore store2 = LocalSessionStore.create(vertx, “myapp3.sessionmap”);</p>
+<p>// Create a local session store specifying the local shared map name to use and<br>// setting the reaper interval for expired sessions to 10 seconds<br>SessionStore store3 = LocalSessionStore.create(vertx, “myapp3.sessionmap”, 10000);</p>
+<h4 id="Clustered-session-store"><a href="#Clustered-session-store" class="headerlink" title="Clustered session store"></a>Clustered session store</h4><p>With this store, sessions are stored in a distributed map which is accessible across the Vert.x cluster.</p>
+<p>This store is appropriate if you’re not using sticky sessions, i.e. your load balancer is distributing different requests from the same browser to different servers.</p>
+<p>Your session is accessible from any node in the cluster using this store.</p>
+<p>To you use a clustered session store you should make sure your Vert.x instance is clustered.</p>
+<p>Here are some examples of creating a ClusteredSessionStore</p>
+<p>Vertx.clusteredVertx(new VertxOptions().setClustered(true), res -&gt; {</p>
+<p>  Vertx vertx = res.result();</p>
+<p>  // Create a clustered session store using defaults<br>  SessionStore store1 = ClusteredSessionStore.create(vertx);</p>
+<p>  // Create a clustered session store specifying the distributed map name to use<br>  // This might be useful if you have more than one application in the cluster<br>  // and want to use different maps for different applications<br>  SessionStore store2 = ClusteredSessionStore.create(vertx, “myclusteredapp3.sessionmap”);<br>});</p>
+<h2 id="Creating-the-session-handler"><a href="#Creating-the-session-handler" class="headerlink" title="Creating the session handler"></a>Creating the session handler</h2><p>Once you’ve created a session store you can create a session handler, and add it to a route. You should make sure your session handler is routed to before your application handlers.</p>
+<p>You’ll also need to include a CookieHandler as the session handler uses cookies to lookup the session. The cookie handler should be before the session handler when routing.</p>
+<p>Here’s an example:</p>
+<p>Router router = Router.router(vertx);</p>
+<p>// We need a cookie handler first<br>router.route().handler(CookieHandler.create());</p>
+<p>// Create a clustered session store using defaults<br>SessionStore store = ClusteredSessionStore.create(vertx);</p>
+<p>SessionHandler sessionHandler = SessionHandler.create(store);</p>
+<p>// Make sure all requests are routed through the session handler too<br>router.route().handler(sessionHandler);</p>
+<p>// Now your application handlers<br>router.route(“/somepath/blah/“).handler(routingContext -&gt; {</p>
+<p>  Session session = routingContext.session();<br>  session.put(“foo”, “bar”);<br>  // etc</p>
+<p>});<br>The session handler will ensure that your session is automatically looked up (or created if no session exists) from the session store and set on the routing context before it gets to your application handlers.</p>
+<h2 id="Using-the-session"><a href="#Using-the-session" class="headerlink" title="Using the session"></a>Using the session</h2><p>In your handlers you an access the session instance with session.</p>
+<p>You put data into the session with put, you get data from the session with get, and you remove data from the session with remove.</p>
+<p>The keys for items in the session are always strings. The values can be any type for a local session store, and for a clustered session store they can be any basic type, or Buffer, JsonObject, JsonArray or a serializable object, as the values have to serialized across the cluster.</p>
+<p>Here’s an example of manipulating session data:</p>
+<p>router.route().handler(CookieHandler.create());<br>router.route().handler(sessionHandler);</p>
+<p>// Now your application handlers<br>router.route(“/somepath/blah”).handler(routingContext -&gt; {</p>
+<p>  Session session = routingContext.session();</p>
+<p>  // Put some data from the session<br>  session.put(“foo”, “bar”);</p>
+<p>  // Retrieve some data from a session<br>  int age = session.get(“age”);</p>
+<p>  // Remove some data from a session<br>  JsonObject obj = session.remove(“myobj”);</p>
+<p>});<br>Sessions are automatically written back to the store after after responses are complete.</p>
+<p>You can manually destroy a session using destroy. This will remove the session from the context and the session store. Note that if there is no session a new one will be automatically created for the next request from the browser that’s routed through the session handler.</p>
+<h2 id="Session-timeout"><a href="#Session-timeout" class="headerlink" title="Session timeout"></a>Session timeout</h2><p>Sessions will be automatically timed out if they are not accessed for a time greater than the timeout period. When a session is timed out, it is removed from the store.</p>
+<p>Sessions are automatically marked as accessed when a request arrives and the session is looked up and and when the response is complete and the session is stored back in the store.</p>
+<p>You can also use setAccessed to manually mark a session as accessed.</p>
+<p>The session timeout can be configured when creating the session handler. Default timeout is 30 minutes.</p>
+<h1 id="Authentication"><a href="#Authentication" class="headerlink" title="Authentication"></a>Authentication</h1><h1 id="Serving-static-resources"><a href="#Serving-static-resources" class="headerlink" title="Serving static resources"></a>Serving static resources</h1><h1 id="CORS-handling"><a href="#CORS-handling" class="headerlink" title="CORS handling"></a>CORS handling</h1><p><code>Cross Origin Resource Sharing</code>是一个安全的资源请求途径(AJAX跨域问题的解决方案)</p>
+<p><code>Vert.x-Web</code>包含了一个<code>CorsHandler</code>, 用于处理<code>CORS</code>协议. 例如</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">router.route().handler(CorsHandler.create(<span class="string">&quot;vertx\\.io&quot;</span>).allowedMethod(HttpMethod.GET));</span><br><span class="line"></span><br><span class="line">router.route().handler(routingContext -&gt; &#123;</span><br><span class="line"></span><br><span class="line">  <span class="comment">// Your app handlers</span></span><br><span class="line"></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>TODO more CORS docs</p>
+<h1 id="Templates"><a href="#Templates" class="headerlink" title="Templates"></a>Templates</h1><h1 id="Error-handler"><a href="#Error-handler" class="headerlink" title="Error handler"></a>Error handler</h1><p>你可以自己提供一个<code>ErrorHandler</code>用于处理<code>error</code>异常,否则的话<code>Vert.x-Web</code>会包含一个包装好的<code>pretty error handler</code>用于响应错误页面.</p>
+<p>如果你自己想要设置一个<code>ErrorHandler</code>, 那么你只需要将其设置成<code>failure handler</code>就可以了.</p>
+<h1 id="Request-logger"><a href="#Request-logger" class="headerlink" title="Request logger"></a>Request logger</h1><p><code>Vert.x-Web</code>内嵌了<code>LoggerHandler</code>,使用它你可以将<code>HTTP requests</code>通过日志形式记录下来.</p>
+<p>默认情况下,请求是<code>Vert.x logger</code>进行记录的,我们可以将其配置成<code>JUL logging, log4j or SLF4J</code></p>
+<h1 id="Serving-favicons"><a href="#Serving-favicons" class="headerlink" title="Serving favicons"></a>Serving favicons</h1><p><code>Vert.x-Web</code>包含一个<code>FaviconHandler</code>来响应<code>favicons</code>.</p>
+<p><code>Favicons</code>可以被指定为文件系统里的一个路径,或者<code>Vert.x-Web</code>会默认的在<code>classpath</code>搜索名为<code>favicon.ico</code>的文件.这意味着你需要在你的应用程序的jar包绑定该<code>favicon</code></p>
+<h1 id="Timeout-handler"><a href="#Timeout-handler" class="headerlink" title="Timeout handler"></a>Timeout handler</h1><p><code>Vert.x-Web</code>包含一个超时<code>handler</code>,你可以使用它应付某些操作执行时间太长的请求.</p>
+<p>我们通过一个<code>TimeoutHandler</code>实例来配置它.</p>
+<p>如果一个请求在写回之前超时了，那么4.8响应将会写回个给客户端.</p>
+<p>下面的例子使用了一个超时<code>handler</code>:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">router.route(<span class="string">&quot;/foo/&quot;</span>).handler(TimeoutHandler.create(<span class="number">5000</span>));</span><br></pre></td></tr></table></figure>
+
+<h1 id="Response-time-handler"><a href="#Response-time-handler" class="headerlink" title="Response time handler"></a>Response time handler</h1><p>这个<code>handler</code>设置了<code>x-response-time</code>响应头, 该响应头包含了请求从接受到响应所耗费的时间,单位是<code>ms</code>:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x-response-time: 1456ms</span><br></pre></td></tr></table></figure>
+
+
+<h1 id="SockJS"><a href="#SockJS" class="headerlink" title="SockJS"></a>SockJS</h1><h1 id="SockJS-event-bus-bridge"><a href="#SockJS-event-bus-bridge" class="headerlink" title="SockJS event bus bridge"></a>SockJS event bus bridge</h1>
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://wangmingco.github.io/2015/08/10/%E7%BF%BB%E8%AF%91/vertx/vertx3_web/" title="Vertx 3 Web" target="_blank" rel="external">https://wangmingco.github.io/2015/08/10/翻译/vertx/vertx3_web/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/wangmingco" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/wangmingco" target="_blank"><span class="text-dark">王明</span><small class="ml-1x">Coder</small></a></h3>
+        <div>一个纯粹的技术开发者。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2015/08/15/%E7%BF%BB%E8%AF%91/vertx/vertx3_metrics_and_monitoring/" title="Vertx 3 Metrics And Monitoring"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2015/08/09/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/python/python2%20%E7%AC%AC%E4%B8%89%E6%96%B9%E5%BA%93/" title="PYTHON2 第三方库"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>感谢您的支持，我会继续努力的!</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/images/donate/alipayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开支付宝扫一扫，即可进行扫码打赏哦</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/images/donate/wechatpayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开微信扫一扫，即可进行扫码打赏哦</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> 支付宝</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> 微信支付</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/wangmingco" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="https://gitee.com/wangmingco" target="_blank" title="Gitee" data-toggle=tooltip data-placement=top><i class="icon icon-gitee"></i></a></li>
+        
+        <li><a href="https://weibo.com/wangmingco" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://www.zhihu.com/people/wangmingco" target="_blank" title="Zhihu" data-toggle=tooltip data-placement=top><i class="icon icon-zhihu"></i></a></li>
+        
+        <li><a href="https://www.douban.com/people/xxxyy/" target="_blank" title="Douban" data-toggle=tooltip data-placement=top><i class="icon icon-douban"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>

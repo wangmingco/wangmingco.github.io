@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+   <!-- google 爬取标记 -->
+   <meta name="google-site-verification" content="aH2bcbMuMlpfF61i9p--iBH54wvMywGXfWg8U6RpxFA" />
+   <!-- bing 爬取标记 -->
+   <meta name="msvalidate.01" content="CBAB9A13FF212142D6C250D9C0D31F28" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>Java NIO原理剖析之 零拷贝 | 王明的技术博客</title>
+  <meta name="description" content="阻塞指的是用户态程序调用系统api进入内核态后，如果条件不满足则被加入到对应的等待队列中，直到条件满足。比如：sleep 2s。在此期间线程得不到CPU调度，自然也就不会往下执行，表现的现象为线程卡在系统api不返回 不论条件是否满足都会立即返回到用户态，线程的CPU资源不会被剥夺，也就意味着程序可以继续往下执行。 传统的数据拷贝方法  传统上下文切换    read() 调用引发了一次从用户模">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java NIO原理剖析之 零拷贝">
+<meta property="og:url" content="https://wangmingco.github.io/2017/10/29/Java/io/Java%20NIO%E5%8E%9F%E7%90%86%E5%89%96%E6%9E%90%E4%B9%8B%20%E9%9B%B6%E6%8B%B7%E8%B4%9D/index.html">
+<meta property="og:site_name" content="王明的技术博客">
+<meta property="og:description" content="阻塞指的是用户态程序调用系统api进入内核态后，如果条件不满足则被加入到对应的等待队列中，直到条件满足。比如：sleep 2s。在此期间线程得不到CPU调度，自然也就不会往下执行，表现的现象为线程卡在系统api不返回 不论条件是否满足都会立即返回到用户态，线程的CPU资源不会被剥夺，也就意味着程序可以继续往下执行。 传统的数据拷贝方法  传统上下文切换    read() 调用引发了一次从用户模">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/javase/zerocopy1.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/javase/zerocopy2.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/javase/zerocopy3.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/javase/zerocopy4.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/javase/zerocopy5.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/javase/zerocopy6.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/javase/zerocopy7.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/javase/zerocopy8.jpg">
+<meta property="og:image" content="https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/javase/zerocopy9.jpg">
+<meta property="article:published_time" content="2017-10-28T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-09-30T10:05:41.734Z">
+<meta property="article:author" content="王明">
+<meta property="article:tag" content="Java IO">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/javase/zerocopy1.jpg">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://wangmingco.github.io/2017/10/29/Java/io/Java%20NIO%E5%8E%9F%E7%90%86%E5%89%96%E6%9E%90%E4%B9%8B%20%E9%9B%B6%E6%8B%B7%E8%B4%9D/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="王明的技术博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/wangmingco" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">王明</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Coder</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Beijing, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">项目</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books">
+            
+            <i class="icon icon-book-fill"></i>
+            
+            <span class="menu-title">书单</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">友链</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/wangmingco" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="https://gitee.com/wangmingco" target="_blank" title="Gitee" data-toggle=tooltip data-placement=top><i class="icon icon-gitee"></i></a></li>
+        
+        <li><a href="https://weibo.com/wangmingco" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://www.zhihu.com/people/wangmingco" target="_blank" title="Zhihu" data-toggle=tooltip data-placement=top><i class="icon icon-zhihu"></i></a></li>
+        
+        <li><a href="https://www.douban.com/people/xxxyy/" target="_blank" title="Douban" data-toggle=tooltip data-placement=top><i class="icon icon-douban"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">143</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/">中间件</a><span class="category-list-count">11</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E6%BA%90/">开源</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><span class="category-list-count">17</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9D%82%E6%96%87/">杂文</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><span class="category-list-count">11</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a><span class="category-list-count">23</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BF%BB%E8%AF%91/">翻译</a><span class="category-list-count">16</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Groovy/" rel="tag">Groovy</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java-IO/" rel="tag">Java IO</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java-%E4%B8%89%E6%96%B9%E5%BA%93/" rel="tag">Java 三方库</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java-%E7%BD%91%E7%BB%9C/" rel="tag">Java 网络</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaSE/" rel="tag">JavaSE</a><span class="tag-list-count">32</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/" rel="tag">JavaScript</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Javasist/" rel="tag">Javasist</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Memcached/" rel="tag">Memcached</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MongoDB/" rel="tag">MongoDB</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Netty/" rel="tag">Netty</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nginx/" rel="tag">Nginx</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PEG-js/" rel="tag">PEG.js</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PHP/" rel="tag">PHP</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PYTHON2/" rel="tag">PYTHON2</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React/" rel="tag">React</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Redis/" rel="tag">Redis</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shell/" rel="tag">Shell</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ZooKeeper/" rel="tag">ZooKeeper</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/asm/" rel="tag">asm</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/awk/" rel="tag">awk</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c-cpp/" rel="tag">c/cpp</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/haskell/" rel="tag">haskell</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmh/" rel="tag">jmh</a><span class="tag-list-count">14</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jol/" rel="tag">jol</a><span class="tag-list-count">24</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm/" rel="tag">jvm</a><span class="tag-list-count">18</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven/" rel="tag">maven</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mybatis/" rel="tag">mybatis</a><span class="tag-list-count">11</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">9</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/soot/" rel="tag">soot</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vertx2/" rel="tag">vertx2</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vertx3/" rel="tag">vertx3</a><span class="tag-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/Groovy/" style="font-size: 13.43px;">Groovy</a> <a href="/tags/Java-IO/" style="font-size: 13.36px;">Java IO</a> <a href="/tags/Java-%E4%B8%89%E6%96%B9%E5%BA%93/" style="font-size: 13.86px;">Java 三方库</a> <a href="/tags/Java-%E7%BD%91%E7%BB%9C/" style="font-size: 13.43px;">Java 网络</a> <a href="/tags/JavaSE/" style="font-size: 14px;">JavaSE</a> <a href="/tags/JavaScript/" style="font-size: 13.36px;">JavaScript</a> <a href="/tags/Javasist/" style="font-size: 13.21px;">Javasist</a> <a href="/tags/Memcached/" style="font-size: 13px;">Memcached</a> <a href="/tags/MongoDB/" style="font-size: 13.14px;">MongoDB</a> <a href="/tags/Netty/" style="font-size: 13.43px;">Netty</a> <a href="/tags/Nginx/" style="font-size: 13.29px;">Nginx</a> <a href="/tags/PEG-js/" style="font-size: 13px;">PEG.js</a> <a href="/tags/PHP/" style="font-size: 13.07px;">PHP</a> <a href="/tags/PYTHON2/" style="font-size: 13.5px;">PYTHON2</a> <a href="/tags/React/" style="font-size: 13px;">React</a> <a href="/tags/Redis/" style="font-size: 13.14px;">Redis</a> <a href="/tags/Shell/" style="font-size: 13px;">Shell</a> <a href="/tags/ZooKeeper/" style="font-size: 13.36px;">ZooKeeper</a> <a href="/tags/asm/" style="font-size: 13.21px;">asm</a> <a href="/tags/awk/" style="font-size: 13px;">awk</a> <a href="/tags/c-cpp/" style="font-size: 13px;">c/cpp</a> <a href="/tags/haskell/" style="font-size: 13.14px;">haskell</a> <a href="/tags/jmh/" style="font-size: 13.71px;">jmh</a> <a href="/tags/jol/" style="font-size: 13.93px;">jol</a> <a href="/tags/jvm/" style="font-size: 13.79px;">jvm</a> <a href="/tags/maven/" style="font-size: 13px;">maven</a> <a href="/tags/mybatis/" style="font-size: 13.64px;">mybatis</a> <a href="/tags/mysql/" style="font-size: 13.57px;">mysql</a> <a href="/tags/soot/" style="font-size: 13px;">soot</a> <a href="/tags/vertx2/" style="font-size: 13.07px;">vertx2</a> <a href="/tags/vertx3/" style="font-size: 13.21px;">vertx3</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">八月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/07/">七月 2022</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">四月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">一月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">六月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">二月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">十一月 2018</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">四月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">十二月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">十一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">十月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">九月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">六月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">37</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">八月 2015</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">七月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">九月 2014</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">四月 2014</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/09/">九月 2013</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E7%BF%BB%E8%AF%91/">翻译</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/08/05/%E7%BF%BB%E8%AF%91/soot/1%20Fundamental%20Soot%20objects/" class="title">Soot 基础对象 [译]</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-08-05T02:21:00.000Z" itemprop="datePublished">2022-08-05</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Java/">Java</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/07/14/Java/jvm/JNI%20%E8%BF%94%E5%9B%9E%20Java%E5%AF%B9%E8%B1%A1/" class="title">JNI 返回 Java对象</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-07-13T16:00:00.000Z" itemprop="datePublished">2022-07-14</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/07/10/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/cpp/NetBeans%20Debug%20Cpp/" class="title">NetBeans Debug Cpp</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-07-09T16:00:00.000Z" itemprop="datePublished">2022-07-10</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/04/12/%E5%89%8D%E7%AB%AF/REACT%20%E8%AF%AD%E6%B3%95/" class="title">React 学习</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-04-12T02:21:00.000Z" itemprop="datePublished">2022-04-12</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Java/">Java</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/01/10/Java/jvm/centos%E7%BC%96%E8%AF%91openjdk/" class="title">Centos7 编译调试 OpenJDK11</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-01-09T16:00:00.000Z" itemprop="datePublished">2022-01-10</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-Java/io/Java NIO原理剖析之 零拷贝" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      Java NIO原理剖析之 零拷贝
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2017/10/29/Java/io/Java%20NIO%E5%8E%9F%E7%90%86%E5%89%96%E6%9E%90%E4%B9%8B%20%E9%9B%B6%E6%8B%B7%E8%B4%9D/" class="article-date">
+	  <time datetime="2017-10-28T16:00:00.000Z" itemprop="datePublished">2017-10-29</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/Java/">Java</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/Java-IO/" rel="tag">Java IO</a>
+  </span>
+
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2017/10/29/Java/io/Java%20NIO%E5%8E%9F%E7%90%86%E5%89%96%E6%9E%90%E4%B9%8B%20%E9%9B%B6%E6%8B%B7%E8%B4%9D/#comments" class="article-comment-link">评论</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+   
+      
+    
+        <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#%E9%9B%B6%E6%8B%B7%E8%B4%9D"><span class="post-toc-text">零拷贝</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#%E9%80%9A%E9%81%93%E4%B9%8B%E9%97%B4%E7%9A%84%E6%95%B0%E6%8D%AE%E4%BC%A0%E8%BE%93"><span class="post-toc-text">通道之间的数据传输</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#transferFrom"><span class="post-toc-text">transferFrom()</span></a></li><li class="post-toc-item post-toc-level-4"><a class="post-toc-link" href="#transferTo"><span class="post-toc-text">transferTo()</span></a></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link"><span class="post-toc-text"></span></a></li></ol>
+        
+        <br/>
+
+        <script src="/assets/asciinema-player.js"></script><link rel="stylesheet" type="text/css" href="/assets/asciinema-player.css" />
+<p>阻塞指的是用户态程序调用系统api进入内核态后，如果条件不满足则被加入到对应的等待队列中，直到条件满足。比如：sleep 2s。在此期间线程得不到CPU调度，自然也就不会往下执行，表现的现象为线程卡在系统api不返回</p>
+<p>不论条件是否满足都会立即返回到用户态，线程的CPU资源不会被剥夺，也就意味着程序可以继续往下执行。</p>
+<p>传统的数据拷贝方法</p>
+<p><img src="https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/javase/zerocopy1.jpg"></p>
+<p>传统上下文切换</p>
+<p><img src="https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/javase/zerocopy2.jpg"></p>
+<ol>
+<li> <code>read()</code> 调用引发了一次从用户模式到内核模式的上下文切换.在内部,发出 <code>sys_read()</code>(或等效内容)以从文件中读取数据.直接内存存取(<code>direct memory access</code>,DMA)引擎执行了第一次拷贝,它从磁盘中读取文件内容,然后将它们存储到一个内核地址空间缓存区中.</li>
+<li>所需的数据被从读取缓冲区拷贝到用户缓冲区,read() 调用返回.该调用的返回引发了内核模式到用户模式的上下文切换(又一次上下文切换).现在数据被储存在用户地址空间缓冲区.</li>
+<li><code>send()</code> 套接字调用引发了从用户模式到内核模式的上下文切换.数据被第三次拷贝,并被再次放置在内核地址空间缓冲区.但是这一次放置的缓冲区不同,该缓冲区与目标套接字相关联.</li>
+<li><code>send()</code> 系统调用返回,结果导致了第四次的上下文切换.DMA 引擎将数据从内核缓冲区传到协议引擎,第四次拷贝独立地、异步地发生 .</li>
+</ol>
+<p>使用中间内核缓冲区(而不是直接将数据传输到用户缓冲区)看起来可能有点效率低下.但是之所以引入中间内核缓冲区的目的是想提高性能.在读取方面使用中间内核缓冲区,可以允许内核缓冲区在应用程序不需要内核缓冲区内的全部数据时,充当 “预读高速缓存(readahead cache)” 的角色.这在所需数据量小于内核缓冲区大小时极大地提高了性能.在写入方面的中间缓冲区则可以让写入过程异步完成.</p>
+<h2 id="零拷贝"><a href="#零拷贝" class="headerlink" title="零拷贝"></a>零拷贝</h2><p>Java 类库通过 <code>java.nio.channels.FileChannel</code> 中的 <code>transferTo()</code> 方法来在 Linux 和 UNIX 系统上支持零拷贝.可以使用 <code>transferTo()</code> 方法直接将字节从它被调用的通道上传输到另外一个可写字节通道上,数据无需流经应用程序.本文首先展示了通过传统拷贝语义进行的简单文件传输引发的开销,然后展示了使用 <code>transferTo()</code> 零拷贝技巧如何提高性能.</p>
+<p>不幸的是,如果所需数据量远大于内核缓冲区大小的话,这个方法本身可能成为一个性能瓶颈.数据在被最终传入到应用程序前,在磁盘、内核缓冲区和用户缓冲区中被拷贝了多次.零拷贝通过消除这些冗余的数据拷贝而提高了性能.</p>
+<p><img src="https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/javase/zerocopy3.jpg"></p>
+<ol>
+<li><code>transferTo()</code> 方法引发 DMA 引擎将文件内容拷贝到一个读取缓冲区.然后由内核将数据拷贝到与输出套接字相关联的内核缓冲区.</li>
+<li>数据的第三次复制发生在DMA引擎将数据从内核套接字缓冲区传到协议引擎时.改进的地方：我们将上下文切换的次数从四次减少到了两次,将数据复制的次数从四次减少到了三次(其中只有一次涉及到了CPU).但是这个代码尚未达到我们的零拷贝要求.如果底层网络接口卡支持收集操作的话,那么我们就可以进一步减少内核的数据复制.</li>
+</ol>
+<p>在Linux内核2.4及后期版本中,套接字缓冲区描述符就做了相应调整,以满足该需求.这种方法不仅可以减少多个上下文切换,还可以消除需要涉及CPU的重复的数据拷贝.对于用户方面,用法还是一样的,但是内部操作已经发生了改变：</p>
+<ol>
+<li>transferTo() 方法引发 DMA 引擎将文件内容拷贝到内核缓冲区.</li>
+<li>数据未被拷贝到套接字缓冲区.取而代之的是,只有包含关于数据的位置和长度的信息的描述符被追加到了套接字缓冲区.DMA 引擎直接把数据从内核缓冲区传输到协议引擎,从而消除了剩下的最后一次 CPU 拷贝.</li>
+</ol>
+<p><img src="https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/javase/zerocopy4.jpg"></p>
+<p>结合使用 <code>transferTo()</code> 和收集操作时的数据拷贝</p>
+<h3 id="通道之间的数据传输"><a href="#通道之间的数据传输" class="headerlink" title="通道之间的数据传输"></a>通道之间的数据传输</h3><p>在Java NIO中，如果两个通道中有一个是<code>FileChannel</code>，那你可以直接将数据从一个channel（译者注：channel中文常译作通道）传输到另外一个channel。 </p>
+<h4 id="transferFrom"><a href="#transferFrom" class="headerlink" title="transferFrom()"></a>transferFrom()</h4><p><code>FileChannel</code>的<code>transferFrom()</code>方法可以将数据从源通道传输到<code>FileChannel</code>中（译者注：这个方法在JDK文档中的解释为将字节从给定的可读取字节通道传输到此通道的文件中）。下面是一个简单的例子： </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">RandomAccessFile fromFile = <span class="keyword">new</span> RandomAccessFile(<span class="string">&quot;fromFile.txt&quot;</span>, <span class="string">&quot;rw&quot;</span>);  </span><br><span class="line">FileChannel      fromChannel = fromFile.getChannel();  </span><br><span class="line">  </span><br><span class="line">RandomAccessFile toFile = <span class="keyword">new</span> RandomAccessFile(<span class="string">&quot;toFile.txt&quot;</span>, <span class="string">&quot;rw&quot;</span>);  </span><br><span class="line">FileChannel      toChannel = toFile.getChannel();  </span><br><span class="line">  </span><br><span class="line"><span class="keyword">long</span> position = <span class="number">0</span>;  </span><br><span class="line"><span class="keyword">long</span> count = fromChannel.size();  </span><br><span class="line">  </span><br><span class="line">toChannel.transferFrom(position, count, fromChannel);  </span><br></pre></td></tr></table></figure>
+
+
+<p>方法的输入参数position表示从position处开始向目标文件写入数据，count表示最多传输的字节数。如果源通道的剩余空间小于 count 个字节，则所传输的字节数要小于请求的字节数。 </p>
+<p>此外要注意，在<code>SoketChannel</code>的实现中，<code>SocketChannel</code>只会传输此刻准备好的数据（可能不足count字节）。因此，<code>SocketChannel</code>可能不会将请求的所有数据(count个字节)全部传输到<code>FileChannel</code>中。 </p>
+<h4 id="transferTo"><a href="#transferTo" class="headerlink" title="transferTo()"></a>transferTo()</h4><p>transferTo()方法将数据从FileChannel传输到其他的channel中。下面是一个简单的例子： </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">RandomAccessFile fromFile = <span class="keyword">new</span> RandomAccessFile(<span class="string">&quot;fromFile.txt&quot;</span>, <span class="string">&quot;rw&quot;</span>);  </span><br><span class="line">FileChannel      fromChannel = fromFile.getChannel();  </span><br><span class="line">  </span><br><span class="line">RandomAccessFile toFile = <span class="keyword">new</span> RandomAccessFile(<span class="string">&quot;toFile.txt&quot;</span>, <span class="string">&quot;rw&quot;</span>);  </span><br><span class="line">FileChannel      toChannel = toFile.getChannel();  </span><br><span class="line">  </span><br><span class="line"><span class="keyword">long</span> position = <span class="number">0</span>;  </span><br><span class="line"><span class="keyword">long</span> count = fromChannel.size();  </span><br><span class="line">  </span><br><span class="line"> fromChannel.transferTo(position, count, toChannel);  </span><br></pre></td></tr></table></figure>
+
+<p>是不是发现这个例子和前面那个例子特别相似？除了调用方法的FileChannel对象不一样外，其他的都一样。 </p>
+<p>上面所说的关于<code>SocketChannel</code>的问题在<code>transferTo()</code>方法中同样存在。<code>SocketChannel</code>会一直传输数据直到目标buffer被填满。 </p>
+<h2 id=""><a href="#" class="headerlink" title=""></a></h2><p><img src="https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/javase/zerocopy5.jpg"><br><img src="https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/javase/zerocopy6.jpg"></p>
+<p>从上面的图中我们可以看到, FileChannel 中一共有俩个涉及到零拷贝的接口, transferFrom(), transferTo().</p>
+<ul>
+<li><code>public abstract long transferTo(long position, long count, WritableByteChannel target)</code></li>
+<li><code>public abstract long transferFrom(ReadableByteChannel src,  long position, long count)</code></li>
+</ul>
+<p><code>transferTo()</code> 接受的是<code>WritableByteChannel</code>:</p>
+<p><img src="https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/javase/zerocopy7.jpg"></p>
+<p><code>transferFrom()</code>接受的是<code>ReadableByteChannel</code></p>
+<p><img src="https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/javase/zerocopy8.jpg"></p>
+<p>我们可以看到Java中的零拷贝分别可以对socket(tcp), socket(udp), file 这三种主要形式的io进行零拷贝(还有pip等其他的, 但是这不是讲述重点, 就不在这里列举了.)</p>
+<p>而在<code>FileChannelImpl</code> 中分别针对<code>tansferFrom</code>和<code>transferTo</code>有俩组接口分别针对上面三种不同形式的io进行具体逻辑实现. </p>
+<p><img src="https://raw.githubusercontent.com/wangmingco/wangmingco.github.io/main/static/images/javase/zerocopy9.jpg"></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">long</span> <span class="title">transferTo</span><span class="params">(<span class="keyword">long</span> position, <span class="keyword">long</span> count, WritableByteChannel target)</span> <span class="keyword">throws</span> IOException</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    ...</span><br><span class="line"> </span><br><span class="line">   <span class="keyword">int</span> icount = (<span class="keyword">int</span>)Math.min(count, Integer.MAX_VALUE);</span><br><span class="line">    <span class="keyword">if</span> ((sz - position) &lt; icount)</span><br><span class="line">        icount = (<span class="keyword">int</span>)(sz - position);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">long</span> n;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Attempt a direct transfer, if the kernel supports it</span></span><br><span class="line">    <span class="keyword">if</span> ((n = transferToDirectly(position, icount, target)) &gt;= <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> n;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Attempt a mapped transfer, but only to trusted channel types</span></span><br><span class="line">    <span class="keyword">if</span> ((n = transferToTrustedChannel(position, icount, target)) &gt;= <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> n;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Slow path for untrusted targets</span></span><br><span class="line">    <span class="keyword">return</span> transferToArbitraryChannel(position, icount, target);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">long</span> <span class="title">transferToDirectly</span><span class="params">(<span class="keyword">long</span> position, <span class="keyword">int</span> icount,</span></span></span><br><span class="line"><span class="params"><span class="function">                                WritableByteChannel target)</span></span></span><br><span class="line"><span class="function">    <span class="keyword">throws</span> IOException</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!transferSupported)</span><br><span class="line">        <span class="keyword">return</span> IOStatus.UNSUPPORTED;</span><br><span class="line"></span><br><span class="line">    FileDescriptor targetFD = <span class="keyword">null</span>;</span><br><span class="line">    <span class="keyword">if</span> (target <span class="keyword">instanceof</span> FileChannelImpl) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!fileSupported)</span><br><span class="line">            <span class="keyword">return</span> IOStatus.UNSUPPORTED_CASE;</span><br><span class="line">        targetFD = ((FileChannelImpl)target).fd;</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (target <span class="keyword">instanceof</span> SelChImpl) &#123;</span><br><span class="line">        <span class="comment">// Direct transfer to pipe causes EINVAL on some configurations</span></span><br><span class="line">        <span class="keyword">if</span> ((target <span class="keyword">instanceof</span> SinkChannelImpl) &amp;&amp; !pipeSupported)</span><br><span class="line">            <span class="keyword">return</span> IOStatus.UNSUPPORTED_CASE;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Platform-specific restrictions. Now there is only one:</span></span><br><span class="line">        <span class="comment">// Direct transfer to non-blocking channel could be forbidden</span></span><br><span class="line">        SelectableChannel sc = (SelectableChannel)target;</span><br><span class="line">        <span class="keyword">if</span> (!nd.canTransferToDirectly(sc))</span><br><span class="line">            <span class="keyword">return</span> IOStatus.UNSUPPORTED_CASE;</span><br><span class="line"></span><br><span class="line">        targetFD = ((SelChImpl)target).getFD();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (nd.transferToDirectlyNeedsPositionLock()) &#123;</span><br><span class="line">        <span class="keyword">synchronized</span> (positionLock) &#123;</span><br><span class="line">            <span class="keyword">long</span> pos = position();</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="keyword">return</span> transferToDirectlyInternal(position, icount,</span><br><span class="line">                                                  target, targetFD);</span><br><span class="line">            &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">                position(pos);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> transferToDirectlyInternal(position, icount, target, targetFD);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">long</span> <span class="title">transferToDirectlyInternal</span><span class="params">(<span class="keyword">long</span> position, <span class="keyword">int</span> icount, WritableByteChannel target,            FileDescriptor targetFD)</span> <span class="keyword">throws</span> IOException</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">long</span> n = -<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">int</span> ti = -<span class="number">1</span>;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        begin();</span><br><span class="line">        ti = threads.add();</span><br><span class="line">        <span class="keyword">if</span> (!isOpen())</span><br><span class="line">            <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">        <span class="keyword">do</span> &#123;</span><br><span class="line">            n = transferTo0(fd, position, icount, targetFD);</span><br><span class="line">        &#125; <span class="keyword">while</span> ((n == IOStatus.INTERRUPTED) &amp;&amp; isOpen());</span><br><span class="line">        <span class="keyword">if</span> (n == IOStatus.UNSUPPORTED_CASE) &#123;</span><br><span class="line">            <span class="keyword">if</span> (target <span class="keyword">instanceof</span> SinkChannelImpl)</span><br><span class="line">                pipeSupported = <span class="keyword">false</span>;</span><br><span class="line">            <span class="keyword">if</span> (target <span class="keyword">instanceof</span> FileChannelImpl)</span><br><span class="line">                fileSupported = <span class="keyword">false</span>;</span><br><span class="line">            <span class="keyword">return</span> IOStatus.UNSUPPORTED_CASE;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (n == IOStatus.UNSUPPORTED) &#123;</span><br><span class="line">            <span class="comment">// Don&#x27;t bother trying again</span></span><br><span class="line">            transferSupported = <span class="keyword">false</span>;</span><br><span class="line">            <span class="keyword">return</span> IOStatus.UNSUPPORTED;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> IOStatus.normalize(n);</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        threads.remove(ti);</span><br><span class="line">        end (n &gt; -<span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过上面的源码我们可以看到pip, socket, file 首先都通过<code>transferToDirectly()</code> 进行尝试零拷贝操作(具体实现在下面). 如果在调用jni方法<code>transferTo0()</code>时返回<code>UNSUPPORTED_CASE</code>, 则说明底层方法实现不支持该io的零拷贝操作. 而通过下面的源码(<code>FileChannelImpl.c</code>)可以看见, 在linux系统中实际是进行<code>sendfile()</code>系统调用的, 而该调用只支持file-&gt;socket的零拷贝传输, 所以在进行target非socket的时候,肯定会返回<code>UNSUPPORTED_CASE</code>. 那接下来就需要继续调用<code>transferToTrustedChannel()</code>了</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">long</span> <span class="title">transferToTrustedChannel</span><span class="params">(<span class="keyword">long</span> position, <span class="keyword">long</span> count,</span></span></span><br><span class="line"><span class="params"><span class="function">                                      WritableByteChannel target)</span></span></span><br><span class="line"><span class="function">    <span class="keyword">throws</span> IOException</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">boolean</span> isSelChImpl = (target <span class="keyword">instanceof</span> SelChImpl);</span><br><span class="line">    <span class="keyword">if</span> (!((target <span class="keyword">instanceof</span> FileChannelImpl) || isSelChImpl))</span><br><span class="line">        <span class="keyword">return</span> IOStatus.UNSUPPORTED;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// Trusted target: Use a mapped buffer</span></span><br><span class="line">    <span class="keyword">long</span> remaining = count;</span><br><span class="line">    <span class="keyword">while</span> (remaining &gt; <span class="number">0L</span>) &#123;</span><br><span class="line">        <span class="keyword">long</span> size = Math.min(remaining, MAPPED_TRANSFER_SIZE);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            MappedByteBuffer dbb = map(MapMode.READ_ONLY, position, size);</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                <span class="comment">// ## Bug: Closing this channel will not terminate the write</span></span><br><span class="line">                <span class="keyword">int</span> n = target.write(dbb);</span><br><span class="line">                <span class="keyword">assert</span> n &gt;= <span class="number">0</span>;</span><br><span class="line">                remaining -= n;</span><br><span class="line">                <span class="keyword">if</span> (isSelChImpl) &#123;</span><br><span class="line">                    <span class="comment">// one attempt to write to selectable channel</span></span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">                &#125;</span><br><span class="line">                <span class="keyword">assert</span> n &gt; <span class="number">0</span>;</span><br><span class="line">                position += n;</span><br><span class="line">            &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">                unmap(dbb);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (ClosedByInterruptException e) &#123;</span><br><span class="line">            <span class="comment">// target closed by interrupt as ClosedByInterruptException needs</span></span><br><span class="line">            <span class="comment">// to be thrown after closing this channel.</span></span><br><span class="line">            <span class="keyword">assert</span> !target.isOpen();</span><br><span class="line">            <span class="keyword">try</span> &#123;</span><br><span class="line">                close();</span><br><span class="line">            &#125; <span class="keyword">catch</span> (Throwable suppressed) &#123;</span><br><span class="line">                e.addSuppressed(suppressed);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">throw</span> e;</span><br><span class="line">        &#125; <span class="keyword">catch</span> (IOException ioe) &#123;</span><br><span class="line">            <span class="comment">// Only throw exception if no bytes have been written</span></span><br><span class="line">            <span class="keyword">if</span> (remaining == count)</span><br><span class="line">                <span class="keyword">throw</span> ioe;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> count - remaining;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>transferToTrustedChannel()</code> 内部就是调用了内存文件映射技术. 如果<code>transferToTrustedChannel()</code> 还是不能调用成功的话, 就接着调用transferToArbitraryChannel()了.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">private</span> <span class="keyword">long</span> <span class="title">transferToArbitraryChannel</span><span class="params">(<span class="keyword">long</span> position, <span class="keyword">int</span> icount, WritableByteChannel target)</span> <span class="keyword">throws</span> IOException</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="comment">// Untrusted target: Use a newly-erased buffer</span></span><br><span class="line">    <span class="keyword">int</span> c = Math.min(icount, TRANSFER_SIZE);</span><br><span class="line">    ByteBuffer bb = Util.getTemporaryDirectBuffer(c);</span><br><span class="line">    <span class="keyword">long</span> tw = <span class="number">0</span>;                    <span class="comment">// Total bytes written</span></span><br><span class="line">    <span class="keyword">long</span> pos = position;</span><br><span class="line">    <span class="keyword">try</span> &#123;</span><br><span class="line">        Util.erase(bb);</span><br><span class="line">        <span class="keyword">while</span> (tw &lt; icount) &#123;</span><br><span class="line">            bb.limit(Math.min((<span class="keyword">int</span>)(icount - tw), TRANSFER_SIZE));</span><br><span class="line">            <span class="keyword">int</span> nr = read(bb, pos);</span><br><span class="line">            <span class="keyword">if</span> (nr &lt;= <span class="number">0</span>)</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            bb.flip();</span><br><span class="line">            <span class="comment">// ## Bug: Will block writing target if this channel</span></span><br><span class="line">            <span class="comment">// ##      is asynchronously closed</span></span><br><span class="line">            <span class="keyword">int</span> nw = target.write(bb);</span><br><span class="line">            tw += nw;</span><br><span class="line">            <span class="keyword">if</span> (nw != nr)</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            pos += nw;</span><br><span class="line">            bb.clear();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> tw;</span><br><span class="line">    &#125; <span class="keyword">catch</span> (IOException x) &#123;</span><br><span class="line">        <span class="keyword">if</span> (tw &gt; <span class="number">0</span>)</span><br><span class="line">            <span class="keyword">return</span> tw;</span><br><span class="line">        <span class="keyword">throw</span> x;</span><br><span class="line">    &#125; <span class="keyword">finally</span> &#123;</span><br><span class="line">        Util.releaseTemporaryDirectBuffer(bb);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>transferToArbitraryChannel()</code>就是开辟了一块直接内存, 慢慢地一点一点拷贝, 这也就说什么上什么零拷贝了.</p>
+<p>因此我们可以总结出,</p>
+<ul>
+<li>如果目标target是socket的话, 就会调用linux的sendfile()零拷贝函数</li>
+<li>如果目标target不是socket的话, 就会先尝试使用内存映射文件进行拷贝, 如果拷贝不成功的话, 就使用DirectBuffer进行拷贝.</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br></pre></td><td class="code"><pre><span class="line">openjdk-jdk8u-jdk8u/jdk/src/solaris/native/sun/nio/ch/FileChannelImpl.<span class="function">c</span></span><br><span class="line"><span class="function">JNIEXPORT jlong JNICALL</span></span><br><span class="line"><span class="function"><span class="title">Java_sun_nio_ch_FileChannelImpl_transferTo0</span><span class="params">(JNIEnv *env, jobject <span class="keyword">this</span>,</span></span></span><br><span class="line"><span class="params"><span class="function">                                            jobject srcFDO,</span></span></span><br><span class="line"><span class="params"><span class="function">                                            jlong position, jlong count,</span></span></span><br><span class="line"><span class="params"><span class="function">                                            jobject dstFDO)</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    jint srcFD = <span class="built_in">fdval</span>(env, srcFDO);</span><br><span class="line">    jint dstFD = <span class="built_in">fdval</span>(env, dstFDO);</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> defined(__linux__)</span></span><br><span class="line">    <span class="keyword">off64_t</span> offset = (<span class="keyword">off64_t</span>)position;</span><br><span class="line">    jlong n = <span class="built_in">sendfile64</span>(dstFD, srcFD, &amp;offset, (<span class="keyword">size_t</span>)count);</span><br><span class="line">    <span class="keyword">if</span> (n &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (errno == EAGAIN)</span><br><span class="line">            <span class="keyword">return</span> IOS_UNAVAILABLE;</span><br><span class="line">        <span class="keyword">if</span> ((errno == EINVAL) &amp;&amp; ((<span class="keyword">ssize_t</span>)count &gt;= <span class="number">0</span>))</span><br><span class="line">            <span class="keyword">return</span> IOS_UNSUPPORTED_CASE;</span><br><span class="line">        <span class="keyword">if</span> (errno == EINTR) &#123;</span><br><span class="line">            <span class="keyword">return</span> IOS_INTERRUPTED;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="built_in">JNU_ThrowIOExceptionWithLastError</span>(env, <span class="string">&quot;Transfer failed&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> IOS_THROWN;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> n;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">elif</span> defined (__solaris__)</span></span><br><span class="line">    <span class="keyword">sendfilevec64_t</span> sfv;</span><br><span class="line">    <span class="keyword">size_t</span> numBytes = <span class="number">0</span>;</span><br><span class="line">    jlong result;</span><br><span class="line"></span><br><span class="line">    sfv.sfv_fd = srcFD;</span><br><span class="line">    sfv.sfv_flag = <span class="number">0</span>;</span><br><span class="line">    sfv.sfv_off = (<span class="keyword">off64_t</span>)position;</span><br><span class="line">    sfv.sfv_len = count;</span><br><span class="line"></span><br><span class="line">    result = <span class="built_in">sendfilev64</span>(dstFD, &amp;sfv, <span class="number">1</span>, &amp;numBytes);</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* Solaris sendfilev() will return -1 even if some bytes have been</span></span><br><span class="line"><span class="comment">     * transferred, so we check numBytes first.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">if</span> (numBytes &gt; <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> numBytes;</span><br><span class="line">    <span class="keyword">if</span> (result &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (errno == EAGAIN)</span><br><span class="line">            <span class="keyword">return</span> IOS_UNAVAILABLE;</span><br><span class="line">        <span class="keyword">if</span> (errno == EOPNOTSUPP)</span><br><span class="line">            <span class="keyword">return</span> IOS_UNSUPPORTED_CASE;</span><br><span class="line">        <span class="keyword">if</span> ((errno == EINVAL) &amp;&amp; ((<span class="keyword">ssize_t</span>)count &gt;= <span class="number">0</span>))</span><br><span class="line">            <span class="keyword">return</span> IOS_UNSUPPORTED_CASE;</span><br><span class="line">        <span class="keyword">if</span> (errno == EINTR)</span><br><span class="line">            <span class="keyword">return</span> IOS_INTERRUPTED;</span><br><span class="line">        <span class="built_in">JNU_ThrowIOExceptionWithLastError</span>(env, <span class="string">&quot;Transfer failed&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> IOS_THROWN;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">elif</span> defined(__APPLE__)</span></span><br><span class="line">    <span class="keyword">off_t</span> numBytes;</span><br><span class="line">    <span class="keyword">int</span> result;</span><br><span class="line"></span><br><span class="line">    numBytes = count;</span><br><span class="line"></span><br><span class="line">    result = <span class="built_in">sendfile</span>(srcFD, dstFD, position, &amp;numBytes, <span class="literal">NULL</span>, <span class="number">0</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (numBytes &gt; <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> numBytes;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (result == <span class="number">-1</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (errno == EAGAIN)</span><br><span class="line">            <span class="keyword">return</span> IOS_UNAVAILABLE;</span><br><span class="line">        <span class="keyword">if</span> (errno == EOPNOTSUPP || errno == ENOTSOCK || errno == ENOTCONN)</span><br><span class="line">            <span class="keyword">return</span> IOS_UNSUPPORTED_CASE;</span><br><span class="line">        <span class="keyword">if</span> ((errno == EINVAL) &amp;&amp; ((<span class="keyword">ssize_t</span>)count &gt;= <span class="number">0</span>))</span><br><span class="line">            <span class="keyword">return</span> IOS_UNSUPPORTED_CASE;</span><br><span class="line">        <span class="keyword">if</span> (errno == EINTR)</span><br><span class="line">            <span class="keyword">return</span> IOS_INTERRUPTED;</span><br><span class="line">        <span class="built_in">JNU_ThrowIOExceptionWithLastError</span>(env, <span class="string">&quot;Transfer failed&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> IOS_THROWN;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">elif</span> defined(_AIX)</span></span><br><span class="line">    jlong max = (jlong)java_lang_Integer_MAX_VALUE;</span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">sf_parms</span> <span class="title">sf_iobuf</span>;</span></span><br><span class="line">    jlong result;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (position &gt; max)</span><br><span class="line">        <span class="keyword">return</span> IOS_UNSUPPORTED_CASE;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (count &gt; max)</span><br><span class="line">        count = max;</span><br><span class="line"></span><br><span class="line">    <span class="built_in">memset</span>(&amp;sf_iobuf, <span class="number">0</span>, <span class="built_in"><span class="keyword">sizeof</span></span>(sf_iobuf));</span><br><span class="line">    sf_iobuf.file_descriptor = srcFD;</span><br><span class="line">    sf_iobuf.file_offset = (<span class="keyword">off_t</span>)position;</span><br><span class="line">    sf_iobuf.file_bytes = count;</span><br><span class="line"></span><br><span class="line">    result = <span class="built_in">send_file</span>(&amp;dstFD, &amp;sf_iobuf, SF_SYNC_CACHE);</span><br><span class="line"></span><br><span class="line">    <span class="comment">/* AIX send_file() will return 0 when this operation complete successfully,</span></span><br><span class="line"><span class="comment">     * return 1 when partial bytes transfered and return -1 when an error has</span></span><br><span class="line"><span class="comment">     * Occured.</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">if</span> (result == <span class="number">-1</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (errno == EWOULDBLOCK)</span><br><span class="line">            <span class="keyword">return</span> IOS_UNAVAILABLE;</span><br><span class="line">        <span class="keyword">if</span> ((errno == EINVAL) &amp;&amp; ((<span class="keyword">ssize_t</span>)count &gt;= <span class="number">0</span>))</span><br><span class="line">            <span class="keyword">return</span> IOS_UNSUPPORTED_CASE;</span><br><span class="line">        <span class="keyword">if</span> (errno == EINTR)</span><br><span class="line">            <span class="keyword">return</span> IOS_INTERRUPTED;</span><br><span class="line">        <span class="keyword">if</span> (errno == ENOTSOCK)</span><br><span class="line">            <span class="keyword">return</span> IOS_UNSUPPORTED;</span><br><span class="line">        <span class="built_in">JNU_ThrowIOExceptionWithLastError</span>(env, <span class="string">&quot;Transfer failed&quot;</span>);</span><br><span class="line">        <span class="keyword">return</span> IOS_THROWN;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> (sf_iobuf.bytes_sent &gt; <span class="number">0</span>)</span><br><span class="line">        <span class="keyword">return</span> (jlong)sf_iobuf.bytes_sent;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> IOS_UNSUPPORTED_CASE;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">else</span></span></span><br><span class="line">    <span class="keyword">return</span> IOS_UNSUPPORTED_CASE;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span></span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">openjdk-jdk8u-jdk8u/jdk/src/share/native/sun/nio/ch/nio.h</span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&quot;sun_nio_ch_IOStatus.h&quot;</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> IOS_EOF              (sun_nio_ch_IOStatus_EOF)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> IOS_UNAVAILABLE      (sun_nio_ch_IOStatus_UNAVAILABLE)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> IOS_INTERRUPTED      (sun_nio_ch_IOStatus_INTERRUPTED)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> IOS_UNSUPPORTED      (sun_nio_ch_IOStatus_UNSUPPORTED)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> IOS_THROWN           (sun_nio_ch_IOStatus_THROWN)</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> IOS_UNSUPPORTED_CASE (sun_nio_ch_IOStatus_UNSUPPORTED_CASE)</span></span><br></pre></td></tr></table></figure>
+
+<p>这个状态就定义到了openjdk-jdk8u-jdk8u/jdk/src/share/classes/sun/nio/ch/IOStatus.java</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="keyword">final</span> <span class="class"><span class="keyword">class</span> <span class="title">IOStatus</span> &#123;</span></span><br><span class="line"></span><br><span class="line">    @Native <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> EOF = <span class="number">-1</span>;              <span class="comment">// End of file</span></span><br><span class="line">    @Native <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> UNAVAILABLE = <span class="number">-2</span>;      <span class="comment">// Nothing available (non-blocking)</span></span><br><span class="line">    @Native <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> INTERRUPTED = <span class="number">-3</span>;      <span class="comment">// System call interrupted</span></span><br><span class="line">    @Native <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> UNSUPPORTED = <span class="number">-4</span>;      <span class="comment">// Operation not supported</span></span><br><span class="line">    @Native <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> THROWN = <span class="number">-5</span>;           <span class="comment">// Exception thrown in JNI code</span></span><br><span class="line">    @Native <span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> UNSUPPORTED_CASE = <span class="number">-6</span>; <span class="comment">// This case not supported</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://wangmingco.github.io/2017/10/29/Java/io/Java%20NIO%E5%8E%9F%E7%90%86%E5%89%96%E6%9E%90%E4%B9%8B%20%E9%9B%B6%E6%8B%B7%E8%B4%9D/" title="Java NIO原理剖析之 零拷贝" target="_blank" rel="external">https://wangmingco.github.io/2017/10/29/Java/io/Java NIO原理剖析之 零拷贝/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/wangmingco" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/wangmingco" target="_blank"><span class="text-dark">王明</span><small class="ml-1x">Coder</small></a></h3>
+        <div>一个纯粹的技术开发者。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2017/11/01/%E6%9D%82%E6%96%87/Linux%20%E4%B8%8B%E8%BD%AF%E4%BB%B6%E5%AE%89%E8%A3%85%E7%9B%AE%E5%BD%95/" title="Linux 下软件安装目录"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2017/09/05/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/python/python2%20mysql/" title="PYTHON2 Mysql"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>感谢您的支持，我会继续努力的!</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/images/donate/alipayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开支付宝扫一扫，即可进行扫码打赏哦</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/images/donate/wechatpayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开微信扫一扫，即可进行扫码打赏哦</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> 支付宝</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> 微信支付</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/wangmingco" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="https://gitee.com/wangmingco" target="_blank" title="Gitee" data-toggle=tooltip data-placement=top><i class="icon icon-gitee"></i></a></li>
+        
+        <li><a href="https://weibo.com/wangmingco" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://www.zhihu.com/people/wangmingco" target="_blank" title="Zhihu" data-toggle=tooltip data-placement=top><i class="icon icon-zhihu"></i></a></li>
+        
+        <li><a href="https://www.douban.com/people/xxxyy/" target="_blank" title="Douban" data-toggle=tooltip data-placement=top><i class="icon icon-douban"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>

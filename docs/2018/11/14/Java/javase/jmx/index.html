@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+   <!-- google 爬取标记 -->
+   <meta name="google-site-verification" content="aH2bcbMuMlpfF61i9p--iBH54wvMywGXfWg8U6RpxFA" />
+   <!-- bing 爬取标记 -->
+   <meta name="msvalidate.01" content="CBAB9A13FF212142D6C250D9C0D31F28" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>JMX 笔记 | 王明的技术博客</title>
+  <meta name="description" content="参考Java SE Monitoring and Management Guide 1The Java virtual machine (JVM) has built-in instrumentation that enables you to monitor and manage it using JMX.  You can also monitor instrumented applicat">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JMX 笔记">
+<meta property="og:url" content="https://wangmingco.github.io/2018/11/14/Java/javase/jmx/index.html">
+<meta property="og:site_name" content="王明的技术博客">
+<meta property="og:description" content="参考Java SE Monitoring and Management Guide 1The Java virtual machine (JVM) has built-in instrumentation that enables you to monitor and manage it using JMX.  You can also monitor instrumented applicat">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2018-11-14T06:13:00.000Z">
+<meta property="article:modified_time" content="2022-09-30T10:05:41.748Z">
+<meta property="article:author" content="王明">
+<meta property="article:tag" content="JavaSE">
+<meta name="twitter:card" content="summary">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://wangmingco.github.io/2018/11/14/Java/javase/jmx/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="王明的技术博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/wangmingco" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">王明</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Coder</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Beijing, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">项目</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books">
+            
+            <i class="icon icon-book-fill"></i>
+            
+            <span class="menu-title">书单</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">友链</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/wangmingco" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="https://gitee.com/wangmingco" target="_blank" title="Gitee" data-toggle=tooltip data-placement=top><i class="icon icon-gitee"></i></a></li>
+        
+        <li><a href="https://weibo.com/wangmingco" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://www.zhihu.com/people/wangmingco" target="_blank" title="Zhihu" data-toggle=tooltip data-placement=top><i class="icon icon-zhihu"></i></a></li>
+        
+        <li><a href="https://www.douban.com/people/xxxyy/" target="_blank" title="Douban" data-toggle=tooltip data-placement=top><i class="icon icon-douban"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">143</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/">中间件</a><span class="category-list-count">11</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E6%BA%90/">开源</a><span class="category-list-count">3</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><span class="category-list-count">17</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9D%82%E6%96%87/">杂文</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><span class="category-list-count">11</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a><span class="category-list-count">23</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BF%BB%E8%AF%91/">翻译</a><span class="category-list-count">16</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Groovy/" rel="tag">Groovy</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java-IO/" rel="tag">Java IO</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java-%E4%B8%89%E6%96%B9%E5%BA%93/" rel="tag">Java 三方库</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java-%E7%BD%91%E7%BB%9C/" rel="tag">Java 网络</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaSE/" rel="tag">JavaSE</a><span class="tag-list-count">32</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/" rel="tag">JavaScript</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Javasist/" rel="tag">Javasist</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Memcached/" rel="tag">Memcached</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MongoDB/" rel="tag">MongoDB</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Netty/" rel="tag">Netty</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nginx/" rel="tag">Nginx</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PEG-js/" rel="tag">PEG.js</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PHP/" rel="tag">PHP</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PYTHON2/" rel="tag">PYTHON2</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React/" rel="tag">React</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Redis/" rel="tag">Redis</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shell/" rel="tag">Shell</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ZooKeeper/" rel="tag">ZooKeeper</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/asm/" rel="tag">asm</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/awk/" rel="tag">awk</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c-cpp/" rel="tag">c/cpp</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/haskell/" rel="tag">haskell</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmh/" rel="tag">jmh</a><span class="tag-list-count">14</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jol/" rel="tag">jol</a><span class="tag-list-count">24</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm/" rel="tag">jvm</a><span class="tag-list-count">18</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven/" rel="tag">maven</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mybatis/" rel="tag">mybatis</a><span class="tag-list-count">11</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">9</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/soot/" rel="tag">soot</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vertx2/" rel="tag">vertx2</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vertx3/" rel="tag">vertx3</a><span class="tag-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/Groovy/" style="font-size: 13.43px;">Groovy</a> <a href="/tags/Java-IO/" style="font-size: 13.36px;">Java IO</a> <a href="/tags/Java-%E4%B8%89%E6%96%B9%E5%BA%93/" style="font-size: 13.86px;">Java 三方库</a> <a href="/tags/Java-%E7%BD%91%E7%BB%9C/" style="font-size: 13.43px;">Java 网络</a> <a href="/tags/JavaSE/" style="font-size: 14px;">JavaSE</a> <a href="/tags/JavaScript/" style="font-size: 13.36px;">JavaScript</a> <a href="/tags/Javasist/" style="font-size: 13.21px;">Javasist</a> <a href="/tags/Memcached/" style="font-size: 13px;">Memcached</a> <a href="/tags/MongoDB/" style="font-size: 13.14px;">MongoDB</a> <a href="/tags/Netty/" style="font-size: 13.43px;">Netty</a> <a href="/tags/Nginx/" style="font-size: 13.29px;">Nginx</a> <a href="/tags/PEG-js/" style="font-size: 13px;">PEG.js</a> <a href="/tags/PHP/" style="font-size: 13.07px;">PHP</a> <a href="/tags/PYTHON2/" style="font-size: 13.5px;">PYTHON2</a> <a href="/tags/React/" style="font-size: 13px;">React</a> <a href="/tags/Redis/" style="font-size: 13.14px;">Redis</a> <a href="/tags/Shell/" style="font-size: 13px;">Shell</a> <a href="/tags/ZooKeeper/" style="font-size: 13.36px;">ZooKeeper</a> <a href="/tags/asm/" style="font-size: 13.21px;">asm</a> <a href="/tags/awk/" style="font-size: 13px;">awk</a> <a href="/tags/c-cpp/" style="font-size: 13px;">c/cpp</a> <a href="/tags/haskell/" style="font-size: 13.14px;">haskell</a> <a href="/tags/jmh/" style="font-size: 13.71px;">jmh</a> <a href="/tags/jol/" style="font-size: 13.93px;">jol</a> <a href="/tags/jvm/" style="font-size: 13.79px;">jvm</a> <a href="/tags/maven/" style="font-size: 13px;">maven</a> <a href="/tags/mybatis/" style="font-size: 13.64px;">mybatis</a> <a href="/tags/mysql/" style="font-size: 13.57px;">mysql</a> <a href="/tags/soot/" style="font-size: 13px;">soot</a> <a href="/tags/vertx2/" style="font-size: 13.07px;">vertx2</a> <a href="/tags/vertx3/" style="font-size: 13.21px;">vertx3</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">八月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/07/">七月 2022</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">四月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">一月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">六月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">二月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">十一月 2018</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">四月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">十二月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">十一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">十月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">九月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">六月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">37</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">八月 2015</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">七月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">九月 2014</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">四月 2014</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/09/">九月 2013</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E7%BF%BB%E8%AF%91/">翻译</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/08/05/%E7%BF%BB%E8%AF%91/soot/1%20Fundamental%20Soot%20objects/" class="title">Soot 基础对象 [译]</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-08-05T02:21:00.000Z" itemprop="datePublished">2022-08-05</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Java/">Java</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/07/14/Java/jvm/JNI%20%E8%BF%94%E5%9B%9E%20Java%E5%AF%B9%E8%B1%A1/" class="title">JNI 返回 Java对象</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-07-13T16:00:00.000Z" itemprop="datePublished">2022-07-14</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/07/10/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/cpp/NetBeans%20Debug%20Cpp/" class="title">NetBeans Debug Cpp</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-07-09T16:00:00.000Z" itemprop="datePublished">2022-07-10</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/04/12/%E5%89%8D%E7%AB%AF/REACT%20%E8%AF%AD%E6%B3%95/" class="title">React 学习</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-04-12T02:21:00.000Z" itemprop="datePublished">2022-04-12</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Java/">Java</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/01/10/Java/jvm/centos%E7%BC%96%E8%AF%91openjdk/" class="title">Centos7 编译调试 OpenJDK11</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-01-09T16:00:00.000Z" itemprop="datePublished">2022-01-10</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-Java/javase/jmx" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      JMX 笔记
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2018/11/14/Java/javase/jmx/" class="article-date">
+	  <time datetime="2018-11-14T06:13:00.000Z" itemprop="datePublished">2018-11-14</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/Java/">Java</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/JavaSE/" rel="tag">JavaSE</a>
+  </span>
+
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2018/11/14/Java/javase/jmx/#comments" class="article-comment-link">评论</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+   
+      
+    
+        <ol class="post-toc"><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#Out-of-the-Box-Monitoring-and-Management-Properties"><span class="post-toc-text">Out-of-the-Box Monitoring and Management Properties</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#Setting-up-Monitoring-and-Management-Programmatically"><span class="post-toc-text">Setting up Monitoring and Management Programmatically</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#Mimicking-Out-of-the-Box-Management-Using-the-JMX-Remote-API"><span class="post-toc-text">Mimicking Out-of-the-Box Management Using the JMX Remote API</span></a></li><li class="post-toc-item post-toc-level-5"><a class="post-toc-link" href="#Monitoring-Applications-through-a-Firewall"><span class="post-toc-text">Monitoring Applications through a Firewall</span></a></li></ol></li></ol></li></ol></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#MBean-Server"><span class="post-toc-text">MBean Server</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#MBean"><span class="post-toc-text">MBean</span></a><ol class="post-toc-child"><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#MXBean-%E8%BF%9E%E6%8E%A5"><span class="post-toc-text">MXBean 连接</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#%E7%9B%91%E6%8E%A7%E7%BA%BF%E7%A8%8B%E5%92%8CCPU"><span class="post-toc-text">监控线程和CPU</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%9A%84%E7%AE%A1%E7%90%86"><span class="post-toc-text">操作系统的管理</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#%E6%97%A5%E5%BF%97%E7%AE%A1%E7%90%86"><span class="post-toc-text">日志管理</span></a></li><li class="post-toc-item post-toc-level-3"><a class="post-toc-link" href="#jmx-%E8%BF%9C%E7%A8%8B"><span class="post-toc-text">jmx 远程</span></a>
+        
+        <br/>
+
+        <script src="/assets/asciinema-player.js"></script><link rel="stylesheet" type="text/css" href="/assets/asciinema-player.css" />
+<p>参考<a target="_blank" rel="noopener" href="http://docs.oracle.com/javase/8/docs/technotes/guides/management/toc.html">Java SE Monitoring and Management Guide</a></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">The Java virtual machine (JVM) has built-in instrumentation that enables you to monitor and manage it using JMX.  You can also monitor instrumented applications with JMX.</span><br></pre></td></tr></table></figure>
+<p>文档上开篇就有这么一句, Java1.5版本开始，JVM内部构建了instrumentation，我们可以通过使用JMX接口访问instrumentation从而监控和管理JVM。</p>
+<p>下面这段开启JMX参数是从zabix jmx那篇文章中copy过来的</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">java \</span><br><span class="line">-Djava.rmi.server.hostname=192.168.3.14 \</span><br><span class="line">-Dcom.sun.management.jmxremote \</span><br><span class="line">-Dcom.sun.management.jmxremote.port=12345 \</span><br><span class="line">-Dcom.sun.management.jmxremote.authenticate=true \</span><br><span class="line">-Dcom.sun.management.jmxremote.password.file=/etc/java-6-openjdk/management/jmxremote.password \</span><br><span class="line">-Dcom.sun.management.jmxremote.access.file=/etc/java-6-openjdk/management/jmxremote.access \</span><br><span class="line">-Dcom.sun.management.jmxremote.ssl=true \</span><br><span class="line">-Djavax.net.ssl.keyStore=$YOUR_KEY_STORE \</span><br><span class="line">-Djavax.net.ssl.keyStorePassword=$YOUR_KEY_STORE_PASSWORD \</span><br><span class="line">-Djavax.net.ssl.trustStore=$YOUR_TRUST_STORE \</span><br><span class="line">-Djavax.net.ssl.trustStorePassword=$YOUR_TRUST_STORE_PASSWORD \</span><br><span class="line">-Dcom.sun.management.jmxremote.ssl.need.client.auth=true \</span><br><span class="line">-jar /usr/share/doc/openjdk-6-jre-headless/demo/jfc/Notepad/Notepad.jar</span><br></pre></td></tr></table></figure>
+
+<p>JMX 有俩种启动方式</p>
+<ol>
+<li>本地启动 : -Dcom.sun.management.jmxremote, 这种启动只能在本地访问, 也就说只能在启动jmx这台机器上启动jmx客户端, 然后连接JMX服务器</li>
+<li>远程访问方式 : 这种模式就需要设置端口了 <code>-Dcom.sun.management.jmxremote.port=12345</code>, 另外如果有需要还可以设置 <code>-Djava.rmi.server.hostname=192.168.3.14</code>，但是需要注意的是这种设置在Linux上需要在/etc/hosts文件里添加相关hostname(例如192.168.3.14 localhostname, 这个localhostname 就是主机登陆账号)</li>
+</ol>
+<p><code>-Dcom.sun.management.jmxremote</code> 这个设置是用来注册  JVM instrumentation MBeans， 同时通过一个私有接口( private interface)发布一个 RMI connector(JMX客户端通过这个接口监控Java应用)</p>
+<p>在1.5的文档中有这么一句话</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Local monitoring with jconsole is useful for development and prototyping. Using jconsole locally is not recommended for production environments, because jconsole itself consumes significant system resources. Rather, use jconsole on a remote system to isolate it from the platform being monitored.</span><br></pre></td></tr></table></figure>
+<p>在生产环境并不推荐，在生产主机上使用jconsole, 那么是不是说, 在生产主机上可以开启JMX监控呢？这也一直是我最关心的问题！！！现在还没有找到有文档或者文章说开启jmx锁带来的性能消耗</p>
+<p>对于编程的方式，这个文档只是给了一点简单的示例</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">JMXServiceURL jmxServiceURL = new JMXServiceURL(&quot;service:jmx:rmi:///jndi/rmi://192.168.15.184:29001/jmxrmi&quot;);</span><br><span class="line">JMXConnector jmxConnector = JMXConnectorFactory.connect(jmxServiceURL);</span><br></pre></td></tr></table></figure>
+
+<p>开启密码验证和SSL的部分没有做说明，如果需要的话，就去开启一下好了，现在主要是探究jmx实现和给JVM带来的风险</p>
+<p>在1.6版本中的Local Monitoring and Management，有这么一句</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">n the Java SE 6 platform, it is no longer necessary to set this system property. Any application that is started on the Java SE 6 platform will support the Attach API, and so will automatically be made available for local monitoring and management when needed.</span><br><span class="line"></span><br><span class="line">For example, previously, to enable the JMX agent for the Java SE sample application Notepad, you would have to run the following commands.</span><br><span class="line"></span><br><span class="line">% cd JDK_HOME/demo/jfc/Notepad</span><br><span class="line">% java -Dcom.sun.management.jmxremote -jar Notepad.jar</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">In the above command, JDK_HOME is the directory in which the Java Development Kit (JDK) is installed. In the Java SE 6 platform, you would simply have to run the following command to start Notepad.</span><br><span class="line"></span><br><span class="line">% java -jar Notepad.jar</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Once Notepad has been started, a JMX client using the Attach API can then enable the out-of-the-box management agent to monitor and manage the Notepad application.</span><br></pre></td></tr></table></figure>
+
+<p>到了1.6的时候, 如果想要监控和管理应用的时候 ，不再需要显式地设置-Dcom.sun.management.jmxremote属性。因为1.6上开始支持Attach API，JMX客户端会通过Attach API进行监控和管理（Attach API就成了一个开箱即用的agent. 因为一直比较关心的是，开启JMX对性能的影响究竟有多大, 感觉是JVM一启动JMX内部组件就开启工作进行统计了, 而Attach API只是提供一个接口？？？）</p>
+<h5 id="Out-of-the-Box-Monitoring-and-Management-Properties"><a href="#Out-of-the-Box-Monitoring-and-Management-Properties" class="headerlink" title="Out-of-the-Box Monitoring and Management Properties"></a>Out-of-the-Box Monitoring and Management Properties</h5><p>在这个标题下有一段很有趣的话</p>
+<blockquote>
+<blockquote>
+<p>You can set out-of-the-box monitoring and management properties in a configuration file or on the command line. Properties specified on the command line override properties in a configuration file. The default location for the configuration file is JRE_HOME/lib/management/management.properties. The Java VM reads this file if either of the command-line properties com.sun.management.jmxremote or com.sun.management.jmxremote.port are set. Management via the Simple Network Management Protocol (SNMP) uses the same configuration file. For more information about SNMP monitoring, see Chapter 5, SNMP Monitoring and Management.</p>
+</blockquote>
+</blockquote>
+<p>可以通过在命令行设定或者配置在配置文件里 进行设置开箱即用的监控和管理属性。如果同时在命令行上和配置文件里都设置了属性，那么命令行上面的设置会覆盖配置文件里的设置。默认的配置文件是这个文件<code>JRE_HOME/lib/management/management.properties</code>。如果命令行中没有设置<code>com.sun.management.jmxremote</code> 或者 <code>com.sun.management.jmxremote.port</code> 那么JVM就会读取默认的配置文件。<br>使用 <code>Simple Network Management Protocol (SNMP)</code> 进行管理的话也会使用这个配置文件。</p>
+<h5 id="Setting-up-Monitoring-and-Management-Programmatically"><a href="#Setting-up-Monitoring-and-Management-Programmatically" class="headerlink" title="Setting up Monitoring and Management Programmatically"></a>Setting up Monitoring and Management Programmatically</h5><p>这一节中，举了个例子，如何使用Attach API 获取RMI Connecter的连接地址</p>
+<blockquote>
+<blockquote>
+<p>As stated previously, in the Java SE platform version 6, you can create a JMX client that uses the Attach API to enable out-of-the-box monitoring and management of any applications that are started on the Java SE 6 platform, without having to configure the applications for monitoring when you launch them. The Attach API provides a way for tools to attach to and start agents in the target application. Once an agent is running, JMX clients (and other tools) are able to obtain the JMX connector address for that agent via a property list that is maintained by the Java VM on behalf of the agents. The properties in the list are accessible from tools that use the Attach API. So, if an agent is started in an application, and if the agent creates a property to represent a piece of configuration information, then that configuration information is available to tools that attach to the application.</p>
+</blockquote>
+</blockquote>
+<p>The JMX agent creates a property with the address of the local JMX connector server. This allows JMX tools to attach to and get the connector address of an agent, if it is running.</p>
+<p>代码如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.sun.tools.attach.AgentInitializationException;</span><br><span class="line"><span class="keyword">import</span> com.sun.tools.attach.AgentLoadException;</span><br><span class="line"><span class="keyword">import</span> com.sun.tools.attach.AttachNotSupportedException;</span><br><span class="line"><span class="keyword">import</span> com.sun.tools.attach.VirtualMachine;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> javax.management.*;</span><br><span class="line"><span class="keyword">import</span> javax.management.remote.JMXConnector;</span><br><span class="line"><span class="keyword">import</span> javax.management.remote.JMXConnectorFactory;</span><br><span class="line"><span class="keyword">import</span> javax.management.remote.JMXServiceURL;</span><br><span class="line"><span class="keyword">import</span> java.io.File;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestJMX</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> String CONNECTOR_ADDRESS = <span class="string">&quot;com.sun.management.jmxremote.localConnectorAddress&quot;</span>;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">      String url = getURL();</span><br><span class="line">      JMXServiceURL jmxServiceURL = <span class="keyword">new</span> JMXServiceURL(url);</span><br><span class="line">      JMXConnector jmxConnector = JMXConnectorFactory.connect(jmxServiceURL);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> String <span class="title">getURL</span><span class="params">()</span> <span class="keyword">throws</span> IOException, AgentLoadException, AgentInitializationException, AttachNotSupportedException </span>&#123;</span><br><span class="line">      <span class="comment">// attach to the target application</span></span><br><span class="line">      VirtualMachine vm = VirtualMachine.attach(<span class="string">&quot;101&quot;</span>);</span><br><span class="line"></span><br><span class="line">      <span class="comment">// get the connector address</span></span><br><span class="line">      String connectorAddress = vm.getAgentProperties().getProperty(CONNECTOR_ADDRESS);</span><br><span class="line"></span><br><span class="line">      <span class="comment">// no connector address, so we start the JMX agent</span></span><br><span class="line">      <span class="keyword">if</span> (connectorAddress == <span class="keyword">null</span>) &#123;</span><br><span class="line">        String agent = vm.getSystemProperties().getProperty(<span class="string">&quot;java.home&quot;</span>) + File.separator + <span class="string">&quot;lib&quot;</span> + File.separator + <span class="string">&quot;management-agent.jar&quot;</span>;</span><br><span class="line">        vm.loadAgent(agent);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// agent is started, get the connector address</span></span><br><span class="line">        connectorAddress = vm.getAgentProperties().getProperty(CONNECTOR_ADDRESS);</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">return</span> connectorAddress;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h5 id="Mimicking-Out-of-the-Box-Management-Using-the-JMX-Remote-API"><a href="#Mimicking-Out-of-the-Box-Management-Using-the-JMX-Remote-API" class="headerlink" title="Mimicking Out-of-the-Box Management Using the JMX Remote API"></a>Mimicking Out-of-the-Box Management Using the JMX Remote API</h5><p>这节中首先点出了在配置JMX监控服务的时候，在命令行中添加参数或者使用配置文件开启JMX的一些缺点</p>
+<blockquote>
+<p>However, in some cases greater levels of security are required and in other cases certain system configurations do not allow the use of a management.properties file. Such cases might involve exporting the RMI server’s remote objects over a certain port to allow passage through a firewall, or exporting the RMI server’s remote objects using a specific network interface in multi-homed systems. For such cases, the behavior of the out-of-the-box management agent can be mimicked by using the JMX Remote API directly to create, configure and deploy the management agent programmatically.</p>
+</blockquote>
+<p>因此Hotspot提供了一个模拟开箱即用的管理agent的JMX agent的实现。教程里给出的例子是开启了密码验证,访问控制,以及使用SSL进行安全通信, 我简化了一下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> javax.management.MBeanServer;</span><br><span class="line"><span class="keyword">import</span> javax.management.remote.JMXConnectorServer;</span><br><span class="line"><span class="keyword">import</span> javax.management.remote.JMXConnectorServerFactory;</span><br><span class="line"><span class="keyword">import</span> javax.management.remote.JMXServiceURL;</span><br><span class="line"><span class="keyword">import</span> java.lang.management.ManagementFactory;</span><br><span class="line"><span class="keyword">import</span> java.rmi.registry.LocateRegistry;</span><br><span class="line"><span class="keyword">import</span> java.util.HashMap;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JMXServer</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">      <span class="comment">// Ensure cryptographically strong random number generator used to choose the object number - see java.rmi.server.ObjID</span></span><br><span class="line">      System.setProperty(<span class="string">&quot;java.rmi.server.randomIDs&quot;</span>, <span class="string">&quot;true&quot;</span>);</span><br><span class="line"></span><br><span class="line">      System.out.println(<span class="string">&quot;Create RMI registry on port 3000&quot;</span>);</span><br><span class="line">      LocateRegistry.createRegistry(<span class="number">3000</span>);</span><br><span class="line"></span><br><span class="line">      MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();</span><br><span class="line"></span><br><span class="line">      HashMap&lt;String,Object&gt; environment = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line"></span><br><span class="line">      System.out.println(<span class="string">&quot;Create an RMI connector server&quot;</span>);</span><br><span class="line">      JMXServiceURL url = <span class="keyword">new</span> JMXServiceURL(<span class="string">&quot;service:jmx:rmi:///jndi/rmi://:3000/jmxrmi&quot;</span>);</span><br><span class="line">      JMXConnectorServer cs = JMXConnectorServerFactory.newJMXConnectorServer(url, environment, mbs);</span><br><span class="line"></span><br><span class="line">      <span class="comment">// Start the RMI connector server.</span></span><br><span class="line">      System.out.println(<span class="string">&quot;Start the RMI connector server&quot;</span>);</span><br><span class="line">      cs.start();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这么着开启之后,就能直接在客户端访问了, 例如在jvisulvm中访问</p>
+<p>在教程的例子中有这么俩行</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">SslRMIClientSocketFactory csf = <span class="keyword">new</span> SslRMIClientSocketFactory();</span><br><span class="line">SslRMIServerSocketFactory ssf = <span class="keyword">new</span> SslRMIServerSocketFactory();</span><br><span class="line">env.put(RMIConnectorServer.RMI_CLIENT_SOCKET_FACTORY_ATTRIBUTE, csf);</span><br><span class="line">env.put(RMIConnectorServer.RMI_SERVER_SOCKET_FACTORY_ATTRIBUTE, ssf);</span><br><span class="line"></span><br><span class="line">env.put(<span class="string">&quot;jmx.remote.x.password.file&quot;</span>, <span class="string">&quot;password.properties&quot;</span>);</span><br><span class="line">env.put(<span class="string">&quot;jmx.remote.x.access.file&quot;</span>, <span class="string">&quot;access.properties&quot;</span>);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>当设定这俩个参数之后需要在启动应用程序的时候, 在命令行或者配置文件中加上</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">-Djavax.net.ssl.keyStore=keystore -Djavax.net.ssl.keyStorePassword=password</span><br></pre></td></tr></table></figure>
+<p>这个就等同于</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">-Dcom.sun.management.jmxremote.port=3000 \</span><br><span class="line">    -Dcom.sun.management.jmxremote.password.file=password.properties \</span><br><span class="line">    -Dcom.sun.management.jmxremote.access.file=access.properties \</span><br><span class="line">    -Djavax.net.ssl.keyStore=keystore \</span><br><span class="line">    -Djavax.net.ssl.keyStorePassword=password \</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h5 id="Monitoring-Applications-through-a-Firewall"><a href="#Monitoring-Applications-through-a-Firewall" class="headerlink" title="Monitoring Applications through a Firewall"></a>Monitoring Applications through a Firewall</h5><p>很有趣的一点是</p>
+<blockquote>
+<blockquote>
+<p>As stated above, the code in Example 2-5 can be used to monitor applications through a firewall, which might not be possible if you use the out-of-the-box monitoring solution. The com.sun.management.jmxremote.port management property specifies the port where the RMI Registry can be reached but the ports where the RMIServer and RMIConnection remote objects are exported is chosen by the RMI stack. To export the remote objects (RMIServer and RMIConnection) to a given port you need to create your own RMI connector server programmatically, as described in Example 2-5. However, you must specify the JMXServiceURL as follows:</p>
+</blockquote>
+</blockquote>
+<p>使用代码的方式可以让JMX通过防火墙访问服务器的JMX agent, 但是采用开箱即用的方式(命令行或者配置文件方式)就不行了。com.sun.management.jmxremote.port  这个参数指定了 RMI Registry 的注册端口, 但是RMIServer 和 RMIConnection 输出远程对象(remote objects) 所用的端口被RMI stack占用了。如果想要将RMIServer 和 RMIConnection 的远程对象(remote objects)输出，必须通过编程的方式创建一个单独的 RMI connector server，而且必须指定一个 JMXServiceURL </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">JMXServiceURL url = <span class="keyword">new</span> JMXServiceURL(<span class="string">&quot;service:jmx:rmi://localhost:&quot;</span> + port1  + <span class="string">&quot;/jndi/rmi://localhost:&quot;</span> + port2 + <span class="string">&quot;/jmxrmi&quot;</span>);</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+<h2 id="MBean-Server"><a href="#MBean-Server" class="headerlink" title="MBean Server"></a>MBean Server</h2><p>MBean Server 是MBean的一个仓库, 我们并不直接访问MBean, 而是通过通过一个唯一的<code>ObjectName</code>通过 MBean Server来进行访问.</p>
+<p>如果要实现一个MBean Server必须实现<code>javax.management.MBeanServer</code>接口.</p>
+<p>如果我们要创建自己的MBean Server的话, 可以使用</p>
+<ul>
+<li><code>MBeanServerFactory.createMBeanServer();</code></li>
+<li><code>MBeanServerFactory.newMBeanServer();</code></li>
+</ul>
+<p><code>createMBeanServer()</code>内部会调用<code>newMBeanServer()</code>, 但是<code>createMBeanServer()</code>会将<code>newMBeanServer()</code>创建出来的MBean Server缓存到<code>ArrayList&lt;MBeanServer&gt; mBeanServerList</code>一个列表里. 这点先姑且不去讨论, 集中精力看看Platform MBean Server.</p>
+<p>官方也建议我们使用Platform MBean Server(也就是自带的那个MBean Server), 在没有特殊需求之下, 没有必要建立自己的MBean Server.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> javax.management.MBeanServer;</span><br><span class="line"><span class="keyword">import</span> java.lang.management.ManagementFactory;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PlatformMBeanServerTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        MBeanServer server = ManagementFactory.getPlatformMBeanServer();</span><br><span class="line">        System.out.println(<span class="string">&quot;MBeanCount : &quot;</span> + server.getMBeanCount());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="MBean"><a href="#MBean" class="headerlink" title="MBean"></a>MBean</h2><p>看完MBServer, 我们来看一下MBean.</p>
+<h3 id="MXBean-连接"><a href="#MXBean-连接" class="headerlink" title="MXBean 连接"></a>MXBean 连接</h3><p>首先先看一下<a target="_blank" rel="noopener" href="http://docs.oracle.com/javase/8/docs/technotes/guides/management/overview.html#gdeuk">MXBean</a>, 什么是MXBean呢? 它是一种用来监控和管理Java VM的MBean.</p>
+<p>我们可以通过三种方式来访问MXBean</p>
+<ul>
+<li>通过<code>ManagementFactory</code>直接进行访问.</li>
+<li>通过<code>MXBean proxy</code>直接访问.</li>
+<li>通过<code>MBeanServerConnection</code>间接访问.</li>
+</ul>
+<p>如果在同一个VM上的话, 我们可以通过ManagementFactory 提供的API进行直接访问</p>
+<ul>
+<li><code>getClassLoadingMXBean()</code></li>
+<li><code>getGarbageCollectorMXBeans()</code></li>
+<li><code>getRuntimeMXBean()</code><br>等等</li>
+</ul>
+<p>例如</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">RuntimeMXBean mxbean = ManagementFactory.getRuntimeMXBean();</span><br><span class="line">String vendor = mxbean.getVmVendor(); </span><br></pre></td></tr></table></figure>
+
+<p>如果不在同一个VM的话, 我们可以通过MXBean Proxy的方式进行远程访问.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">MBeanServerConnection mbs;</span><br><span class="line">...</span><br><span class="line"><span class="comment">// Get a MBean proxy for RuntimeMXBean interface</span></span><br><span class="line">RuntimeMXBean proxy = ManagementFactory.newPlatformMXBeanProxy(mbs,</span><br><span class="line">                                             ManagementFactory.RUNTIME_MXBEAN_NAME,</span><br><span class="line">                                             RuntimeMXBean.class);</span><br><span class="line"><span class="comment">// Get standard attribute &quot;VmVendor&quot;</span></span><br><span class="line">String vendor = proxy.getVmVendor();</span><br></pre></td></tr></table></figure>
+
+<p>通过</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">MBeanServerConnection mbs;</span><br><span class="line">...</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">  ObjectName oname = <span class="keyword">new</span> ObjectName(ManagementFactory.RUNTIME_MXBEAN_NAME);</span><br><span class="line">  <span class="comment">// Get standard attribute &quot;VmVendor&quot;</span></span><br><span class="line">  String vendor = (String) mbs.getAttribute(oname, <span class="string">&quot;VmVendor&quot;</span>);</span><br><span class="line">&#125; <span class="keyword">catch</span> (....) &#123;</span><br><span class="line">  <span class="comment">// Catch the exceptions thrown by ObjectName constructor</span></span><br><span class="line">  <span class="comment">// and MBeanServer.getAttribute method</span></span><br><span class="line">  ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当我们通过上述方式拿到MXBean之后, 就可以访问它里面的各种属性了.</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">com.sun.management.OperatingSystemMXBean mxbean =</span><br><span class="line">  (com.sun.management.OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean();</span><br><span class="line"></span><br><span class="line"><span class="comment">// Get the number of processors</span></span><br><span class="line"><span class="keyword">int</span> numProcessors = mxbean.getAvailableProcessors();</span><br><span class="line"></span><br><span class="line"><span class="comment">// Get the Oracle JDK-specific attribute Process CPU time</span></span><br><span class="line"><span class="keyword">long</span> cpuTime = mxbean.getProcessCpuTime();</span><br></pre></td></tr></table></figure>
+
+<h3 id="监控线程和CPU"><a href="#监控线程和CPU" class="headerlink" title="监控线程和CPU"></a>监控线程和CPU</h3><p><code>ThreadMXBean </code>提供了对线程和CPU的监控.<br>在使用这个功能之前, 我们可能需要判断一下, Java VM是否开启了线程content监控</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ThreadMXBean.isThreadContentionMonitoringSupported()</span><br></pre></td></tr></table></figure>
+<p>如果没有开启的话, 我们调用一下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">setThreadContentionMonitoringEnabled()</span><br></pre></td></tr></table></figure>
+<p>开启它就可以了.</p>
+<p>还有对线程统计的支持</p>
+<ul>
+<li><code>isThreadCpuTimeSupported()</code>检测是否开启</li>
+<li><code>isCurrentThreadCpuTimeSupported()</code> 上面那个是对任意线程的统计检测, 这个则是对并发线程的检测</li>
+</ul>
+<p>同理, 对CPU需要同样地处理</p>
+<ul>
+<li><code>isThreadCpuTimeEnabled</code> 检测CPU</li>
+<li><code>setThreadCpuTimeEnabled()</code> 开启检测CPU</li>
+</ul>
+<h3 id="操作系统的管理"><a href="#操作系统的管理" class="headerlink" title="操作系统的管理"></a>操作系统的管理</h3><p>通过<code>OperatingSystem </code>可以拿到操作系统相关的信息</p>
+<ul>
+<li>CPU的运行时间(Process CPU time).</li>
+<li>物理内存剩余和总共大小.</li>
+<li>committed virtual memory数量. (这个值表示的是当前运行的进程还可使用的虚拟内存的大小, 也就是在程序启动时分配的虚拟内存现在还剩下多少).</li>
+<li>交换分区剩余和总共大小.</li>
+<li>打开的文件()数量(因为Uniux哲学是一切皆文件, 所以这个值只支持Solaris, Linux, or Mac OS X).</li>
+</ul>
+<h3 id="日志管理"><a href="#日志管理" class="headerlink" title="日志管理"></a>日志管理</h3><p>为了记录日志, Java特地提供了一个特殊的接口<code>LoggingMXBean</code>, 使用这个接口我们可以完成下面任务</p>
+<ul>
+<li>获取指定logger的日志级别  </li>
+<li>获取到当前注册的logger列表</li>
+<li>获取到指定logger的父名称  </li>
+<li>设置指定logger新的日志级别</li>
+</ul>
+<p><code>LoggingMXBean</code> 的<code>ObjectName </code>为<code>java.util.logging:type=Logging</code>. 这个名称存储在<code>LogManager.LOGGING_MXBEAN_NAME</code>里</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">LoggingMXBean loggingMXBean = LogManager.getLoggingMXBean();</span><br><span class="line">System.out.println(loggingMXBean.getLoggerNames());</span><br></pre></td></tr></table></figure>
+<p>得到的loggerName有</p>
+<ul>
+<li><code>javax.management.snmp</code></li>
+<li><code>global</code></li>
+<li><code>javax.management.notification</code></li>
+<li><code>javax.management.modelmbean</code></li>
+<li><code>javax.management.timer</code></li>
+<li><code>javax.management</code></li>
+<li><code>javax.management.mlet</code></li>
+<li><code>javax.management.mbeanserver</code></li>
+<li><code>javax.management.snmp.daemon</code></li>
+<li><code>javax.management.relation</code></li>
+<li><code>javax.management.monitor</code></li>
+<li><code>javax.management.misc</code><br>由于我的测试没有使用任何的日志系统, 因此它只打印了Java自带的一些logger, 但是如果你在SpringBoot或者自己添加上log4j的话, 会获取到更多的logger, 我们可以通过这个接口, 在服务器运行阶段动态修改logger级别.</li>
+</ul>
+<blockquote>
+<p>尽管以前也做过修改日志级别的事情, 但是是通过第三方框架自带的api进行修改的, 但是使用这个MXBean, 貌似可以跨框架了, O(∩_∩)O~</p>
+</blockquote>
+<h3 id="jmx-远程"><a href="#jmx-远程" class="headerlink" title="jmx 远程"></a>jmx 远程</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">JMX_OPTS=&quot;-Djava.rmi.server.hostname=192.168.15.25 -Dcom.sun.management.jmxremote -Dcom.sun.management.jmxremote.port=29001 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false &quot;</span><br></pre></td></tr></table></figure>
+<p>当我们加上这个远程访问的时候, 需要在<code>/etc/hosts</code>文件里加上一个ip映射</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">192.168.15.25 ceshi_1</span><br></pre></td></tr></table></figure>
+<p>ceshi_1 是服务器名称, 前面的是内网ip, 要不然服务器在启动的时候会报错</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@c2x_hm_cn_banhao01 log]# tail -f nohup_group_2017-08-14.nohup</span><br><span class="line">Error: Exception thrown by the agent : java.net.MalformedURLException: Local host name unknown: java.net.UnknownHostException: c2x_hm_cn_banhao01: c2x_hm_cn_banhao01: unknown error</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://wangmingco.github.io/2018/11/14/Java/javase/jmx/" title="JMX 笔记" target="_blank" rel="external">https://wangmingco.github.io/2018/11/14/Java/javase/jmx/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/wangmingco" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/wangmingco" target="_blank"><span class="text-dark">王明</span><small class="ml-1x">Coder</small></a></h3>
+        <div>一个纯粹的技术开发者。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2018/11/14/Java/javase/java-books/" title="Java入门及书单"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2018/11/05/Java/javase/agent-mock/" title="通过Java Agent的redefineClasses实现Mock功能"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>感谢您的支持，我会继续努力的!</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/images/donate/alipayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开支付宝扫一扫，即可进行扫码打赏哦</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/images/donate/wechatpayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开微信扫一扫，即可进行扫码打赏哦</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> 支付宝</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> 微信支付</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/wangmingco" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="https://gitee.com/wangmingco" target="_blank" title="Gitee" data-toggle=tooltip data-placement=top><i class="icon icon-gitee"></i></a></li>
+        
+        <li><a href="https://weibo.com/wangmingco" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://www.zhihu.com/people/wangmingco" target="_blank" title="Zhihu" data-toggle=tooltip data-placement=top><i class="icon icon-zhihu"></i></a></li>
+        
+        <li><a href="https://www.douban.com/people/xxxyy/" target="_blank" title="Douban" data-toggle=tooltip data-placement=top><i class="icon icon-douban"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>
