@@ -16,6 +16,7 @@ body{height:100%;margin:0px;padding:0px}
 <body>
     <div id="selectors">
         <input id="jingdian" class="inputCheckBox" type="checkbox" checked="checked">景点</input>
+        <input id="hotel" class="inputCheckBox" type="checkbox" checked="checked">住宿</input>
         <br/><br/>
     </div> 
     <div id="container"></div>
@@ -58,6 +59,15 @@ body{height:100%;margin:0px;padding:0px}
             {x: 119.42294,  y: 39.801815, title: '南戴河'},
             {x: 119.913612, y: 40.00837, title: '东戴河'},
             {x: 119.41133,  y: 39.778022 , title: 'BLUEPINK儿童乐园'},
+           
+        ]
+
+        var hotelData = [
+            {x: 119.512143,  y: 39.840414, title: '赤土山'},
+            {x: 119.491683,  y: 39.831171, title: '北岭'},
+            {x: 119.484171,  y: 39.833989, title: '草厂'},
+            {x: 119.529913,  y: 39.833147, title: '单庄'},
+            {x: 119.260034,  y: 39.692167, title: '向海大道'},
          
         ]
        
@@ -71,6 +81,13 @@ body{height:100%;margin:0px;padding:0px}
             removeOverlay(jingdianData)
         }
       }
+      if (event.id == "hotel") {
+        if (event.checked == true) {
+            addOverlay(hotelData, 'red')
+        } else {
+            removeOverlay(hotelData)
+        }
+      }
       
 
     }
@@ -81,6 +98,8 @@ body{height:100%;margin:0px;padding:0px}
 
     selectData(document.querySelector('#jingdian'))
     document.querySelector('#jingdian').addEventListener('change', handler);
+    selectData(document.querySelector('#hotel'))
+    document.querySelector('#hotel').addEventListener('change', handler);
 
 
     function addOverlay(array, color) {
