@@ -6,4 +6,4 @@ REM 生成 Hexo 站点
 hexo generate
 
 REM 将 public 文件夹重命名为 docs
-ren public docs
+move public docs

@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang=zh>
+<head>
+  <meta charset="utf-8">
+  
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui">
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="Cache-Control" content="no-transform" />
+  <meta http-equiv="Cache-Control" content="no-siteapp" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="format-detection" content="telephone=no,email=no,adress=no">
+  <!-- Color theme for statusbar -->
+  <meta name="theme-color" content="#000000" />
+   <!-- google 爬取标记 -->
+   <meta name="google-site-verification" content="aH2bcbMuMlpfF61i9p--iBH54wvMywGXfWg8U6RpxFA" />
+   <!-- bing 爬取标记 -->
+   <meta name="msvalidate.01" content="CBAB9A13FF212142D6C250D9C0D31F28" />
+  <!-- 强制页面在当前窗口以独立页面显示,防止别人在框架里调用页面 -->
+  <meta http-equiv="window-target" content="_top" />
+  
+  
+  <title>JVM内存溢出 | 王明的技术博客</title>
+  <meta name="description" content="ConstantPool OOM溢出代码 12345678910111213141516&#x2F;** * 运行时常量溢出 * VM Args: -XX:PermSize&#x3D;10M -XX:MaxPermSize&#x3D;10M * @author mingwang * *&#x2F;public class RuntimeConstantPoolOOM &amp;#123;	public static void main(Str">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JVM内存溢出">
+<meta property="og:url" content="https://wangmingco.github.io/2014/09/06/Java/jvm/JVM%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA/index.html">
+<meta property="og:site_name" content="王明的技术博客">
+<meta property="og:description" content="ConstantPool OOM溢出代码 12345678910111213141516&#x2F;** * 运行时常量溢出 * VM Args: -XX:PermSize&#x3D;10M -XX:MaxPermSize&#x3D;10M * @author mingwang * *&#x2F;public class RuntimeConstantPoolOOM &amp;#123;	public static void main(Str">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2014-09-05T16:00:00.000Z">
+<meta property="article:modified_time" content="2022-09-30T10:05:41.765Z">
+<meta property="article:author" content="王明">
+<meta property="article:tag" content="jvm">
+<meta name="twitter:card" content="summary">
+  <!-- Canonical links -->
+  <link rel="canonical" href="https://wangmingco.github.io/2014/09/06/Java/jvm/JVM%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA/index.html">
+  
+    <link rel="alternate" href="/atom.xml" title="王明的技术博客" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png" type="image/x-icon">
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+  
+  
+  
+<meta name="generator" content="Hexo 5.4.2"></head>
+
+
+<body class="main-center" itemscope itemtype="http://schema.org/WebPage">
+  <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+  <div class="slimContent">
+    <div class="navbar-header">
+      
+      
+      <div class="profile-block text-center">
+        <a id="avatar" href="https://github.com/wangmingco" target="_blank">
+          <img class="img-circle img-rotate" src="/images/avatar.jpg" width="200" height="200">
+        </a>
+        <h2 id="name" class="hidden-xs hidden-sm">王明</h2>
+        <h3 id="title" class="hidden-xs hidden-sm hidden-md">Coder</h3>
+        <small id="location" class="text-muted hidden-xs hidden-sm"><i class="icon icon-map-marker"></i> Beijing, China</small>
+      </div>
+      
+      <div class="search" id="search-form-wrap">
+
+    <form class="search-form sidebar-form">
+        <div class="input-group">
+            <input type="text" class="search-form-input form-control" placeholder="搜索" />
+            <span class="input-group-btn">
+                <button type="submit" class="search-form-submit btn btn-flat" onclick="return false;"><i class="icon icon-search"></i></button>
+            </span>
+        </div>
+    </form>
+    <div class="ins-search">
+  <div class="ins-search-mask"></div>
+  <div class="ins-search-container">
+    <div class="ins-input-wrapper">
+      <input type="text" class="ins-search-input" placeholder="想要查找什么..." x-webkit-speech />
+      <button type="button" class="close ins-close ins-selectable" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button>
+    </div>
+    <div class="ins-section-wrapper">
+      <div class="ins-section-container"></div>
+    </div>
+  </div>
+</div>
+
+
+</div>
+      <button class="navbar-toggle collapsed" type="button" data-toggle="collapse" data-target="#main-navbar" aria-controls="main-navbar" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+    </div>
+    <nav id="main-navbar" class="collapse navbar-collapse" itemscope itemtype="http://schema.org/SiteNavigationElement" role="navigation">
+      <ul class="nav navbar-nav main-nav ">
+        
+        
+        <li class="menu-item menu-item-home">
+          <a href="/.">
+            
+            <i class="icon icon-home-fill"></i>
+            
+            <span class="menu-title">首页</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives">
+            
+            <i class="icon icon-archives-fill"></i>
+            
+            <span class="menu-title">归档</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories">
+            
+            <i class="icon icon-folder"></i>
+            
+            <span class="menu-title">分类</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags">
+            
+            <i class="icon icon-tags"></i>
+            
+            <span class="menu-title">标签</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-repository">
+          <a href="/repository">
+            
+            <i class="icon icon-project"></i>
+            
+            <span class="menu-title">项目</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-books">
+          <a href="/books">
+            
+            <i class="icon icon-book-fill"></i>
+            
+            <span class="menu-title">书单</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-links">
+          <a href="/links">
+            
+            <i class="icon icon-friendship"></i>
+            
+            <span class="menu-title">友链</span>
+          </a>
+        </li>
+        
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about">
+            
+            <i class="icon icon-cup-fill"></i>
+            
+            <span class="menu-title">关于</span>
+          </a>
+        </li>
+        
+      </ul>
+      
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/wangmingco" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="https://gitee.com/wangmingco" target="_blank" title="Gitee" data-toggle=tooltip data-placement=top><i class="icon icon-gitee"></i></a></li>
+        
+        <li><a href="https://weibo.com/wangmingco" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://www.zhihu.com/people/wangmingco" target="_blank" title="Zhihu" data-toggle=tooltip data-placement=top><i class="icon icon-zhihu"></i></a></li>
+        
+        <li><a href="https://www.douban.com/people/xxxyy/" target="_blank" title="Douban" data-toggle=tooltip data-placement=top><i class="icon icon-douban"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    </nav>
+  </div>
+</header>
+
+  
+    <aside class="sidebar" itemscope itemtype="http://schema.org/WPSideBar">
+  <div class="slimContent">
+    
+      <div class="widget">
+    <h3 class="widget-title">公告</h3>
+    <div class="widget-body">
+        <div id="board">
+            <div class="content">
+                <p>欢迎交流与分享经验!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">分类</h3>
+    <div class="widget-body">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/Java/">Java</a><span class="category-list-count">143</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E4%B8%AD%E9%97%B4%E4%BB%B6/">中间件</a><span class="category-list-count">11</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%89%8D%E7%AB%AF/">前端</a><span class="category-list-count">7</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E5%BC%80%E6%BA%90/">开源</a><span class="category-list-count">5</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a><span class="category-list-count">17</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E6%9D%82%E6%96%87/">杂文</a><span class="category-list-count">8</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%AE%97%E6%B3%95/">算法</a><span class="category-list-count">11</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a><span class="category-list-count">23</span></li><li class="category-list-item"><a class="category-list-link" href="/categories/%E7%BF%BB%E8%AF%91/">翻译</a><span class="category-list-count">16</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签</h3>
+    <div class="widget-body">
+      <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/Groovy/" rel="tag">Groovy</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java-IO/" rel="tag">Java IO</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java-%E4%B8%89%E6%96%B9%E5%BA%93/" rel="tag">Java 三方库</a><span class="tag-list-count">23</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Java-%E7%BD%91%E7%BB%9C/" rel="tag">Java 网络</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaSE/" rel="tag">JavaSE</a><span class="tag-list-count">32</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/JavaScript/" rel="tag">JavaScript</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Javasist/" rel="tag">Javasist</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Memcached/" rel="tag">Memcached</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/MongoDB/" rel="tag">MongoDB</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Netty/" rel="tag">Netty</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Nginx/" rel="tag">Nginx</a><span class="tag-list-count">5</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PEG-js/" rel="tag">PEG.js</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PHP/" rel="tag">PHP</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/PYTHON2/" rel="tag">PYTHON2</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/React/" rel="tag">React</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Redis/" rel="tag">Redis</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Shell/" rel="tag">Shell</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/ZooKeeper/" rel="tag">ZooKeeper</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/asm/" rel="tag">asm</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/awk/" rel="tag">awk</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/c-cpp/" rel="tag">c/cpp</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/haskell/" rel="tag">haskell</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jmh/" rel="tag">jmh</a><span class="tag-list-count">14</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jol/" rel="tag">jol</a><span class="tag-list-count">24</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/jvm/" rel="tag">jvm</a><span class="tag-list-count">18</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/maven/" rel="tag">maven</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mybatis/" rel="tag">mybatis</a><span class="tag-list-count">11</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/mysql/" rel="tag">mysql</a><span class="tag-list-count">9</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/soot/" rel="tag">soot</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vertx2/" rel="tag">vertx2</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/vertx3/" rel="tag">vertx3</a><span class="tag-list-count">4</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">标签云</h3>
+    <div class="widget-body tagcloud">
+      <a href="/tags/Groovy/" style="font-size: 13.43px;">Groovy</a> <a href="/tags/Java-IO/" style="font-size: 13.36px;">Java IO</a> <a href="/tags/Java-%E4%B8%89%E6%96%B9%E5%BA%93/" style="font-size: 13.86px;">Java 三方库</a> <a href="/tags/Java-%E7%BD%91%E7%BB%9C/" style="font-size: 13.43px;">Java 网络</a> <a href="/tags/JavaSE/" style="font-size: 14px;">JavaSE</a> <a href="/tags/JavaScript/" style="font-size: 13.36px;">JavaScript</a> <a href="/tags/Javasist/" style="font-size: 13.21px;">Javasist</a> <a href="/tags/Memcached/" style="font-size: 13px;">Memcached</a> <a href="/tags/MongoDB/" style="font-size: 13.14px;">MongoDB</a> <a href="/tags/Netty/" style="font-size: 13.43px;">Netty</a> <a href="/tags/Nginx/" style="font-size: 13.29px;">Nginx</a> <a href="/tags/PEG-js/" style="font-size: 13px;">PEG.js</a> <a href="/tags/PHP/" style="font-size: 13.07px;">PHP</a> <a href="/tags/PYTHON2/" style="font-size: 13.5px;">PYTHON2</a> <a href="/tags/React/" style="font-size: 13px;">React</a> <a href="/tags/Redis/" style="font-size: 13.14px;">Redis</a> <a href="/tags/Shell/" style="font-size: 13px;">Shell</a> <a href="/tags/ZooKeeper/" style="font-size: 13.36px;">ZooKeeper</a> <a href="/tags/asm/" style="font-size: 13.21px;">asm</a> <a href="/tags/awk/" style="font-size: 13px;">awk</a> <a href="/tags/c-cpp/" style="font-size: 13px;">c/cpp</a> <a href="/tags/haskell/" style="font-size: 13.14px;">haskell</a> <a href="/tags/jmh/" style="font-size: 13.71px;">jmh</a> <a href="/tags/jol/" style="font-size: 13.93px;">jol</a> <a href="/tags/jvm/" style="font-size: 13.79px;">jvm</a> <a href="/tags/maven/" style="font-size: 13px;">maven</a> <a href="/tags/mybatis/" style="font-size: 13.64px;">mybatis</a> <a href="/tags/mysql/" style="font-size: 13.57px;">mysql</a> <a href="/tags/soot/" style="font-size: 13px;">soot</a> <a href="/tags/vertx2/" style="font-size: 13.07px;">vertx2</a> <a href="/tags/vertx3/" style="font-size: 13.21px;">vertx3</a>
+    </div>
+  </div>
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">归档</h3>
+    <div class="widget-body">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2024/05/">五月 2024</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/08/">八月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/07/">七月 2022</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/04/">四月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2022/01/">一月 2022</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/12/">十二月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2021/06/">六月 2021</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/11/">十一月 2020</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/05/">五月 2020</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2020/04/">四月 2020</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/12/">十二月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/07/">七月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/06/">六月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/05/">五月 2019</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">二月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">十一月 2018</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/06/">六月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/05/">五月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/04/">四月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/03/">三月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/01/">一月 2018</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/12/">十二月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">十一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/10/">十月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/09/">九月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/06/">六月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/05/">五月 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/04/">四月 2017</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/03/">三月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/02/">二月 2017</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/01/">一月 2017</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/12/">十二月 2016</a><span class="archive-list-count">37</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/11/">十一月 2016</a><span class="archive-list-count">10</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/10/">十月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/09/">九月 2016</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/08/">八月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/07/">七月 2016</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/06/">六月 2016</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/05/">五月 2016</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/04/">四月 2016</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/03/">三月 2016</a><span class="archive-list-count">15</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/02/">二月 2016</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2016/01/">一月 2016</a><span class="archive-list-count">9</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/12/">十二月 2015</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/11/">十一月 2015</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/10/">十月 2015</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/09/">九月 2015</a><span class="archive-list-count">6</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/08/">八月 2015</a><span class="archive-list-count">8</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/07/">七月 2015</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/06/">六月 2015</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/04/">四月 2015</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2015/03/">三月 2015</a><span class="archive-list-count">5</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/09/">九月 2014</a><span class="archive-list-count">4</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2014/04/">四月 2014</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/11/">十一月 2013</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2013/09/">九月 2013</a><span class="archive-list-count">2</span></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget">
+    <h3 class="widget-title">最新文章</h3>
+    <div class="widget-body">
+      <ul class="recent-post-list list-unstyled no-thumbnail">
+        
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E5%BC%80%E6%BA%90/">开源</a>
+              </p>
+              <p class="item-title">
+                <a href="/2024/05/15/%E5%BC%80%E6%BA%90/java%20sql/" class="title">Java 中执行sql</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2024-05-14T16:00:00.000Z" itemprop="datePublished">2024-05-15</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E5%BC%80%E6%BA%90/">开源</a>
+              </p>
+              <p class="item-title">
+                <a href="/2024/05/10/%E5%BC%80%E6%BA%90/Vue%20%E9%A1%B5%E9%9D%A2%20%E5%86%85%E5%B5%8C%20Grafana%20%E9%A1%B5%E9%9D%A2/" class="title">Vue 页面 内嵌 Grafana 页面</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2024-05-09T16:00:00.000Z" itemprop="datePublished">2024-05-10</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E7%BF%BB%E8%AF%91/">翻译</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/08/05/%E7%BF%BB%E8%AF%91/soot/1%20Fundamental%20Soot%20objects/" class="title">Soot 基础对象 [译]</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-08-05T02:21:00.000Z" itemprop="datePublished">2022-08-05</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/Java/">Java</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/07/14/Java/jvm/JNI%20%E8%BF%94%E5%9B%9E%20Java%E5%AF%B9%E8%B1%A1/" class="title">JNI 返回 Java对象</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-07-13T16:00:00.000Z" itemprop="datePublished">2022-07-14</time>
+              </p>
+            </div>
+          </li>
+          
+          <li>
+            
+            <div class="item-inner">
+              <p class="item-category">
+                <a class="category-link" href="/categories/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/">编程语言</a>
+              </p>
+              <p class="item-title">
+                <a href="/2022/07/10/%E7%BC%96%E7%A8%8B%E8%AF%AD%E8%A8%80/cpp/NetBeans%20Debug%20Cpp/" class="title">NetBeans Debug Cpp</a>
+              </p>
+              <p class="item-date">
+                <time datetime="2022-07-09T16:00:00.000Z" itemprop="datePublished">2022-07-10</time>
+              </p>
+            </div>
+          </li>
+          
+      </ul>
+    </div>
+  </div>
+  
+
+    
+  </div>
+</aside>
+
+  
+  
+<main class="main" role="main">
+  <div class="content">
+  <article id="post-Java/jvm/JVM内存溢出" class="article article-type-post" itemscope itemtype="http://schema.org/BlogPosting">
+    
+    <div class="article-header">
+      
+        
+  
+    <h1 class="article-title" itemprop="name">
+      JVM内存溢出
+    </h1>
+  
+
+      
+      <div class="article-meta">
+        <span class="article-date">
+    <i class="icon icon-calendar-check"></i>
+	<a href="/2014/09/06/Java/jvm/JVM%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA/" class="article-date">
+	  <time datetime="2014-09-05T16:00:00.000Z" itemprop="datePublished">2014-09-06</time>
+	</a>
+</span>
+        
+  <span class="article-category">
+    <i class="icon icon-folder"></i>
+    <a class="article-category-link" href="/categories/Java/">Java</a>
+  </span>
+
+        
+  <span class="article-tag">
+    <i class="icon icon-tags"></i>
+	<a class="article-tag-link-link" href="/tags/jvm/" rel="tag">jvm</a>
+  </span>
+
+
+        
+
+        <span class="post-comment"><i class="icon icon-comment"></i> <a href="/2014/09/06/Java/jvm/JVM%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA/#comments" class="article-comment-link">评论</a></span>
+        
+      </div>
+    </div>
+    <div class="article-entry marked-body" itemprop="articleBody">
+   
+      
+    
+        <ol class="post-toc"><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#ConstantPool-OOM"><span class="post-toc-text">ConstantPool OOM</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Stack-OOM"><span class="post-toc-text">Stack OOM</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Metadata-OOM"><span class="post-toc-text">Metadata OOM</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#Heap-OOM"><span class="post-toc-text">Heap OOM</span></a></li><li class="post-toc-item post-toc-level-2"><a class="post-toc-link" href="#DirectMemory-OOM"><span class="post-toc-text">DirectMemory OOM</span></a></li></ol>
+        
+        <br/>
+
+        <script src="/assets/asciinema-player.js"></script><link rel="stylesheet" type="text/css" href="/assets/asciinema-player.css" />
+<h2 id="ConstantPool-OOM"><a href="#ConstantPool-OOM" class="headerlink" title="ConstantPool OOM"></a>ConstantPool OOM</h2><p>溢出代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 运行时常量溢出</span></span><br><span class="line"><span class="comment"> * VM Args: -XX:PermSize=10M -XX:MaxPermSize=10M</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> mingwang</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RuntimeConstantPoolOOM</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		List&lt;String&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">		<span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">		<span class="keyword">while</span>(<span class="keyword">true</span>) &#123;</span><br><span class="line">			list.add(String.valueOf(i++).intern());</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如果想运行时常量池添加内容最简单的方式就是String.intern()这个native方法.该方法的作用是:如果池中已经包含一个等于此String对象的字符串,则返回池中这个字符串的String对象.否则将次String对象包含的字符串添加到常量池中,并返回次String对象音乐.</p>
+<h2 id="Stack-OOM"><a href="#Stack-OOM" class="headerlink" title="Stack OOM"></a>Stack OOM</h2><p>溢出代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestStackSOF</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> stackLength = <span class="number">1</span>;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">stackLeak</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		stackLength ++;</span><br><span class="line">		stackLeak();</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">try</span> &#123;</span><br><span class="line">			stackLeak();</span><br><span class="line">		&#125; <span class="keyword">catch</span>(Throwable e) &#123;</span><br><span class="line">			System.out.println(<span class="string">&quot;stack length:&quot;</span> + stackLength + <span class="string">&quot;. &quot;</span> + e.getMessage());</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>运行上面的程序</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">D:\testOOM&gt;java -XX:+HeapDumpOnOutOfMemoryError -Xss1M TestStackSOF</span><br><span class="line">stack length:22427. null</span><br></pre></td></tr></table></figure>
+<p>1M的栈空间大概能执行以上那个简单方法的22427次. 这个次数并不是在编译期就决定的,而是在运行时根据具体的内存使用情况而变化的. </p>
+<p>下面的代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">stackLeak</span><span class="params">()</span> </span>&#123;</span><br><span class="line">                stackLeak();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">                stackLeak();</span><br><span class="line">        &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用<code>-XX:+HeapDumpOnOutOfMemoryError</code>并不能产生堆内存溢出错误, 也没有产生类似于java_pid19212.hprof文件的文件.<br>使用<code>java -XX:ErrorFile=./error.log -Xss1M Test</code> 也没有产生错误文件<br>上面的并没有产生</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JavaVMStackOOM</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title">dontStop</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">while</span>(<span class="keyword">true</span>) &#123;</span><br><span class="line"></span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">stackLeakByThread</span><span class="params">()</span> </span>&#123;</span><br><span class="line">		<span class="keyword">while</span>(<span class="keyword">true</span>) &#123;</span><br><span class="line">			Thread t = <span class="keyword">new</span> Thread(<span class="keyword">new</span> Runnable()&#123;</span><br><span class="line">				<span class="meta">@Override</span></span><br><span class="line">				<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line">					dontStop();</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		JavaVMStackOM om = <span class="keyword">new</span> JavaVMStackOM();</span><br><span class="line">		om.stackLeakByThread();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>以上俩个实现都都无法让虚拟机产生OutOfMemoryError异常,只能产生StackOverflowError.实验结果表明: 单个线程下,无论由于栈帧太大还是虚拟机容量太小,当内存无法分配时,虚拟机抛出的都是StackOverflowError.如果测试时不是限于单线程,通过不断建立新线程的方式倒是可以产生内存溢出异常. 但是这样产生的内存溢出异常与栈空间是否足够大并不存在任何联系,或者准确说,在这种情况下,给每个线程的栈分配的内存越大,反而越容易产生内存溢出异常.</p>
+<p>当开发多线程应用时应该特别注意的是,出现StackOverflowError异常时有错误堆栈可以阅读,相对来说比较容易找到问题.如果使用虚拟机默认参数,栈深度在大多数情况下达到1000-2000完全没有问题,对于正常的方法调用(包括递归),这个深度应该够用了,但是如果建立过多的线程导致的内存溢出,在不能减少线程数或者更换64位虚拟机的情况下,就只能通过减少最大堆和减少栈容量来换取更多的线程.</p>
+<h2 id="Metadata-OOM"><a href="#Metadata-OOM" class="headerlink" title="Metadata OOM"></a>Metadata OOM</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">JavaMethodAreaOOM</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">while</span>(<span class="keyword">true</span>) &#123;</span><br><span class="line">			Enhancer enhancer = <span class="keyword">new</span> Enhancer();</span><br><span class="line">			enhancer.setSuperclass(OOMObject.class);</span><br><span class="line">			enhancer.setUseCache(<span class="keyword">false</span>);</span><br><span class="line">			enhancer.setCallBack(<span class="keyword">new</span> MethodInterceptor()&#123;</span><br><span class="line">				<span class="function"><span class="keyword">public</span> Object <span class="title">intercept</span><span class="params">(Object obj, Method method, Object[] objs,</span></span></span><br><span class="line"><span class="params"><span class="function">				MethodProxy proxy)</span> <span class="keyword">throws</span> Throwable </span>&#123;</span><br><span class="line">					<span class="keyword">return</span> proxy.invokeSuper(obj, args);</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">static</span> <span class="class"><span class="keyword">class</span> <span class="title">OOMObject</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>执行代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">javac JavaMethodAreaOOMRun.java</span><br><span class="line">java -XX:PermSize10M -XX:MaxPermSize10M JavaMethodAreaOOMRun</span><br></pre></td></tr></table></figure>
+<p>方法区用于存放Class信息,为了测试这个区域,基本思路是产生大量的类去填充方法区,直到溢出.本例中使用的是CGLib, 还可以使用ASM等框架进行测试.方法区溢出也是一种常见的内存溢出异常.一个类如果被垃圾收集器回收,其条件是非常苛刻的. 在经常动态生成大量Class的应用中,需要特别注意类的回收状况. (基于OSGI的应用即使是同一个类文件被不同的加载器加载也会视为不同的类)</p>
+<h2 id="Heap-OOM"><a href="#Heap-OOM" class="headerlink" title="Heap OOM"></a>Heap OOM</h2><p>我们首先看一段内存溢出的代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">TestHeapOOM</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">10</span>; i ++) &#123;</span><br><span class="line">			System.out.println(<span class="string">&quot;Allocate : &quot;</span> + i);</span><br><span class="line">			<span class="keyword">byte</span>[] bytes = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">1324</span> * <span class="number">1124</span> * i * <span class="number">2</span>];</span><br><span class="line">		&#125; </span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接下来我们运行一下上面的那个程序</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br></pre></td><td class="code"><pre><span class="line">D:\testOOM&gt;java -XX:+HeapDumpOnOutOfMemoryError -XX:+PrintHeapAtGC -Xms10M -Xmx10M -Xmn4M TestHeapOOM</span><br><span class="line">Allocate : <span class="number">1</span></span><br><span class="line">Allocate : <span class="number">2</span></span><br><span class="line">Allocate : <span class="number">3</span></span><br><span class="line">&#123;Heap before GC invocations=<span class="number">1</span> (full <span class="number">0</span>):</span><br><span class="line"> PSYoungGen      total 3584K, used 3002K [<span class="number">0x00000000ffc00000</span>, <span class="number">0x0000000100000000</span>, <span class="number">0x0000000100000000</span>)</span><br><span class="line">  eden space 3072K, <span class="number">97</span>% used [<span class="number">0x00000000ffc00000</span>,<span class="number">0x00000000ffeee8c0</span>,<span class="number">0x00000000fff00000</span>)</span><br><span class="line">  from space 512K, <span class="number">0</span>% used [<span class="number">0x00000000fff80000</span>,<span class="number">0x00000000fff80000</span>,<span class="number">0x0000000100000000</span>)</span><br><span class="line">  to   space 512K, <span class="number">0</span>% used [<span class="number">0x00000000fff00000</span>,<span class="number">0x00000000fff00000</span>,<span class="number">0x00000000fff80000</span>)</span><br><span class="line"> ParOldGen       total 6144K, used 4096K [<span class="number">0x00000000ff600000</span>, <span class="number">0x00000000ffc00000</span>, <span class="number">0x00000000ffc00000</span>)</span><br><span class="line">  object space 6144K, <span class="number">66</span>% used [<span class="number">0x00000000ff600000</span>,<span class="number">0x00000000ffa00010</span>,<span class="number">0x00000000ffc00000</span>)</span><br><span class="line"> Metaspace       used 2580K, capacity 4486K, committed 4864K, reserved 1056768K</span><br><span class="line">  <span class="class"><span class="keyword">class</span> <span class="title">space</span>    <span class="title">used</span> 287<span class="title">K</span>, <span class="title">capacity</span> 386<span class="title">K</span>, <span class="title">committed</span> 512<span class="title">K</span>, <span class="title">reserved</span> 1048576<span class="title">K</span></span></span><br><span class="line"><span class="class"><span class="title">Heap</span> <span class="title">after</span> <span class="title">GC</span> <span class="title">invocations</span></span>=<span class="number">1</span> (full <span class="number">0</span>):</span><br><span class="line"> PSYoungGen      total 3584K, used 488K [<span class="number">0x00000000ffc00000</span>, <span class="number">0x0000000100000000</span>, <span class="number">0x0000000100000000</span>)</span><br><span class="line">  eden space 3072K, <span class="number">0</span>% used [<span class="number">0x00000000ffc00000</span>,<span class="number">0x00000000ffc00000</span>,<span class="number">0x00000000fff00000</span>)</span><br><span class="line">  from space 512K, <span class="number">95</span>% used [<span class="number">0x00000000fff00000</span>,<span class="number">0x00000000fff7a020</span>,<span class="number">0x00000000fff80000</span>)</span><br><span class="line">  to   space 512K, <span class="number">0</span>% used [<span class="number">0x00000000fff80000</span>,<span class="number">0x00000000fff80000</span>,<span class="number">0x0000000100000000</span>)</span><br><span class="line"> ParOldGen       total 6144K, used 4312K [<span class="number">0x00000000ff600000</span>, <span class="number">0x00000000ffc00000</span>, <span class="number">0x00000000ffc00000</span>)</span><br><span class="line">  object space 6144K, <span class="number">70</span>% used [<span class="number">0x00000000ff600000</span>,<span class="number">0x00000000ffa36020</span>,<span class="number">0x00000000ffc00000</span>)</span><br><span class="line"> Metaspace       used 2580K, capacity 4486K, committed 4864K, reserved 1056768K</span><br><span class="line">  <span class="class"><span class="keyword">class</span> <span class="title">space</span>    <span class="title">used</span> 287<span class="title">K</span>, <span class="title">capacity</span> 386<span class="title">K</span>, <span class="title">committed</span> 512<span class="title">K</span>, <span class="title">reserved</span> 1048576<span class="title">K</span></span></span><br><span class="line"><span class="class">&#125;</span></span><br><span class="line"><span class="class"></span>&#123;Heap before GC invocations=<span class="number">2</span> (full <span class="number">0</span>):</span><br><span class="line"> PSYoungGen      total 3584K, used 488K [<span class="number">0x00000000ffc00000</span>, <span class="number">0x0000000100000000</span>, <span class="number">0x0000000100000000</span>)</span><br><span class="line">  eden space 3072K, <span class="number">0</span>% used [<span class="number">0x00000000ffc00000</span>,<span class="number">0x00000000ffc00000</span>,<span class="number">0x00000000fff00000</span>)</span><br><span class="line">  from space 512K, <span class="number">95</span>% used [<span class="number">0x00000000fff00000</span>,<span class="number">0x00000000fff7a020</span>,<span class="number">0x00000000fff80000</span>)</span><br><span class="line">  to   space 512K, <span class="number">0</span>% used [<span class="number">0x00000000fff80000</span>,<span class="number">0x00000000fff80000</span>,<span class="number">0x0000000100000000</span>)</span><br><span class="line"> ParOldGen       total 6144K, used 4312K [<span class="number">0x00000000ff600000</span>, <span class="number">0x00000000ffc00000</span>, <span class="number">0x00000000ffc00000</span>)</span><br><span class="line">  object space 6144K, <span class="number">70</span>% used [<span class="number">0x00000000ff600000</span>,<span class="number">0x00000000ffa36020</span>,<span class="number">0x00000000ffc00000</span>)</span><br><span class="line"> Metaspace       used 2580K, capacity 4486K, committed 4864K, reserved 1056768K</span><br><span class="line">  <span class="class"><span class="keyword">class</span> <span class="title">space</span>    <span class="title">used</span> 287<span class="title">K</span>, <span class="title">capacity</span> 386<span class="title">K</span>, <span class="title">committed</span> 512<span class="title">K</span>, <span class="title">reserved</span> 1048576<span class="title">K</span></span></span><br><span class="line"><span class="class"><span class="title">Heap</span> <span class="title">after</span> <span class="title">GC</span> <span class="title">invocations</span></span>=<span class="number">2</span> (full <span class="number">0</span>):</span><br><span class="line"> PSYoungGen      total 3584K, used 488K [<span class="number">0x00000000ffc00000</span>, <span class="number">0x0000000100000000</span>, <span class="number">0x0000000100000000</span>)</span><br><span class="line">  eden space 3072K, <span class="number">0</span>% used [<span class="number">0x00000000ffc00000</span>,<span class="number">0x00000000ffc00000</span>,<span class="number">0x00000000fff00000</span>)</span><br><span class="line">  from space 512K, <span class="number">95</span>% used [<span class="number">0x00000000fff80000</span>,<span class="number">0x00000000ffffa020</span>,<span class="number">0x0000000100000000</span>)</span><br><span class="line">  to   space 512K, <span class="number">0</span>% used [<span class="number">0x00000000fff00000</span>,<span class="number">0x00000000fff00000</span>,<span class="number">0x00000000fff80000</span>)</span><br><span class="line"> ParOldGen       total 6144K, used 4312K [<span class="number">0x00000000ff600000</span>, <span class="number">0x00000000ffc00000</span>, <span class="number">0x00000000ffc00000</span>)</span><br><span class="line">  object space 6144K, <span class="number">70</span>% used [<span class="number">0x00000000ff600000</span>,<span class="number">0x00000000ffa36020</span>,<span class="number">0x00000000ffc00000</span>)</span><br><span class="line"> Metaspace       used 2580K, capacity 4486K, committed 4864K, reserved 1056768K</span><br><span class="line">  <span class="class"><span class="keyword">class</span> <span class="title">space</span>    <span class="title">used</span> 287<span class="title">K</span>, <span class="title">capacity</span> 386<span class="title">K</span>, <span class="title">committed</span> 512<span class="title">K</span>, <span class="title">reserved</span> 1048576<span class="title">K</span></span></span><br><span class="line"><span class="class">&#125;</span></span><br><span class="line"><span class="class"></span>&#123;Heap before GC invocations=<span class="number">3</span> (full <span class="number">1</span>):</span><br><span class="line"> PSYoungGen      total 3584K, used 488K [<span class="number">0x00000000ffc00000</span>, <span class="number">0x0000000100000000</span>, <span class="number">0x0000000100000000</span>)</span><br><span class="line">  eden space 3072K, <span class="number">0</span>% used [<span class="number">0x00000000ffc00000</span>,<span class="number">0x00000000ffc00000</span>,<span class="number">0x00000000fff00000</span>)</span><br><span class="line">  from space 512K, <span class="number">95</span>% used [<span class="number">0x00000000fff80000</span>,<span class="number">0x00000000ffffa020</span>,<span class="number">0x0000000100000000</span>)</span><br><span class="line">  to   space 512K, <span class="number">0</span>% used [<span class="number">0x00000000fff00000</span>,<span class="number">0x00000000fff00000</span>,<span class="number">0x00000000fff80000</span>)</span><br><span class="line"> ParOldGen       total 6144K, used 4312K [<span class="number">0x00000000ff600000</span>, <span class="number">0x00000000ffc00000</span>, <span class="number">0x00000000ffc00000</span>)</span><br><span class="line">  object space 6144K, <span class="number">70</span>% used [<span class="number">0x00000000ff600000</span>,<span class="number">0x00000000ffa36020</span>,<span class="number">0x00000000ffc00000</span>)</span><br><span class="line"> Metaspace       used 2580K, capacity 4486K, committed 4864K, reserved 1056768K</span><br><span class="line">  <span class="class"><span class="keyword">class</span> <span class="title">space</span>    <span class="title">used</span> 287<span class="title">K</span>, <span class="title">capacity</span> 386<span class="title">K</span>, <span class="title">committed</span> 512<span class="title">K</span>, <span class="title">reserved</span> 1048576<span class="title">K</span></span></span><br><span class="line"><span class="class"><span class="title">Heap</span> <span class="title">after</span> <span class="title">GC</span> <span class="title">invocations</span></span>=<span class="number">3</span> (full <span class="number">1</span>):</span><br><span class="line"> PSYoungGen      total 3584K, used 0K [<span class="number">0x00000000ffc00000</span>, <span class="number">0x0000000100000000</span>, <span class="number">0x0000000100000000</span>)</span><br><span class="line">  eden space 3072K, <span class="number">0</span>% used [<span class="number">0x00000000ffc00000</span>,<span class="number">0x00000000ffc00000</span>,<span class="number">0x00000000fff00000</span>)</span><br><span class="line">  from space 512K, <span class="number">0</span>% used [<span class="number">0x00000000fff80000</span>,<span class="number">0x00000000fff80000</span>,<span class="number">0x0000000100000000</span>)</span><br><span class="line">  to   space 512K, <span class="number">0</span>% used [<span class="number">0x00000000fff00000</span>,<span class="number">0x00000000fff00000</span>,<span class="number">0x00000000fff80000</span>)</span><br><span class="line"> ParOldGen       total 6144K, used 642K [<span class="number">0x00000000ff600000</span>, <span class="number">0x00000000ffc00000</span>, <span class="number">0x00000000ffc00000</span>)</span><br><span class="line">  object space 6144K, <span class="number">10</span>% used [<span class="number">0x00000000ff600000</span>,<span class="number">0x00000000ff6a08a0</span>,<span class="number">0x00000000ffc00000</span>)</span><br><span class="line"> Metaspace       used 2580K, capacity 4486K, committed 4864K, reserved 1056768K</span><br><span class="line">  <span class="class"><span class="keyword">class</span> <span class="title">space</span>    <span class="title">used</span> 287<span class="title">K</span>, <span class="title">capacity</span> 386<span class="title">K</span>, <span class="title">committed</span> 512<span class="title">K</span>, <span class="title">reserved</span> 1048576<span class="title">K</span></span></span><br><span class="line"><span class="class">&#125;</span></span><br><span class="line"><span class="class"></span>&#123;Heap before GC invocations=<span class="number">4</span> (full <span class="number">1</span>):</span><br><span class="line"> PSYoungGen      total 3584K, used 0K [<span class="number">0x00000000ffc00000</span>, <span class="number">0x0000000100000000</span>, <span class="number">0x0000000100000000</span>)</span><br><span class="line">  eden space 3072K, <span class="number">0</span>% used [<span class="number">0x00000000ffc00000</span>,<span class="number">0x00000000ffc00000</span>,<span class="number">0x00000000fff00000</span>)</span><br><span class="line">  from space 512K, <span class="number">0</span>% used [<span class="number">0x00000000fff80000</span>,<span class="number">0x00000000fff80000</span>,<span class="number">0x0000000100000000</span>)</span><br><span class="line">  to   space 512K, <span class="number">0</span>% used [<span class="number">0x00000000fff00000</span>,<span class="number">0x00000000fff00000</span>,<span class="number">0x00000000fff80000</span>)</span><br><span class="line"> ParOldGen       total 6144K, used 642K [<span class="number">0x00000000ff600000</span>, <span class="number">0x00000000ffc00000</span>, <span class="number">0x00000000ffc00000</span>)</span><br><span class="line">  object space 6144K, <span class="number">10</span>% used [<span class="number">0x00000000ff600000</span>,<span class="number">0x00000000ff6a08a0</span>,<span class="number">0x00000000ffc00000</span>)</span><br><span class="line"> Metaspace       used 2580K, capacity 4486K, committed 4864K, reserved 1056768K</span><br><span class="line">  <span class="class"><span class="keyword">class</span> <span class="title">space</span>    <span class="title">used</span> 287<span class="title">K</span>, <span class="title">capacity</span> 386<span class="title">K</span>, <span class="title">committed</span> 512<span class="title">K</span>, <span class="title">reserved</span> 1048576<span class="title">K</span></span></span><br><span class="line"><span class="class"><span class="title">Heap</span> <span class="title">after</span> <span class="title">GC</span> <span class="title">invocations</span></span>=<span class="number">4</span> (full <span class="number">1</span>):</span><br><span class="line"> PSYoungGen      total 3584K, used 0K [<span class="number">0x00000000ffc00000</span>, <span class="number">0x0000000100000000</span>, <span class="number">0x0000000100000000</span>)</span><br><span class="line">  eden space 3072K, <span class="number">0</span>% used [<span class="number">0x00000000ffc00000</span>,<span class="number">0x00000000ffc00000</span>,<span class="number">0x00000000fff00000</span>)</span><br><span class="line">  from space 512K, <span class="number">0</span>% used [<span class="number">0x00000000fff00000</span>,<span class="number">0x00000000fff00000</span>,<span class="number">0x00000000fff80000</span>)</span><br><span class="line">  to   space 512K, <span class="number">0</span>% used [<span class="number">0x00000000fff80000</span>,<span class="number">0x00000000fff80000</span>,<span class="number">0x0000000100000000</span>)</span><br><span class="line"> ParOldGen       total 6144K, used 642K [<span class="number">0x00000000ff600000</span>, <span class="number">0x00000000ffc00000</span>, <span class="number">0x00000000ffc00000</span>)</span><br><span class="line">  object space 6144K, <span class="number">10</span>% used [<span class="number">0x00000000ff600000</span>,<span class="number">0x00000000ff6a08a0</span>,<span class="number">0x00000000ffc00000</span>)</span><br><span class="line"> Metaspace       used 2580K, capacity 4486K, committed 4864K, reserved 1056768K</span><br><span class="line">  <span class="class"><span class="keyword">class</span> <span class="title">space</span>    <span class="title">used</span> 287<span class="title">K</span>, <span class="title">capacity</span> 386<span class="title">K</span>, <span class="title">committed</span> 512<span class="title">K</span>, <span class="title">reserved</span> 1048576<span class="title">K</span></span></span><br><span class="line"><span class="class">&#125;</span></span><br><span class="line"><span class="class"></span>&#123;Heap before GC invocations=<span class="number">5</span> (full <span class="number">2</span>):</span><br><span class="line"> PSYoungGen      total 3584K, used 0K [<span class="number">0x00000000ffc00000</span>, <span class="number">0x0000000100000000</span>, <span class="number">0x0000000100000000</span>)</span><br><span class="line">  eden space 3072K, <span class="number">0</span>% used [<span class="number">0x00000000ffc00000</span>,<span class="number">0x00000000ffc00000</span>,<span class="number">0x00000000fff00000</span>)</span><br><span class="line">  from space 512K, <span class="number">0</span>% used [<span class="number">0x00000000fff00000</span>,<span class="number">0x00000000fff00000</span>,<span class="number">0x00000000fff80000</span>)</span><br><span class="line">  to   space 512K, <span class="number">0</span>% used [<span class="number">0x00000000fff80000</span>,<span class="number">0x00000000fff80000</span>,<span class="number">0x0000000100000000</span>)</span><br><span class="line"> ParOldGen       total 6144K, used 642K [<span class="number">0x00000000ff600000</span>, <span class="number">0x00000000ffc00000</span>, <span class="number">0x00000000ffc00000</span>)</span><br><span class="line">  object space 6144K, <span class="number">10</span>% used [<span class="number">0x00000000ff600000</span>,<span class="number">0x00000000ff6a08a0</span>,<span class="number">0x00000000ffc00000</span>)</span><br><span class="line"> Metaspace       used 2580K, capacity 4486K, committed 4864K, reserved 1056768K</span><br><span class="line">  <span class="class"><span class="keyword">class</span> <span class="title">space</span>    <span class="title">used</span> 287<span class="title">K</span>, <span class="title">capacity</span> 386<span class="title">K</span>, <span class="title">committed</span> 512<span class="title">K</span>, <span class="title">reserved</span> 1048576<span class="title">K</span></span></span><br><span class="line"><span class="class"><span class="title">Heap</span> <span class="title">after</span> <span class="title">GC</span> <span class="title">invocations</span></span>=<span class="number">5</span> (full <span class="number">2</span>):</span><br><span class="line"> PSYoungGen      total 3584K, used 0K [<span class="number">0x00000000ffc00000</span>, <span class="number">0x0000000100000000</span>, <span class="number">0x0000000100000000</span>)</span><br><span class="line">  eden space 3072K, <span class="number">0</span>% used [<span class="number">0x00000000ffc00000</span>,<span class="number">0x00000000ffc00000</span>,<span class="number">0x00000000fff00000</span>)</span><br><span class="line">  from space 512K, <span class="number">0</span>% used [<span class="number">0x00000000fff00000</span>,<span class="number">0x00000000fff00000</span>,<span class="number">0x00000000fff80000</span>)</span><br><span class="line">  to   space 512K, <span class="number">0</span>% used [<span class="number">0x00000000fff80000</span>,<span class="number">0x00000000fff80000</span>,<span class="number">0x0000000100000000</span>)</span><br><span class="line"> ParOldGen       total 6144K, used 630K [<span class="number">0x00000000ff600000</span>, <span class="number">0x00000000ffc00000</span>, <span class="number">0x00000000ffc00000</span>)</span><br><span class="line">  object space 6144K, <span class="number">10</span>% used [<span class="number">0x00000000ff600000</span>,<span class="number">0x00000000ff69d8d0</span>,<span class="number">0x00000000ffc00000</span>)</span><br><span class="line"> Metaspace       used 2580K, capacity 4486K, committed 4864K, reserved 1056768K</span><br><span class="line">  <span class="class"><span class="keyword">class</span> <span class="title">space</span>    <span class="title">used</span> 287<span class="title">K</span>, <span class="title">capacity</span> 386<span class="title">K</span>, <span class="title">committed</span> 512<span class="title">K</span>, <span class="title">reserved</span> 1048576<span class="title">K</span></span></span><br><span class="line"><span class="class">&#125;</span></span><br><span class="line"><span class="class"><span class="title">java</span>.<span class="title">lang</span>.<span class="title">OutOfMemoryError</span>: <span class="title">Java</span> <span class="title">heap</span> <span class="title">space</span></span></span><br><span class="line"><span class="class"><span class="title">Dumping</span> <span class="title">heap</span> <span class="title">to</span> <span class="title">java_pid17676</span>.<span class="title">hprof</span> ...</span></span><br><span class="line"><span class="class"><span class="title">Heap</span> <span class="title">dump</span> <span class="title">file</span> <span class="title">created</span> [1336934 <span class="title">bytes</span> <span class="title">in</span> 0.006 <span class="title">secs</span>]</span></span><br><span class="line"><span class="class"><span class="title">Exception</span> <span class="title">in</span> <span class="title">thread</span> &quot;<span class="title">main</span>&quot; <span class="title">java</span>.<span class="title">lang</span>.<span class="title">OutOfMemoryError</span>: <span class="title">Java</span> <span class="title">heap</span> <span class="title">space</span></span></span><br><span class="line"><span class="class">	<span class="title">at</span> <span class="title">TestHeapOOM</span>.<span class="title">main</span>(<span class="title">TestHeapOOM</span>.<span class="title">java</span>:6)</span></span><br><span class="line"><span class="class"></span></span><br><span class="line"><span class="class"><span class="title">D</span>:\<span class="title">testOOM</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p>我们来分析一下, 我们固定堆内存大小为10M, 新生代为4M. 我们看到PSYoungGen总共为3584K, 分别为eden区3072K, from survivor区为512K, 然后加上to survivor 区的512K, 总共为4096K. 老年代总共为6114K</p>
+<p>我们来看一下第一次GC之前的内存分布情况: 此时程序已经进行了俩次内存分配, 在第三次的(分配6M 6114K的byte数组)时候触发了GC. 此时 新生代为3002K, 老年代为4096K, 我们可以推断出，第一次2M的byte数组应该是分配在了新生代, 而第二次的4M byte数组直接分配在了老年代.</p>
+<p>而经过一次GC之后, 新生代使用了488K, 而老年代增长到4312K. 经过一次GC之后新生代消耗了<code>3002 - 488 -(4312 - 4096) = 2298</code>, 我们可以推断出第一次分配的那2M的byte数组被回收掉了.</p>
+<p>接下来又进行了一次yong GC但是内存并没有发生什么变化,于是就发生了一次full GC.</p>
+<p>第一次full GC(也就是invocations=3的时候)之后, 我们看到新生代被清空了, 老年代也只剩下了642K的内存被使用着, 我们推断应该是那个4M的byte数组被回收掉了. 但是此时要分配一个6M的byte数组,显然老年代是不够的. 于是在这次Full GC的时候又进行了一次GC操作, 但是内存仍然不够, 于是又产生了一次Full GC, 也就是full=2的那次. 但是很悲催, 内存仍然是不够用的, 于是就看到了java.lang.OutOfMemoryError: Java heap space, 同时生成了一个java_pid17676.hprof 的文件.</p>
+<p>对于*.hprof文件。我们可以通过下列工具分析它</p>
+<ul>
+<li>Eclipse Memory Analyzer</li>
+<li>JProfiler</li>
+<li>jvisualvm</li>
+<li>jhat</li>
+</ul>
+<p>由于我们从上面的GC日志中分析出了引发内存溢出的原因, 也就不再使用上列的工具分析*.hprof文件了,但是对于复杂的应用程序来说,如果发生了堆内存溢出的话, 使用上列工具分析的话,还是非常有必要的.</p>
+<p>在分析这个文件的时候,我们重点确认内存中的对象是否是必要的,也就是弄清楚是引发了内存泄漏还是内存溢出.</p>
+<ol>
+<li>如果是内存泄漏可通过工具查看泄漏对象到GC Roots的引用链.于是就能找到泄漏对象是通过怎样的路径与GC Toots相关联,并导致垃圾收集器无法自动回收它们的. 掌握了泄漏对象的类型信息,以及GC Roots引用链信息,就可以比较准确地定位出泄漏代码的位置.</li>
+<li>如果不存在泄漏, 换句话说就是内存中的对象确实还都必须存货着, 那就应当检查虚拟机的堆参数,与物理机内存对比查看是否还可以调大,从代码上检查是否存在某些生命周期过长,持有状态时间过长的情况,尝试减少程序运行周期的内存消耗.</li>
+</ol>
+<h2 id="DirectMemory-OOM"><a href="#DirectMemory-OOM" class="headerlink" title="DirectMemory OOM"></a>DirectMemory OOM</h2><p>溢出代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * VM Args: -Xmx20M -XX:MaxDirectMemorySize=10M</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">DirectMemoryOOM</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="keyword">int</span> _1MB = <span class="number">1024</span> * <span class="number">1024</span>;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> Exception </span>&#123;</span><br><span class="line">        Field unsafeField = Unsafe.class.getDeclaredFields()[<span class="number">0</span>];</span><br><span class="line">        unsafeField.setAccessible(<span class="keyword">true</span>);</span><br><span class="line">        Unsafe unsafe = (Unsafe)unsafeField.get(<span class="keyword">null</span>);</span><br><span class="line">        <span class="keyword">while</span>(<span class="keyword">true</span>)</span><br><span class="line">            unsafe.allocateMemory(_1MB);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>直接通过反射获取Unsafe实例并进行内存分配,Unsafe类的getUnsafe()方法限制了只有引导类加载器才会返回实例,也就是设计者希望只有rt.jar中的类才能使用unsafe的功能. 因为虽然使用DirectbyeBuffer分配内存也会抛出内存异常,但抛出异常时并没有真正向操作系统申请分配内存,而是通过计算得知内存无法分配,于是手动抛出异常,真正申请分配内存的方法是:unsafe.allocateMemory(_1MB);</p>
+
+      
+    </div>
+    <div class="article-footer">
+      <blockquote class="mt-2x">
+  <ul class="post-copyright list-unstyled">
+    
+    <li class="post-copyright-link hidden-xs">
+      <strong>本文链接：</strong>
+      <a href="https://wangmingco.github.io/2014/09/06/Java/jvm/JVM%E5%86%85%E5%AD%98%E6%BA%A2%E5%87%BA/" title="JVM内存溢出" target="_blank" rel="external">https://wangmingco.github.io/2014/09/06/Java/jvm/JVM内存溢出/</a>
+    </li>
+    
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong> 本博客所有文章除特别声明外，均采用 <a href="http://creativecommons.org/licenses/by/4.0/deed.zh" target="_blank" rel="external">CC BY 4.0 CN协议</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+</blockquote>
+
+
+<div class="panel panel-default panel-badger">
+  <div class="panel-body">
+    <figure class="media">
+      <div class="media-left">
+        <a href="https://github.com/wangmingco" target="_blank" class="img-burn thumb-sm visible-lg">
+          <img src="/images/avatar.jpg" class="img-rounded w-full" alt="">
+        </a>
+      </div>
+      <div class="media-body">
+        <h3 class="media-heading"><a href="https://github.com/wangmingco" target="_blank"><span class="text-dark">王明</span><small class="ml-1x">Coder</small></a></h3>
+        <div>一个纯粹的技术开发者。</div>
+      </div>
+    </figure>
+  </div>
+</div>
+
+
+    </div>
+  </article>
+  
+    
+  <section id="comments">
+  	
+      <div id="vcomments"></div>
+    
+  </section>
+
+
+  
+</div>
+
+  <nav class="bar bar-footer clearfix" data-stick-bottom>
+  <div class="bar-inner">
+  
+  <ul class="pager pull-left">
+    
+    <li class="prev">
+      <a href="/2014/09/09/Java/jvm/JVM%20%E7%B1%BB%E5%8A%A0%E8%BD%BD%E6%9C%BA%E5%88%B6/" title="类加载机制"><i class="icon icon-angle-left" aria-hidden="true"></i><span>&nbsp;&nbsp;上一篇</span></a>
+    </li>
+    
+    
+    <li class="next">
+      <a href="/2014/09/04/Java/jvm/JVM%20%E6%96%B9%E6%B3%95%E8%B0%83%E7%94%A8/" title="JVM方法调用"><span>下一篇&nbsp;&nbsp;</span><i class="icon icon-angle-right" aria-hidden="true"></i></a>
+    </li>
+    
+    
+  </ul>
+  
+  
+  <!-- Button trigger modal -->
+  <button type="button" class="btn btn-fancy btn-donate pop-onhover bg-gradient-warning" data-toggle="modal" data-target="#donateModal"><span>赏</span></button>
+  <!-- <div class="wave-icon wave-icon-danger btn-donate" data-toggle="modal" data-target="#donateModal">
+    <div class="wave-circle"><span class="icon"><i class="icon icon-bill"></i></span></div>
+  </div> -->
+  
+  
+  <div class="bar-right">
+    
+    <div class="share-component" data-sites="weibo,qq,wechat,facebook,twitter" data-mobile-sites="weibo,qq,qzone"></div>
+    
+  </div>
+  </div>
+</nav>
+  
+<!-- Modal -->
+<div class="modal modal-center modal-small modal-xs-full fade" id="donateModal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content donate">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <div class="modal-body">
+        <div class="donate-box">
+          <div class="donate-head">
+            <p>感谢您的支持，我会继续努力的!</p>
+          </div>
+          <div class="tab-content">
+            <div role="tabpanel" class="tab-pane fade active in" id="alipay">
+              <div class="donate-payimg">
+                <img src="/images/donate/alipayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开支付宝扫一扫，即可进行扫码打赏哦</p>
+            </div>
+            <div role="tabpanel" class="tab-pane fade" id="wechatpay">
+              <div class="donate-payimg">
+                <img src="/images/donate/wechatpayimg.png" alt="扫码支持" title="扫一扫" />
+              </div>
+              <p class="text-muted mv">扫码打赏，你说多少就多少</p>
+              <p class="text-grey">打开微信扫一扫，即可进行扫码打赏哦</p>
+            </div>
+          </div>
+          <div class="donate-footer">
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+              <li role="presentation" class="active">
+                <a href="#alipay" id="alipay-tab" role="tab" data-toggle="tab" aria-controls="alipay" aria-expanded="true"><i class="icon icon-alipay"></i> 支付宝</a>
+              </li>
+              <li role="presentation" class="">
+                <a href="#wechatpay" role="tab" id="wechatpay-tab" data-toggle="tab" aria-controls="wechatpay" aria-expanded="false"><i class="icon icon-wepay"></i> 微信支付</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+</main>
+
+  <footer class="footer" itemscope itemtype="http://schema.org/WPFooter">
+	
+	
+    <ul class="social-links">
+    	
+        <li><a href="https://github.com/wangmingco" target="_blank" title="Github" data-toggle=tooltip data-placement=top><i class="icon icon-github"></i></a></li>
+        
+        <li><a href="https://gitee.com/wangmingco" target="_blank" title="Gitee" data-toggle=tooltip data-placement=top><i class="icon icon-gitee"></i></a></li>
+        
+        <li><a href="https://weibo.com/wangmingco" target="_blank" title="Weibo" data-toggle=tooltip data-placement=top><i class="icon icon-weibo"></i></a></li>
+        
+        <li><a href="https://www.zhihu.com/people/wangmingco" target="_blank" title="Zhihu" data-toggle=tooltip data-placement=top><i class="icon icon-zhihu"></i></a></li>
+        
+        <li><a href="https://www.douban.com/people/xxxyy/" target="_blank" title="Douban" data-toggle=tooltip data-placement=top><i class="icon icon-douban"></i></a></li>
+        
+        <li><a href="/atom.xml" target="_blank" title="Rss" data-toggle=tooltip data-placement=top><i class="icon icon-rss"></i></a></li>
+        
+    </ul>
+
+    <div class="copyright">
+    	
+        <div class="publishby">
+        	Theme by <a href="https://github.com/cofess" target="_blank"> cofess </a>base on <a href="https://github.com/cofess/hexo-theme-pure" target="_blank">pure</a>.
+        </div>
+    </div>
+</footer>
+  <script src="//cdn.jsdelivr.net/npm/jquery@1.12.4/dist/jquery.min.js"></script>
+<script>
+window.jQuery || document.write('<script src="js/jquery.min.js"><\/script>')
+</script>
+
+<script src="/js/plugin.min.js"></script>
+
+
+<script src="/js/application.js"></script>
+
+
+    <script>
+(function (window) {
+    var INSIGHT_CONFIG = {
+        TRANSLATION: {
+            POSTS: '文章',
+            PAGES: '页面',
+            CATEGORIES: '分类',
+            TAGS: '标签',
+            UNTITLED: '(未命名)',
+        },
+        ROOT_URL: '/',
+        CONTENT_URL: '/content.json',
+    };
+    window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+})(window);
+</script>
+
+<script src="/js/insight.js"></script>
+
+
+
+
+
+
+   
+
+
+
+
+   
+    
+  <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/valine"></script>
+  <script type="text/javascript">
+  var GUEST = ['nick', 'mail', 'link'];
+  var meta = 'nick,mail,link';
+  meta = meta.split(',').filter(function(item) {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#vcomments',
+    verify: false,
+    notify: false,
+    appId: '',
+    appKey: '',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: meta,
+    pageSize: '10' || 10,
+    visitor: false
+  });
+  </script>
+
+     
+
+
+
+
+
+
+
+</body>
+</html>
