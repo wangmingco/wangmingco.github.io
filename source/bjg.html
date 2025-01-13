@@ -36,14 +36,21 @@
     
     function addPosition(x, y, title) {
         const item = bd09ToGcj02(x, y)
-        // 点标记显示内容，HTML要素字符串
-        var markerContent = '' +
-        '<div class="custom-content-marker">' + title + 
-        '   <img src="//a.amap.com/jsapi_demos/static/demo-center/icons/dir-via-marker.png">' +
-        '</div>';
+        // 点标记显示内容，HTML要素字符串 <input type="text" value="'+title+'" style="font-weight: bold;">
+        var markerContent = `
+        <div><div class="custom-content-marker"> 
+           <img src="https://a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-red.png">
+        </div></div>`;
         const marker = new AMap.Marker({
             position: new AMap.LngLat(item[0], item[1]), //Marker 经纬度
             content: markerContent, //将 html 传给 content
+            // 显示标题
+            label: {
+                content: title,
+                direction: top
+            },
+            // 鼠标滑过时显示
+            title: title,
             offset: new AMap.Pixel(-13, -30), //以 icon 的 [center bottom] 为原点
         });
 
