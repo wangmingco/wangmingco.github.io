@@ -115,14 +115,14 @@ body{height:100%;margin:0px;padding:0px}
 
     function addOverlay(array, color) {
         array.forEach(function(item, index) {
-            map.addOverlay(new BMapGL.Marker(new BMapGL.Point(item.x, item.y)));
+            map.addOverlay(new BMapGL.Marker(new BMapGL.Point(item[0], item[1])));
 
             var opts = {
-                position: new BMapGL.Point(item.x, item.y), // 指定文本标注所在的地理位置
+                position: new BMapGL.Point(item[0], item[1]), // 指定文本标注所在的地理位置
                 offset: new BMapGL.Size(12, -30) // 设置文本偏移量
             };
             // 创建文本标注对象
-            var label = new BMapGL.Label(item.title, opts);
+            var label = new BMapGL.Label(item[2], opts);
             // 自定义文本标注样式
             label.setStyle({
                 color: color,
@@ -143,7 +143,7 @@ body{height:100%;margin:0px;padding:0px}
         var allOverlay = map.getOverlays();
         allOverlay.map(overlay => {
             array.forEach(function(item, index) {
-                if(overlay.content == item.title){
+                if(overlay.content == item[2]){
                     overlay.hide()
                     map.removeOverlay(overlay);
                 }
@@ -169,7 +169,7 @@ body{height:100%;margin:0px;padding:0px}
                     map.addOverlay(marker);
 
                     // 创建信息窗口
-                    const infoWindow = new BMapGL.InfoWindow(result.title, {
+                    const infoWindow = new BMapGL.InfoWindow(result[2], {
                         width: 200, // 信息窗口宽度
                         height: 100, // 信息窗口高度
                         '地铁站信息' // 信息窗口标题
