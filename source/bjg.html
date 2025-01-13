@@ -13,6 +13,7 @@
 
 <!-- 加载地图JSAPI脚本 -->
 <script src="https://webapi.amap.com/maps?v=2.0&key=bdfdcd1e62e20e2d27d027d457c9463e"></script>
+<script src="bj.js"></script>
 <script>
     var map = new AMap.Map('container', {
         viewMode: '2D', // 默认使用 2D 模式，如果希望使用带有俯仰角的 3D 模式，请设置 viewMode: '3D'
@@ -20,25 +21,48 @@
         center: [116.397428, 39.90923] // 初始化地图中心点
     });
 
-     // 点标记显示内容，HTML要素字符串
-     
-
-    addPosition(116.323871,39.909108, '123')
-
+    addOverlay(dataMap.bowuguanData, 'red')
+    addOverlay(dataMap.jingdianData, 'blue')
+    addOverlay(dataMap.ertongData, 'green')
+    addOverlay(dataMap.juchangData, 'Purple')
+    addOverlay(dataMap.simiaoData, 'goldenrod')
+    addOverlay(dataMap.shangchangData, 'yellowgreen')
+    
+    function addOverlay(array, color) {
+        array.forEach(function(item, index) {
+            addPosition(item[0], item[1], item[2])
+        })
+    }
+    
     function addPosition(x, y, title) {
+        const item = bd09ToGcj02(x, y)
+        // 点标记显示内容，HTML要素字符串
         var markerContent = '' +
         '<div class="custom-content-marker">' + title + 
         '   <img src="//a.amap.com/jsapi_demos/static/demo-center/icons/dir-via-marker.png">' +
         '</div>';
-        const position = new AMap.LngLat(x, y); //Marker 经纬度
         const marker = new AMap.Marker({
-            position: position,
+            position: new AMap.LngLat(item[0], item[1]), //Marker 经纬度
             content: markerContent, //将 html 传给 content
             offset: new AMap.Pixel(-13, -30), //以 icon 的 [center bottom] 为原点
         });
 
         map.add(marker);
     }
+
+    // 常量定义
+    function bd09ToGcj02(bd_lon, bd_lat) {
+        const x_pi = 3.14159265358979324 * 3000.0 / 180.0;
+        // 百度坐标系 (BD-09) 转换为高德坐标系 (GCJ-02)
+        var x = bd_lon - 0.0065;
+        var y = bd_lat - 0.006;
+        var z = Math.sqrt(x * x + y * y) - 0.00002 * Math.sin(y * x_pi);
+        var theta = Math.atan2(y, x) - 0.000003 * Math.cos(x * x_pi);
+        var gg_lon = z * Math.cos(theta);
+        var gg_lat = z * Math.sin(theta);
+        return [gg_lon, gg_lat];
+    }
+
 </script>
 </body>
 
