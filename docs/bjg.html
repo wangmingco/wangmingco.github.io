@@ -1,5 +1,6 @@
 <!doctype html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,107 +8,202 @@
     <link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css" />
     <title>地图显示</title>
 </head>
-<body>
 
+<body>
+    <div class="condition">
+        <div style="width: 60px;">
+            <input id="bowuguan" class="inputCheckBox" type="checkbox" checked="checked">博物馆</input>
+        </div>
+        <div style="width: 50px;">
+            <input id="jingdian" class="inputCheckBox" type="checkbox" checked="checked">景点</input>
+        </div>
+        <div style="width: 50px;">
+            <input id="ertong" class="inputCheckBox" type="checkbox" checked="checked">儿童</input>
+        </div>
+        <div style="width: 50px;">
+            <input id="juchang" class="inputCheckBox" type="checkbox">剧场</input>
+        </div>
+        <div style="width: 50px;">
+            <input id="simiao" class="inputCheckBox" type="checkbox">寺庙</input>
+        </div>
+        <div style="width: 50px;">
+            <input id="shangchang" class="inputCheckBox" type="checkbox">商场</input>
+        </div>
+        <div style="width: 50px;">
+            <input id="huabing" class="inputCheckBox" type="checkbox">滑冰</input>
+        </div>
+        <div style="width: 200px;">
+            <input type="text" id="start" placeholder="起点">
+        </div>
+        <div style="width: 200px;">
+            <input type="text" id="end" placeholder="终点">
+        </div>
+        <div style="width: 40px;">
+            <button onclick="searchTransit()">公交</button>
+        </div>
+        <div style="width: 40px;">
+            <button onclick="searchDriving()">自驾</button>
+        </div>
+    </div>
+    <br />
     <div id="container"></div>
 
-<!-- 加载地图JSAPI脚本 -->
-<script src="https://webapi.amap.com/maps?v=2.0&key=bdfdcd1e62e20e2d27d027d457c9463e"></script>
-<script src="bj.js"></script>
-<script>
-    var map = new AMap.Map('container', {
-        viewMode: '2D', // 默认使用 2D 模式，如果希望使用带有俯仰角的 3D 模式，请设置 viewMode: '3D'
-        zoom:12, // 初始化地图层级
-        center: [116.397428, 39.90923] // 初始化地图中心点
-    });
-
-    addOverlay(dataMap.bowuguanData, 'red')
-    addOverlay(dataMap.jingdianData, 'blue')
-    addOverlay(dataMap.ertongData, 'green')
-    addOverlay(dataMap.juchangData, 'Purple')
-    addOverlay(dataMap.simiaoData, 'goldenrod')
-    addOverlay(dataMap.shangchangData, 'yellowgreen')
-    
-    function addOverlay(array, color) {
-        array.forEach(function(item, index) {
-            addPosition(item[0], item[1], item[2])
-        })
-    }
-    
-    function addPosition(x, y, title) {
-        const item = bd09ToGcj02(x, y)
-        // 点标记显示内容，HTML要素字符串 <input type="text" value="'+title+'" style="font-weight: bold;">
-        var markerContent = `
-        <div><div class="custom-content-marker"> 
-           <img src="https://a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-red.png">
-        </div></div>`;
-        const marker = new AMap.Marker({
-            position: new AMap.LngLat(item[0], item[1]), //Marker 经纬度
-            content: markerContent, //将 html 传给 content
-            // 显示标题
-            label: {
-                content: title,
-                direction: top
-            },
-            // 鼠标滑过时显示
-            title: title,
-            offset: new AMap.Pixel(-13, -30), //以 icon 的 [center bottom] 为原点
+    <!-- 加载地图JSAPI脚本 -->
+    <script src="https://webapi.amap.com/maps?v=2.0&key=bdfdcd1e62e20e2d27d027d457c9463e"></script>
+    <script src="bj.js"></script>
+    <script>
+        var map = new AMap.Map('container', {
+            viewMode: '2D', // 默认使用 2D 模式，如果希望使用带有俯仰角的 3D 模式，请设置 viewMode: '3D'
+            zoom: 12, // 初始化地图层级
+            center: [116.397428, 39.90923] // 初始化地图中心点
         });
 
-        map.add(marker);
-    }
+        const selectData = (event) => {
+            const value = bjData[event.id]
+            if (event.checked == true) {
+                addOverlay(value.list, value.color)
+            } else {
+                removeOverlay(value.list)
+            }
+        }
 
-    // 常量定义
-    function bd09ToGcj02(bd_lon, bd_lat) {
-        const x_pi = 3.14159265358979324 * 3000.0 / 180.0;
-        // 百度坐标系 (BD-09) 转换为高德坐标系 (GCJ-02)
-        var x = bd_lon - 0.0065;
-        var y = bd_lat - 0.006;
-        var z = Math.sqrt(x * x + y * y) - 0.00002 * Math.sin(y * x_pi);
-        var theta = Math.atan2(y, x) - 0.000003 * Math.cos(x * x_pi);
-        var gg_lon = z * Math.cos(theta);
-        var gg_lat = z * Math.sin(theta);
-        return [gg_lon, gg_lat];
-    }
+        for (const key in bjData) {
+            const value = bjData[key]// 添加点击事件
+            const checkbox = document.querySelector('#' + key)
+            // 显示默认坐标
+            if (value.show) {
+                addOverlay(value.list, value.color)
+                checkbox.checked = true;
+            }
 
-</script>
+            if (checkbox) {
+                checkbox.addEventListener('change', (event) => {
+                    selectData(event.explicitOriginalTarget)
+                });
+            }
+        }
+
+        function removeOverlay(array) {
+            const titles = array.map(e => e[2])
+            var allOverlays = map.getAllOverlays('marker');
+            for (allOverlay of allOverlays) {
+                if (titles.includes(allOverlay.dom.title)) {
+                    map.remove(allOverlay); //清除 marker
+                }
+            }
+        }
+
+        function addOverlay(array, color) {
+            array.forEach(function (item, index) {
+                addPosition(item[0], item[1], item[2])
+            })
+        }
+
+        function addPosition(x, y, title) {
+            // 点标记显示内容，HTML要素字符串 <input type="text" value="'+title+'" style="font-weight: bold;">
+            var markerContent = `
+            <div><div class="custom-content-marker"> 
+            <img src="https://a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-red.png">
+            </div></div>`;
+
+            const item = bd09ToGcj02(x, y)
+            const marker = new AMap.Marker({
+                position: new AMap.LngLat(item[0], item[1]), //Marker 经纬度
+                content: markerContent, //将 html 传给 content
+                // 显示标题
+                label: {
+                    content: title,
+                    direction: top
+                },
+                // 鼠标滑过时显示
+                title: title,
+                offset: new AMap.Pixel(-13, -30), //以 icon 的 [center bottom] 为原点
+            });
+
+            map.add(marker);
+        }
+
+        // 常量定义
+        function bd09ToGcj02(bd_lon, bd_lat) {
+            const x_pi = 3.14159265358979324 * 3000.0 / 180.0;
+            // 百度坐标系 (BD-09) 转换为高德坐标系 (GCJ-02)
+            var x = bd_lon - 0.0065;
+            var y = bd_lat - 0.006;
+            var z = Math.sqrt(x * x + y * y) - 0.00002 * Math.sin(y * x_pi);
+            var theta = Math.atan2(y, x) - 0.000003 * Math.cos(x * x_pi);
+            var gg_lon = z * Math.cos(theta);
+            var gg_lat = z * Math.sin(theta);
+            return [gg_lon, gg_lat];
+        }
+
+        // 查询公交路径
+        function searchTransit() {
+            const start = document.getElementById("start").value;
+            const end = document.getElementById("end").value;
+            if (start && end) {
+
+            } else {
+                alert("请输入起点和终点");
+            }
+        }
+
+        // 查询自驾路径
+        function searchDriving() {
+            const start = document.getElementById("start").value;
+            const end = document.getElementById("end").value;
+            if (start && end) {
+
+            } else {
+                alert("请输入起点和终点");
+            }
+        }
+
+    </script>
 </body>
 
-<link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css"/>
-    <style>
-        html, body, #container {
-            height: 100%;
-            width: 100%;
-        }
+<link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css" />
+<style>
+    html,
+    body,
+    #container {
+        height: 100%;
+        width: 100%;
+    }
 
-        .custom-content-marker {
-            position: relative;
-            width: 25px;
-            height: 34px;
-        }
+    .custom-content-marker {
+        position: relative;
+        width: 25px;
+        height: 34px;
+    }
 
-        .custom-content-marker img {
-            width: 100%;
-            height: 100%;
-        }
+    .custom-content-marker img {
+        width: 100%;
+        height: 100%;
+    }
 
-        .custom-content-marker .close-btn {
-            position: absolute;
-            top: -6px;
-            right: -8px;
-            width: 15px;
-            height: 15px;
-            font-size: 12px;
-            background: #ccc;
-            border-radius: 50%;
-            color: #fff;
-            text-align: center;
-            line-height: 15px;
-            box-shadow: -1px 1px 1px rgba(10, 10, 10, .2);
-        }
+    .custom-content-marker .close-btn {
+        position: absolute;
+        top: -6px;
+        right: -8px;
+        width: 15px;
+        height: 15px;
+        font-size: 12px;
+        background: #ccc;
+        border-radius: 50%;
+        color: #fff;
+        text-align: center;
+        line-height: 15px;
+        box-shadow: -1px 1px 1px rgba(10, 10, 10, .2);
+    }
 
-        .custom-content-marker .close-btn:hover{
-            background: #666;
-        }
-    </style>
+    .custom-content-marker .close-btn:hover {
+        background: #666;
+    }
+
+    .condition {
+        display: flex;
+        flex-direction: row
+    }
+</style>
+
 </html>

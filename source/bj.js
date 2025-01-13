@@ -252,12 +252,40 @@ var huabing = [
 ]
 
 
-var dataMap = {
-    bowuguanData: bowuguanData,
-    jingdianData: jingdianData,
-    ertongData: ertongData,
-    shangchangData: shangchangData,
-    juchangData: juchangData,
-    simiaoData: simiaoData,
-    huabing: huabing,
+var bjData = {
+    bowuguan: {
+        list: bowuguanData,
+        show: true,
+        color: 'red'
+    },
+    jingdian: {
+        list: jingdianData,
+        show: true,
+        color: 'red'
+    },
+    ertong: {
+        list: ertongData,
+        show: true,
+        color: 'red'
+    },
+    shangchang: {
+        list: shangchangData,
+        show: false,
+        color: 'red'
+    },
+    juchang: {
+        list: juchangData,
+        show: false,
+        color: 'red'
+    },
+    simiao: {
+        list: simiaoData,
+        show: false,
+        color: 'red'
+    },
+    huabing: {
+        list: huabing,
+        show: false,
+        color: 'red'
+    },
 }
