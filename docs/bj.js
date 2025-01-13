@@ -1,4 +1,4 @@
-<script src="/assets/asciinema-player.js"></script><link rel="stylesheet" type="text/css" href="/assets/asciinema-player.css" />var bowuguanData = [
+var bowuguanData = [
     [116.403757, 39.916727, '故宫'],
     [116.348486, 39.911876, '首都博物馆'],
     [116.403757, 39.916727, '国家博物馆'],
