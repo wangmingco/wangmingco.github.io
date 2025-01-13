@@ -45,20 +45,6 @@ body{height:100%;margin:0px;padding:0px}
     map.addControl(scaleCtrl);
     const zoomCtrl = new BMapGL.ZoomControl();  // 添加缩放控件
     map.addControl(zoomCtrl);
-
-    addSubway(map, point);
-   
-    // 创建公交路径搜索实例
-    const transit = new BMapGL.TransitRoute(map, {
-      renderOptions: { map: map, panel: "panel" },
-      policy: BMapGL.TransitRoutePolicy.LEAST_TIME
-    });
-
-    // 创建自驾路径搜索实例
-    const driving = new BMapGL.DrivingRoute(map, {
-        renderOptions: { map: map, panel: "panel" },
-        policy: BMapGL.DrivingRoutePolicy.LEAST_TIME
-    });
     
     // https://api.map.baidu.com/lbsapi/getpoint/index.html
 
@@ -419,6 +405,12 @@ body{height:100%;margin:0px;padding:0px}
         })
     }
 
+    try {
+        addSubway(map, point);
+    } catch(err) {
+        console.error('addSubway', err)
+    }
+
     function addSubway(map, point) {
         // 创建 LocalSearch 实例
         const localSearch = new BMapGL.LocalSearch(map, {
@@ -453,6 +445,16 @@ body{height:100%;margin:0px;padding:0px}
             localSearch.searchNearby('地铁站', point, 5000); // 在点周围1000米范围内搜索地铁站
     }
 
+    try {
+        // 创建公交路径搜索实例
+        const transit = new BMap.TransitRoute(map, {
+            renderOptions: { map: map, panel: "panel" },
+            policy: BMAP_TRANSIT_POLICY_LEAST_TIME
+        });
+    } catch(err) {
+        console.error('TransitRoute', err)
+    }
+
     // 查询公交路径
     function searchTransit() {
       const start = document.getElementById("start").value;
@@ -465,15 +467,26 @@ body{height:100%;margin:0px;padding:0px}
       }
     }
 
+   
+    try {
+         // 创建自驾路径搜索实例
+         const driving = new BMap.DrivingRoute(map, {
+            renderOptions: { map: map, panel: "panel" },
+            policy: BMAP_DRIVING_POLICY_LEAST_TIME
+        });
+    } catch(err) {
+        console.error('DrivingRoute', err)
+    }
+
     // 查询自驾路径
     function searchDriving() {
         const start = document.getElementById("start").value;
         const end = document.getElementById("end").value;
         if (start && end) {
-        map.clearOverlays();
-        driving.search(start, end);
+            map.clearOverlays();
+            driving.search(start, end);
         } else {
-        alert("请输入起点和终点");
+            alert("请输入起点和终点");
         }
     }
 
