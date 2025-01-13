@@ -1,0 +1,82 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css" />
+    <title>地图显示</title>
+</head>
+<body>
+
+    <div id="container"></div>
+
+<!-- 加载地图JSAPI脚本 -->
+<script src="https://webapi.amap.com/maps?v=2.0&key=bdfdcd1e62e20e2d27d027d457c9463e"></script>
+<script>
+    var map = new AMap.Map('container', {
+        viewMode: '2D', // 默认使用 2D 模式，如果希望使用带有俯仰角的 3D 模式，请设置 viewMode: '3D'
+        zoom:12, // 初始化地图层级
+        center: [116.397428, 39.90923] // 初始化地图中心点
+    });
+
+     // 点标记显示内容，HTML要素字符串
+     
+
+    addPosition(116.323871,39.909108, '123')
+
+    function addPosition(x, y, title) {
+        var markerContent = '' +
+        '<div class="custom-content-marker">' + title + 
+        '   <img src="//a.amap.com/jsapi_demos/static/demo-center/icons/dir-via-marker.png">' +
+        '</div>';
+        const position = new AMap.LngLat(x, y); //Marker 经纬度
+        const marker = new AMap.Marker({
+            position: position,
+            content: markerContent, //将 html 传给 content
+            offset: new AMap.Pixel(-13, -30), //以 icon 的 [center bottom] 为原点
+        });
+
+        map.add(marker);
+    }
+</script>
+</body>
+
+<link rel="stylesheet" href="https://a.amap.com/jsapi_demos/static/demo-center/css/demo-center.css"/>
+    <style>
+        html, body, #container {
+            height: 100%;
+            width: 100%;
+        }
+
+        .custom-content-marker {
+            position: relative;
+            width: 25px;
+            height: 34px;
+        }
+
+        .custom-content-marker img {
+            width: 100%;
+            height: 100%;
+        }
+
+        .custom-content-marker .close-btn {
+            position: absolute;
+            top: -6px;
+            right: -8px;
+            width: 15px;
+            height: 15px;
+            font-size: 12px;
+            background: #ccc;
+            border-radius: 50%;
+            color: #fff;
+            text-align: center;
+            line-height: 15px;
+            box-shadow: -1px 1px 1px rgba(10, 10, 10, .2);
+        }
+
+        .custom-content-marker .close-btn:hover{
+            background: #666;
+        }
+    </style>
+</html>

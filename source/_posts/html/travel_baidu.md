@@ -3,7 +3,8 @@ title: 地图景点
 date: 2021-12-09 15:40:00
 ---
 
-[北京景点地图](/html/bj_baidu.html)
+[北京景点地图-百度](/bjb.html)
+[北京景点地图-高德](/bjg.html)
 
 [秦皇岛景点地图](/html/qinhuangdao_baidu.html)
 
