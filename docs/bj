@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>北京旅游景点</title>
+    <style type="text/css">
+        html {
+            height: 100%
+        }
+
+        body {
+            height: 100%;
+            margin: 0px;
+            padding: 0px
+        }
+
+        #container {
+            height: 100%
+        }
+    </style>
+    <script type="text/javascript"
+        src="https://api.map.baidu.com/api?v=1.0&type=webgl&ak=GZQT8L85QtZfRfSYEoW82abcNiaGjKmw"></script>
+    <script src="bj.js"></script>
+</head>
+
+<body>
+    <div id="selectors">
+        <input id="bowuguan" class="inputCheckBox" type="checkbox" checked="checked">博物馆</input>
+        <input id="jingdian" class="inputCheckBox" type="checkbox" checked="checked">景点</input>
+        <input id="ertong" class="inputCheckBox" type="checkbox" checked="checked">儿童</input>
+        <input id="jucahng" class="inputCheckBox" type="checkbox">剧场</input>
+        <input id="simiao" class="inputCheckBox" type="checkbox">寺庙</input>
+        <input id="shangchang" class="inputCheckBox" type="checkbox">商场</input>
+        <input type="text" id="start" placeholder="起点">
+        <input type="text" id="end" placeholder="终点">
+        <button onclick="searchTransit()">公交</button>
+        <button onclick="searchDriving()">自驾</button>
+        <br /><br />
+    </div>
+    <div id="container"></div>
+    <div id="panel" style="width: 100%; height: 200px; overflow: auto;"></div>
+
+    <script type="text/javascript">
+        const map = new BMapGL.Map("container");
+
+        // 创建地图实例 
+        const point = new BMapGL.Point(116.404, 39.915);
+        // 创建点坐标 
+        map.centerAndZoom(point, 15);
+        // 初始化地图，设置中心点坐标和地图级别 
+
+        map.enableScrollWheelZoom(true);     //开启鼠标滚轮缩放
+        const scaleCtrl = new BMapGL.ScaleControl();  // 添加比例尺控件
+        map.addControl(scaleCtrl);
+        const zoomCtrl = new BMapGL.ZoomControl();  // 添加缩放控件
+        map.addControl(zoomCtrl);
+
+        // https://api.map.baidu.com/lbsapi/getpoint/index.html
+
+        const selectData = (event) => {
+            const value = bjData[event.id]
+            if (event.checked == true) {
+                addOverlay(value.list, value.color)
+            } else {
+                removeOverlay(value.list)
+            }
+        }
+
+        for (const key in bjData) {
+            const value = bjData[key]// 添加点击事件
+            const checkbox = document.querySelector('#' + key)
+            // 显示默认坐标
+            if (value.show) {
+                addOverlay(value.list, value.color)
+                checkbox.checked = true;
+            }
+
+            if (checkbox) {
+                checkbox.addEventListener('change', (event) => {
+                    selectData(event.explicitOriginalTarget)
+                });
+            }
+        }
+
+        function addOverlay(array, color) {
+            array.forEach(function (item, index) {
+                map.addOverlay(new BMapGL.Marker(new BMapGL.Point(item[0], item[1])));
+
+                var opts = {
+                    position: new BMapGL.Point(item[0], item[1]), // 指定文本标注所在的地理位置
+                    offset: new BMapGL.Size(12, -30) // 设置文本偏移量
+                };
+                // 创建文本标注对象
+                var label = new BMapGL.Label(item[2], opts);
+                // 自定义文本标注样式
+                label.setStyle({
+                    color: color,
+                    borderRadius: '5px',
+                    borderColor: '#ccc',
+                    padding: '10px',
+                    fontSize: '13px',
+                    height: '20px',
+                    lineHeight: '20px',
+                    fontFamil: '微软雅黑'
+                });
+                map.addOverlay(label);
+            })
+        }
+
+        function removeOverlay(array) {
+
+            var allOverlay = map.getOverlays();
+            allOverlay.map(overlay => {
+                array.forEach(function (item, index) {
+                    if (overlay.content == item[2]) {
+                        overlay.hide()
+                        map.removeOverlay(overlay);
+                    }
+                })
+            })
+        }
+
+        try {
+            // addSubway(map, point);
+        } catch (err) {
+            console.error('addSubway', err)
+        }
+
+        function addSubway(map, point) {
+            // 创建 LocalSearch 实例
+            const localSearch = new BMapGL.LocalSearch(map, {
+                onSearchComplete: function (results) {
+                    // 搜索完成后的回调函数
+                    if (localSearch.getStatus() === BMapGL.SearchResult.SEARCH_SUCCESS) {
+                        // 搜索成功
+                        results.forEach(result => {
+                            const marker = new BMapGL.Marker(result.location);
+                            map.addOverlay(marker);
+
+                            // 创建信息窗口
+                            const infoWindow = new BMapGL.InfoWindow(result[2], {
+                                width: 200, // 信息窗口宽度
+                                height: 100, // 信息窗口高度
+                                // '地铁站信息' // 信息窗口标题
+                            });
+
+                            // 为标记添加点击事件
+                            marker.addEventListener('click', function () {
+                                this.openInfoWindow(infoWindow);
+                            });
+                        });
+                    } else {
+                        // 搜索失败
+                        console.error('搜索失败');
+                    }
+                }
+            });
+
+            // 搜索地铁站
+            localSearch.searchNearby('地铁站', point, 5000); // 在点周围1000米范围内搜索地铁站
+        }
+
+        try {
+            // 创建公交路径搜索实例
+            const transit = new BMap.TransitRoute(map, {
+                renderOptions: { map: map, panel: "panel" },
+                policBMAP_TRANSIT_POLICY_LEAST_TIME
+            });
+        } catch (err) {
+            console.error('TransitRoute', err)
+        }
+
+        // 查询公交路径
+        function searchTransit() {
+            const start = document.getElementById("start").value;
+            const end = document.getElementById("end").value;
+            if (start && end) {
+                map.clearOverlays();
+                transit.search(start, end);
+            } else {
+                alert("请输入起点和终点");
+            }
+        }
+
+
+        try {
+            // 创建自驾路径搜索实例
+            const driving = new BMap.DrivingRoute(map, {
+                renderOptions: { map: map, panel: "panel" },
+                policBMAP_DRIVING_POLICY_LEAST_TIME
+            });
+        } catch (err) {
+            console.error('DrivingRoute', err)
+        }
+
+        // 查询自驾路径
+        function searchDriving() {
+            const start = document.getElementById("start").value;
+            const end = document.getElementById("end").value;
+            if (start && end) {
+                map.clearOverlays();
+                driving.search(start, end);
+            } else {
+                alert("请输入起点和终点");
+            }
+        }
+
+    </script>
+</body>
+
+</html>
