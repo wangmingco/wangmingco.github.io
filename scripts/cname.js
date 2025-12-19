@@ -4,7 +4,7 @@ console.log("Arguments:", process.argv.slice(2));
 
 const cnameContent = 'blog.vc89.cn';
 
-const cnamePath = path.resolve(__dirname, '../dist/CNAME');
+const cnamePath = path.resolve(__dirname, '../public/CNAME');
 fs.writeFileSync(cnamePath, cnameContent);
 
 const cnamePath1 = path.resolve(__dirname, '../CNAME');
