@@ -10,5 +10,4 @@ fs.writeFileSync(cnamePath2, cnameContent);
 const cnamePath1 = path.resolve(__dirname, '../CNAME');
 fs.writeFileSync(cnamePath1, cnameContent);
 
-const cnamePath = path.resolve(__dirname, '../public/CNAME');
-fs.writeFileSync(cnamePath, cnameContent);
+
